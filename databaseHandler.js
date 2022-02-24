@@ -7,3 +7,7 @@ async function getDBO() {
     const dbo = client.db(dbName);
     return dbo;
 }
+
+module.exports = {
+
+}

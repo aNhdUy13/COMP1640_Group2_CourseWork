@@ -8,6 +8,14 @@ async function getDBO() {
     return dbo;
 }
 
-module.exports = {
 
+/* Admin Role */
+async function addNewAccount(collectionName, data){
+    const dbo = await getDBO();
+    await dbo.collection(collectionName).insertOne(data);
+}
+/* (End) Admin Role */
+
+module.exports = {
+    addNewAccount
 }

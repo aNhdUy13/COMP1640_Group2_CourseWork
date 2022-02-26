@@ -15,49 +15,71 @@
 
         <!-- Content -->
         <div class="main_Content">
-            <table>
-                <form  action="../admin/doAddAccount" method="post">
-                    <tr>
-                        <td>Name : </td>
-                        <td><input type="text" name="txtStaffName"> </td> 
-                        <td style="color: brown;">{{errorName}}</td>
-                    </tr>
-                    <tr>
-                        <td>Email : </td>
-                        <td><input type="text" name="txtStaffEmail"> </td> 
-                        <td style="color: brown;">{{errorEmail}}</td>
-                    </tr>
+            <div class="top_content">
+                <div class="table_title">
+                    <h2>Add new Account</h2>
+                </div>
 
-                    <tr>
-                        <td>Password : </td>
-                        <td><input type="text" name="txtStaffPassword"> </td> 
-                        <td style="color: brown;">{{errorPassword}}</td>
-                    </tr>
+                <table>
+                    <form  action="../admin/doAddAccount" method="post">
+                        <tr>
+                            <td class="accountManagement_title">Name : </td>
+                            <td><input type="text" class="accountManagement" name="txtStaffName"> </td> 
+                            <td style="color: brown;">{{errorName}}</td>
+                        </tr>
+                        <tr>
+                            <td class="accountManagement_title">Email : </td>
+                            <td><input type="text" class="accountManagement" name="txtStaffEmail"> </td> 
+                            <td style="color: brown;">{{errorEmail}}</td>
+                        </tr>
 
-                    <tr>
-                        <td>Age : </td>
-                        <td><input type="text" name="txtStaffAge"></td>
-                        <td  style="color: brown;">{{errorAge}}</td>
+                        <tr>
+                            <td class="accountManagement_title">Password : </td>
+                            <td><input type="text" class="accountManagement" name="txtStaffPassword"> </td> 
+                            <td style="color: brown;">{{errorPassword}}</td>
+                        </tr>
 
-                    </tr>
-                    
-                    <tr>
-                        <td>PhoneNumber : </td>
-                        <td><input type="text" name="txtStaffEducation"></td>
-                        <td  style="color: brown;">{{errorMessage}}</td>
+                        <tr>
+                            <td class="accountManagement_title">Age : </td>
+                            <td><input type="text" class="accountManagement" name="txtStaffAge"></td>
+                            <td  style="color: brown;">{{errorAge}}</td>
 
-                    </tr>
+                        </tr>
+                        
+                        <tr>
+                            <td class="accountManagement_title">PhoneNumber : </td>
+                            <td><input type="text" class="accountManagement" name="txtStaffEducation"></td>
+                            <td  style="color: brown;">{{errorMessage}}</td>
 
-                    <tr>
-                        <td>Role : </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input type="submit" value="Insert" class="insertButton"></td>
+                        </tr>
 
-                    </tr>
-                </form>
-            </table>
+                        <tr>
+                            <td class="accountManagement_title">Role : </td>
+                            <td>
+                                <div class="dropbox">
+                                        <select name="txtRoleSelected">
+                                            <option value="selectedQAManager">Quality Assurance Manager</option>
+                                            <option value="selectedQACoordinator">Quality Assurance Coordinator</option>
+                                            <option value="selectedStaff">Staff</option>
+
+                                        </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="submit" value="Insert" class="insertButton"></td>
+
+                        </tr>
+                    </form>
+                </table>
+
+                <div class="line_only"></div>
+            </div>
+
+            <div class="bottom_content">
+
+            </div>
         </div>
 
         <!-- (End) Content -->

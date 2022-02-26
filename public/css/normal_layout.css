@@ -1,0 +1,99 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    background-color: #7cade6;
+}
+div.container{
+    width: 100%;
+    height: 900px;
+
+}
+
+/*=============================== Header ===============================*/
+
+div.leftSideHeader {
+    width: 20%;
+    height: 90%;
+    background-color: #203b5b;
+    float: left;
+    border-top-left-radius: 10px;
+
+    
+}
+
+div.greeting {
+    width: 100%;
+    height: 10%;
+    /* Align item inside div to center */
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+div.greeting h1{
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    font-family: Courier;
+
+}
+
+div.left_navigation_bar{
+    width: 100%;
+    height: 70%;
+
+}
+nav ul li {
+    border: 1px solid #2a4565;
+    list-style-type: none;
+}
+nav ul li:hover {
+    background-color: #7cade6;
+    border: 1px solid #7cade6;
+
+}
+
+nav ul li a {
+    text-decoration: none;
+    padding: 15px;
+    color: white;
+    display: block;
+}
+
+nav ul{
+    padding: 0;
+}
+
+/*=============================== Body ===============================*/
+div.main_Content {
+    width: 80%;
+    height: 90%;
+    background-color: #ffffff;
+    float: left;
+    border-top-right-radius: 10px;
+
+}
+
+
+div.main_Content div.intro_image_content img{
+    width: 100%;
+    background-repeat: no-repeat;
+    height: 100%;
+    background-size: cover;
+    border-top-right-radius: 10px;
+}
+
+/*=============================== Footer ===============================*/
+div.footer {
+    width: 100%;
+    padding: 40px;
+    color: white;
+    text-align: center;
+    height: 10%;
+    clear: both;
+    background-color: #203b5b;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+
+}

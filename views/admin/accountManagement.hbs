@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management</title>
+</head>
+<body>
+    <table>
+        <form  action="../admin/doAddStaffAccount" method="post">
+            <tr>
+                <td>Name : </td>
+                <td><input type="text" name="txtStaffName"> </td> 
+                <td style="color: brown;">{{errorName}}</td>
+            </tr>
+            <tr>
+                <td>Email : </td>
+                <td><input type="text" name="txtStaffEmail"> </td> 
+                <td style="color: brown;">{{errorEmail}}</td>
+            </tr>
+
+            <tr>
+                <td>Password : </td>
+                <td><input type="text" name="txtStaffPassword"> </td> 
+                <td style="color: brown;">{{errorPassword}}</td>
+            </tr>
+
+            <tr>
+                <td>Age : </td>
+                <td><input type="text" name="txtStaffAge"></td>
+                <td  style="color: brown;">{{errorAge}}</td>
+
+            </tr>
+
+            <tr>
+                <td>Date of Birth : </td>
+                <td><input type="text" name="txtStaffDoB"></td>
+                <td  style="color: brown;">{{errorMessage}}</td>
+
+            </tr>
+            
+            <tr>
+                <td>Education : </td>
+                <td><input type="text" name="txtStaffEducation"></td>
+                <td  style="color: brown;">{{errorMessage}}</td>
+
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Insert" class="insertButton"></td>
+
+            </tr>
+        </form>
+    </table>
+</body>
+</html>

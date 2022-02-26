@@ -3,6 +3,7 @@ const hbs = require('hbs');
 const path = require('path');
 const session = require('express-session');
 
+
 const app = express();
 
 app.set('view engine', 'hbs');
@@ -13,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const viewPath = path.join(__dirname, 'views/partial')
 hbs.registerPartials(viewPath)
+
 
 
 app.get('/', (req, res) => {

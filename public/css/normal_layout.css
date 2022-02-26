@@ -19,18 +19,19 @@ div.leftSideHeader {
     float: left;
     border-top-left-radius: 10px;
 
-    
+
 }
 
 div.greeting {
     width: 100%;
-    height: 10%;
-    /* Align item inside div to center */
-    justify-content: center;
-    display: flex;
-    align-items: center;
-}
+    height: 20%;
 
+}
+div.greeting img{
+    width: 100%;
+    height: 20%;
+    margin-left: 25%;
+}
 div.greeting h1{
     color: white;
     font-size: 16px;

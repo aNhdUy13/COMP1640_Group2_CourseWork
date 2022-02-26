@@ -1,6 +1,10 @@
 div.main_Content table{
-        width: 40%;
-    height: 350px;
-    border: 1px solid black;
-    margin-left: 30%;
+    width: 40%;
+    height: 30%;
+    margin-top:1%;
+    margin-left: 1%;
+}
+
+div.main_Content table form tr{
+    margin-top:2%;
 }

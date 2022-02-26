@@ -1,6 +1,8 @@
 const express = require('express');
 const hbs = require('hbs');
 const path = require('path');
+const session = require('express-session');
+
 const app = express();
 
 app.set('view engine', 'hbs');
@@ -14,12 +16,12 @@ hbs.registerPartials(viewPath)
 
 
 app.get('/', (req, res) => {
-    // res.send("HEllo World");
     res.render('index');
 })
 
 
-
+var adminController = require('./admin.js');
+app.use('/admin', adminController);
 
 
 

@@ -32,4 +32,4 @@ app.use(express.static('public'));
 
 const PORT = 12345;
 app.listen(process.env.PORT || PORT);
-console.log("Web is running at port " + PORT);
+console.log("Web is running at port " + PORT +" click: http://localhost:12345/");

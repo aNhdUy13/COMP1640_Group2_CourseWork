@@ -16,10 +16,13 @@ const viewPath = path.join(__dirname, 'views/partial')
 hbs.registerPartials(viewPath)
 
 
-app.get('/', (req, res) => {
-    res.render('login');
-})
+var loginController = require('./login.js');
+app.use('/', loginController)
 
+
+app.get('/home', (req, res) => {
+    res.render('index');
+})
 
 var managerController = require('./manager.js');
 app.use('/manager', managerController);

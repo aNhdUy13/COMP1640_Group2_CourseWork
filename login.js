@@ -3,14 +3,6 @@ const router = express.Router();
 const session = require('express-session');
 const dbHandler = require('./databaseHandler');
 
-router.set('view engine', 'hbs');
-
-var bodyParser = require("body-parser");
-//const { Console } = require('console');
-router.use(bodyParser.urlencoded({ extended: false }));
-
-const viewPath = path.join(__dirname, 'views/partial')
-hbs.registerPartials(viewPath)
 
 // session middle ware
 router.use(session({
@@ -23,6 +15,7 @@ router.use(session({
 router.get('/', (req, res) => {
     res.render('login');
 }) 
+
 router.post('/doLogin', async(req, res) => {
     var nameInput = req.body.txtUser;
     var passInput = req.body.txtPassword;
@@ -31,7 +24,6 @@ router.post('/doLogin', async(req, res) => {
         var findEmail = await dbHandler.emailFinding(nameInput);
         req.session.username=nameInput;
         req.session.user = findEmail[0];
-        
         
         if (findEmail[0].role == "Quality Assurance Manager") {
             res.render('manager/managerHome')
@@ -44,7 +36,7 @@ router.post('/doLogin', async(req, res) => {
         }
         //het phan role
     } else {
-        res.render('login')
+        res.render('login');
     }
 })
 

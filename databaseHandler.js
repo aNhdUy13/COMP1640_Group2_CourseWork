@@ -16,6 +16,26 @@ async function addNewAccount(collectionName, data){
 }
 /* (End) Admin Role */
 
+/* Login function*/
+async function checkUser(nameIn, passwordIn) {
+    const dbo = await getDBO();
+    const results = await dbo.collection("users").
+    findOne({ $and: [{ email: nameIn }, { password: passwordIn }] });
+
+    if (results != null)
+        return true;
+    else
+        return false;
+}
+async function emailFinding(emailIn) {
+    const dbo = await getDBO();
+    const resultss = await dbo.collection("users").
+    find({ email: emailIn }).toArray();
+    return resultss;
+}
+/* End Login function  */
 module.exports = {
-    addNewAccount
+    addNewAccount,
+    checkUser,
+    emailFinding
 }

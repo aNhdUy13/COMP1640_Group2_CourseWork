@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/login.css" type="text/css">
+</head>
+<body>
+    <div class="hero">
+        <div class="form-box">
+            <div class="button-box">
+                <div id="btn"></div>
+                <img  class="toggle-btn" src="https://fpthcm.com.vn/wp-content/uploads/2021/01/logo-fpt-software.jpg">
+            </div>
+            <div class="social-icons">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png">  
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"> 
+                <img src="https://cdn-icons-png.flaticon.com/512/1409/1409937.png"> 
+            </div>
+            <form  action="../doLogin" method="POST" class="input-group">
+                <input type="text" class="input-field" placeholder="User Id" name="txtUser" required>
+                <input type="text" class="input-field" placeholder="Enter password" name="txtPassword" required>
+                <input type="checkbox" class="check-box"><span>Remember Password</span>
+                <h2 style="color: brown;" >{{errorMsg}}</h2>
+                <button type="submit" class="submit-btn">Log In</button>
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>

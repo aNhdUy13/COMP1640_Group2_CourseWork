@@ -16,16 +16,22 @@ const viewPath = path.join(__dirname, 'views/partial')
 hbs.registerPartials(viewPath)
 
 
-
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('login');
 })
 
 
+var managerController = require('./manager.js');
+app.use('/manager', managerController);
+
+// var coordinatorController = require('./coordinator.js');
+// app.use('/coordinator', coordinatorController);
+
+// var staffController = require('./staff.js');
+// app.use('/staff', staffController);
+
 var adminController = require('./admin.js');
 app.use('/admin', adminController);
-
-
 
 app.use(express.static('public'));
 

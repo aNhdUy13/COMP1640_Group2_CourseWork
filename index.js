@@ -30,8 +30,8 @@ app.use('/manager', managerController);
 // var coordinatorController = require('./coordinator.js');
 // app.use('/coordinator', coordinatorController);
 
-// var staffController = require('./staff.js');
-// app.use('/staff', staffController);
+var staffController = require('./staff.js');
+app.use('/staff', staffController);
 
 var adminController = require('./admin.js');
 app.use('/admin', adminController);

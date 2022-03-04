@@ -31,16 +31,8 @@ async function checkUser(emailIn, passwordIn) {
 
     if (results != null)
     {
-        // const results2 = await dbo.collection("users").find({ email: emailIn }).toArray();
 
-        // const hashPassword = results2.password;
-
-        // const match = await bcrypt.compare(passwordIn, hashPassword);
-
-        // if (match) {
-        //     //login
             return true;
-        // }
     }
 
     else

@@ -28,7 +28,6 @@ async function checkUser(emailIn, passwordIn) {
     const results = await dbo.collection("users").
         findOne({ $and: [{ email: emailIn }] });
 
-
     if (results != null)
     {
 

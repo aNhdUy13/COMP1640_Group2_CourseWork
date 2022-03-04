@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
+
+    <title>Document</title>
+</head>
+<body>
+        <div class="container">
+        {{> headerAdmin}}
+
+        <!-- Content -->
+        <div class="main_Content">
+            <div class="top_content">
+                <div class="table_title">
+                    <h2>Add new Account</h2>
+                </div>
+
+                <table>
+                    <form  action="../admin/doAddAccount" method="post">
+                        <tr>
+                            <td class="accountManagement_title">Name : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewName"> </td> 
+                        </tr>
+                            <td style="width:40%; font-size:12px; color: brown; ">{{errorName}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">Email : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewEmail"> </td> 
+                        </tr>                       
+                    </form>
+                </table>
+
+                <div class="line_only"></div>
+            </div>
+
+            <div class="bottom_content">
+
+            </div>
+        </div>
+
+        <!-- (End) Content -->
+
+        {{> footer}}
+    </div>
+</body>
+</html>

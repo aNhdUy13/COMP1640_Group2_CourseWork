@@ -7,7 +7,31 @@
     <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
     <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
 
-    <title>Document</title>
+    <title>Submit File</title>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script>  
+        $(document).ready(function () {
+            $('#uploadForm').submit(function () {
+                $("#status").empty().text("File is uploading...");
+
+                $(this).ajaxSubmit({
+
+                    error: function (xhr) {
+                        status('Error: ' + xhr.status);
+                    },
+
+                    success: function (response) {
+                        console.log(response)
+                        $("#status").empty().text(response);
+                    }
+                });
+
+                return false;
+            });
+        });  
+    </script>
 </head>
 <body>
         <div class="container">
@@ -21,17 +45,14 @@
                 </div>
 
                 <table>
-                    <form  action="../admin/doAddAccount" method="post">
-                        <tr>
-                            <td class="accountManagement_title">Name : </td>
-                            <td><input type="text" class="accountManagement" name="txtNewName"> </td> 
-                        </tr>
-                            <td style="width:40%; font-size:12px; color: brown; ">{{errorName}}</td>
-
-                        <tr>
-                            <td class="accountManagement_title">Email : </td>
-                            <td><input type="text" class="accountManagement" name="txtNewEmail"> </td> 
-                        </tr>                       
+                    <form id="uploadForm" enctype="multipart/form-data" action="/upload" method="post">
+                        <input type="file" name="myfile" />
+                        <br/>
+                        <br/>
+                        <input type="submit" value="Upload Image" name="submit">
+                        <br/>
+                        <br/>
+                        <span id="status"></span>
                     </form>
                 </table>
 

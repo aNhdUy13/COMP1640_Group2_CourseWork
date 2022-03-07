@@ -11,20 +11,6 @@ router.get('/', (req, res) => {
 })
 
 router.get('/accountManagement',async (req, res) => {
-    /* 
-        const originalPassword = "123456";
-        const password = "123456";
-
-        // Hash password & display in the system
-        const hashPassword = await bcrypt.hash(originalPassword, 10);
-        console.log(hashPassword);
-
-        // Compare the PASSWORD with HASH PASSWORD & Display in the system
-        const compare = await bcrypt.compare(password, hashPassword);
-        console.log(compare);
-    */
-
-
     res.render('admin/accountManagement');
 })
 

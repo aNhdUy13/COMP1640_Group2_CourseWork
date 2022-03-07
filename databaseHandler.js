@@ -47,6 +47,12 @@ async function emailFinding(emailIn) {
     return resultss;
 }
 /* End Login function  */
+
+
+/* Manager function */ 
+
+
+/* End Manager function*/
 module.exports = {
     addNewAccount,
     checkUser,

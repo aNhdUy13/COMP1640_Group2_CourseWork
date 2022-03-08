@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category</title>
+    <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
+
+</head>
+<body>
+    <div class="container">
+        {{> headerManager}}
+
+        <!-- Content -->
+        <div class="main_Content">
+            <div class="top_content">
+                <div class="table_title">
+                    <h2>Add new Category</h2>
+                </div>
+
+                <table>
+                    <form  action="../admin/doAddAccount" method="post">
+                        <tr>
+                            <td class="accountManagement_title">Name : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewName"> </td> 
+                        </tr>
+                            <td style="width:40%; font-size:12px; color: brown; ">{{errorName}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">Email : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewEmail"> </td> 
+                        </tr>
+                        <td style="width:40%; font-size:12px; color: brown; ">{{errorEmail}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">Password : </td>
+                            <td><input type="password" class="accountManagement" name="txtNewPassword"> </td> 
+                        </tr>
+                        <td style="width:40%; font-size:12px; color: brown; ">{{errorPassword}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">Age : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewAge"></td>
+                        </tr>
+                        <td style="width:40%; font-size:12px; color: brown; ">{{errorAge}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">PhoneNumber : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewPhoneNumber"></td>
+                        </tr>
+                        <td style="width:40%; font-size:12px; color: brown; ">{{errorPhoneNumber}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">Role : </td>
+                            <td>
+                                <div class="dropbox">
+                                        <select name="txtRoleSelected">
+                                            <option value="Quality Assurance Manager">Quality Assurance Manager</option>
+                                            <option value="Quality Assurance Coordinator">Quality Assurance Coordinator</option>
+                                            <option value="Staff">Staff</option>
+                                        </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="submit" value="Insert" class="insertButton"></td>
+                        </tr>
+                        <td style="width:40%; font-size:12px; color: rgb(32, 193, 59); ">{{implementSuccess}}</td>
+
+                    </form>
+                </table>
+
+                <div class="line_only"></div>
+            </div>
+
+            <div class="bottom_content">
+
+            </div>
+        </div>
+
+        <!-- (End) Content -->
+
+        {{> footer}}
+    </div>
+
+
+</body>
+</html>

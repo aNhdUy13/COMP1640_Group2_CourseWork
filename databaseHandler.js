@@ -13,12 +13,7 @@ async function getDBO() {
 }
 
 
-/* Admin Role */
-async function addNewAccount(collectionName, data){
-    const dbo = await getDBO();
-    await dbo.collection(collectionName).insertOne(data);
-}
-/* (End) Admin Role */
+
 
 
 
@@ -49,6 +44,32 @@ async function emailFinding(emailIn) {
 /* End Login function  */
 
 
+/* Admin Role */
+async function addNewAccount(collectionName, data) {
+    const dbo = await getDBO();
+    await dbo.collection(collectionName).insertOne(data);
+}
+
+async function viewAllAccount(collectionName, roleChoice) {
+    const dbo = await getDBO();
+    const result = await dbo.collection(collectionName).find({ role: roleChoice }).toArray();
+
+    return result;
+}
+
+async function deleteFunction(collectionName,userId)
+{
+    const dbo = await getDBO();
+
+    var ObjectID = require('mongodb').ObjectID;
+    // Lấy Id gửi về
+    const condition = { "_id": ObjectID(userId) };
+
+    await dbo.collection(collectionName).deleteOne(condition); //await đợi đến khi kết thúc
+}
+/* (End) Admin Role */
+
+
 /* Manager function */ 
 
 
@@ -56,5 +77,7 @@ async function emailFinding(emailIn) {
 module.exports = {
     addNewAccount,
     checkUser,
-    emailFinding
+    emailFinding,
+    viewAllAccount,
+    deleteFunction
 }

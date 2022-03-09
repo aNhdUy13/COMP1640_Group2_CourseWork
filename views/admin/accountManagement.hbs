@@ -15,6 +15,7 @@
 
         <!-- Content -->
         <div class="main_Content">
+            <!-- Top Content -->
             <div class="top_content">
                 <div class="table_title">
                     <h2>Add new Account</h2>
@@ -76,9 +77,76 @@
                 <div class="line_only"></div>
             </div>
 
-            <div class="bottom_content">
+            <div class="center_option">
+                <button>
+                    <a href="../admin/accountManagement">
+                        Staff
+                    </a>
+                </button>
 
+                <button>
+                    <a href="../admin/viewManagerAccount">
+                        Manager
+                    </a>
+                </button>
+
+                <button>
+                    <a href="../admin/viewCoordinatorAccount">
+                        Coordinator
+                    </a>
+                </button>
             </div>
+
+            <div class="bottom_content">
+                <!-- Bottom Content -->
+                <table border="1" cellspacing ="0 " cellpadding="15">
+                        <thead>
+                            <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Age</th>
+                                    <th>PhoneNumber</th>
+                                    <th>Role</th>
+                                    <th>Delete</th>
+                                    <th>Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each viewAllAccount}}
+                                <tr>
+                                    <td>{{name}}</td>
+                                    <td>{{email}}</td>
+                                    <td>{{age}}</td>
+                                    <td>{{phoneNumber}}</td>
+                                    <td>{{role}}</td>
+
+                                    <td>
+                                        <button>
+                                            <a href="../admin/deleteAccount?id={{_id}}" 
+                                            onclick="return confirm('Are You Sure to Delete ?')">
+                                                <img src="https://icon-library.com/images/red-recycle-bin-icon/red-recycle-bin-icon-18.jpg"
+                                                    width="18" height="18">
+                                                    Delete
+                                            </a>
+                                        </button>
+                                    </td>
+
+                                    <td>
+                                            <button>
+                                                <a href="../admin/updateStaffAccount?id={{_id}}">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png"
+                                                    width="18" height="18" alt="">
+                                                    Update
+                                                </a>
+                                        </button>
+                                    </td>
+                                
+                                </tr>
+                            {{/each }}
+                    </tbody>
+                </table>
+            </div>
+
         </div>
 
         <!-- (End) Content -->

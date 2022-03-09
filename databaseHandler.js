@@ -25,7 +25,6 @@ async function checkUser(emailIn, passwordIn) {
 
     if (results != null)
     {
-
             return true;
     }
 
@@ -42,6 +41,7 @@ async function emailFinding(emailIn) {
     return resultss;
 }
 /* End Login function  */
+
 
 
 /* Admin Role */
@@ -91,10 +91,15 @@ async function doUpdateFunction(collectionName, userId, newValues)
 /* (End) Admin Role */
 
 
+
+
 /* Manager function */ 
 
 
 /* End Manager function*/
+
+
+
 module.exports = {
     addNewAccount,
     checkUser,

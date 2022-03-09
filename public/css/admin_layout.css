@@ -88,3 +88,18 @@ div.bottom_content table {
     width: 100%;
 }
 
+
+
+
+/* =========== Update Account Page =========== */
+div.top_content_updateFunc{
+    width: 70%;
+    height: 50%;
+    margin-left: 2%;
+    margin-top: 4%;
+}
+
+div.top_content_updateFunc table {
+    width: 40%;
+    height: 40%;
+}

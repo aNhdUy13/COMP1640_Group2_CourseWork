@@ -80,4 +80,30 @@ router.get('/deleteAccount',async function (req, res) {
 
 })
 
+router.get('/updateAccount', async (req, res) => {
+    const userId = req.query.id;
+
+    var accountToEdit = await dbHandler.updateFunction("users", userId);
+    res.render('admin/updateAccount', { accountDetail: accountToEdit })
+})
+
+router.post('/doUpdateAccount', async (req, res) => {
+    const userId = req.body.id;
+    const nameUpdated = req.body.txtUpdateAccountName;
+    const ageUpdated = req.body.txtUpdateAge;
+    const phoneNumberUpdated = req.body.txtUpdatePhoneNumber;
+
+    const newValues = {
+        $set: {
+            name: nameUpdated,
+            age: ageUpdated,
+            phoneNumber: phoneNumberUpdated
+        }
+    };
+
+    await dbHandler.doUpdateFunction("users", userId, newValues);
+
+    res.redirect('accountManagement')
+
+})
 module.exports = router;

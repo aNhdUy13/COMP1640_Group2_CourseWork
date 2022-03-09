@@ -67,6 +67,27 @@ async function deleteFunction(collectionName,userId)
 
     await dbo.collection(collectionName).deleteOne(condition); //await đợi đến khi kết thúc
 }
+
+async function updateFunction(collectionName, userId)
+{
+    const dbo = await getDBO();
+    var ObjectID = require('mongodb').ObjectID;
+    // Lấy Id gửi về
+    const condition = { "_id": ObjectID(userId) };
+
+    const accountToDelete = await dbo.collection(collectionName).findOne(condition);
+    return accountToDelete;
+}
+
+async function doUpdateFunction(collectionName, userId, newValues)
+{
+    const dbo = await getDBO();
+
+    var ObjectID = require('mongodb').ObjectID;
+    // Lấy Id gửi về
+    const condition = { "_id": ObjectID(userId) };
+    await dbo.collection(collectionName).updateOne(condition, newValues);
+}
 /* (End) Admin Role */
 
 
@@ -79,5 +100,7 @@ module.exports = {
     checkUser,
     emailFinding,
     viewAllAccount,
-    deleteFunction
+    deleteFunction,
+    updateFunction,
+    doUpdateFunction
 }

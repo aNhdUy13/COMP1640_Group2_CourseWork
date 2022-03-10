@@ -13,12 +13,7 @@ async function getDBO() {
 }
 
 
-/* Admin Role */
-async function addNewAccount(collectionName, data){
-    const dbo = await getDBO();
-    await dbo.collection(collectionName).insertOne(data);
-}
-/* (End) Admin Role */
+
 
 
 
@@ -30,7 +25,6 @@ async function checkUser(emailIn, passwordIn) {
 
     if (results != null)
     {
-
             return true;
     }
 
@@ -49,12 +43,69 @@ async function emailFinding(emailIn) {
 /* End Login function  */
 
 
+
+/* Admin Role */
+async function addNewAccount(collectionName, data) {
+    const dbo = await getDBO();
+    await dbo.collection(collectionName).insertOne(data);
+}
+
+async function viewAllAccount(collectionName, roleChoice) {
+    const dbo = await getDBO();
+    const result = await dbo.collection(collectionName).find({ role: roleChoice }).toArray();
+
+    return result;
+}
+
+async function deleteFunction(collectionName,userId)
+{
+    const dbo = await getDBO();
+
+    var ObjectID = require('mongodb').ObjectID;
+    // Lấy Id gửi về
+    const condition = { "_id": ObjectID(userId) };
+
+    await dbo.collection(collectionName).deleteOne(condition); //await đợi đến khi kết thúc
+}
+
+async function updateFunction(collectionName, userId)
+{
+    const dbo = await getDBO();
+    var ObjectID = require('mongodb').ObjectID;
+    // Lấy Id gửi về
+    const condition = { "_id": ObjectID(userId) };
+
+    const accountToDelete = await dbo.collection(collectionName).findOne(condition);
+    return accountToDelete;
+}
+
+async function doUpdateFunction(collectionName, userId, newValues)
+{
+    const dbo = await getDBO();
+
+    var ObjectID = require('mongodb').ObjectID;
+    // Lấy Id gửi về
+    const condition = { "_id": ObjectID(userId) };
+    await dbo.collection(collectionName).updateOne(condition, newValues);
+}
+/* (End) Admin Role */
+
+
+
+
 /* Manager function */ 
 
 
 /* End Manager function*/
+
+
+
 module.exports = {
     addNewAccount,
     checkUser,
-    emailFinding
+    emailFinding,
+    viewAllAccount,
+    deleteFunction,
+    updateFunction,
+    doUpdateFunction
 }

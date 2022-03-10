@@ -20,6 +20,20 @@ router.get('/', (req, res) => {
     res.render('manager/managerHome');
 })
 
+router.get('/addCategory',async (req, res) => {
+    res.render('manager/addCategory');
+})
 
+router.post('/doAddCategory',async(req, res) => {
+    const newCategory = req.body.txtNewCate;
+
+        const categoryData = {
+            name: newCategory
+        }
+
+        await dbHandler.addNewAccount("categories", categoryData);
+
+        res.render('manager/addCategory', { implementSuccess: "New Account Added Successfully !" })
+})
 
 module.exports = router;

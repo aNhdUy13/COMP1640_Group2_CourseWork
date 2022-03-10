@@ -5,15 +5,27 @@ const dbHandler = require('./databaseHandler');
 
 // Import dependencies to hash passwordToCompare
 const bcrypt = require('bcrypt');
+const { route } = require('express/lib/router');
 
 router.get('/', (req, res) => {
     res.render('admin/adminHome');
 })
 
+
 router.get('/accountManagement',async (req, res) => {
-    res.render('admin/accountManagement');
+    const result = await dbHandler.viewAllAccount("users", "Staff")
+    res.render('admin/accountManagement', { viewAllAccount: result });
 })
 
+router.get('/viewManagerAccount', async (req, res) => {
+    const result = await dbHandler.viewAllAccount("users", "Quality Assurance Manager")
+    res.render('admin/accountManagement', { viewAllAccount: result });
+})
+
+router.get('/viewCoordinatorAccount', async (req, res) => {
+    const result = await dbHandler.viewAllAccount("users", "Quality Assurance Coordinator")
+    res.render('admin/accountManagement', { viewAllAccount: result });
+})
 
 router.post('/doAddAccount',async(req, res) => {
     const newName = req.body.txtNewName;
@@ -59,6 +71,39 @@ router.post('/doAddAccount',async(req, res) => {
 
 })
 
+router.get('/deleteAccount',async function (req, res) {
 
+    const userId = req.query.id;
 
+    await dbHandler.deleteFunction("users", userId);
+    res.redirect('accountManagement')
+
+})
+
+router.get('/updateAccount', async (req, res) => {
+    const userId = req.query.id;
+
+    var accountToEdit = await dbHandler.updateFunction("users", userId);
+    res.render('admin/updateAccount', { accountDetail: accountToEdit })
+})
+
+router.post('/doUpdateAccount', async (req, res) => {
+    const userId = req.body.id;
+    const nameUpdated = req.body.txtUpdateAccountName;
+    const ageUpdated = req.body.txtUpdateAge;
+    const phoneNumberUpdated = req.body.txtUpdatePhoneNumber;
+
+    const newValues = {
+        $set: {
+            name: nameUpdated,
+            age: ageUpdated,
+            phoneNumber: phoneNumberUpdated
+        }
+    };
+
+    await dbHandler.doUpdateFunction("users", userId, newValues);
+
+    res.redirect('accountManagement')
+
+})
 module.exports = router;

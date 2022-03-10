@@ -7,28 +7,28 @@ const dbHandler = require('./databaseHandler');
 
 //submit file
 var storage = multer.diskStorage({
-    destination: function(req,file,callback){
-        callback(null,'./uploads');
+    destination: function (req, file, callback) {
+        callback(null, './uploads');
     },
-    filename: function(req,file,callback){
-        callback(null,file.originalname);
+    filename: function (req, file, callback) {
+        callback(null, file.originalname);
     }
-})
+});
 
-var upload = multer({storage: storage}).single('myfile');
+var upload = multer({ storage: storage }).single('myfile');
 
-app.get('/',function(req, res){
+app.get('/', function (req, res) {
     res.sendFile(__dirname + "/submit.hbs");
-})
+});
 
-app.post('/upload',function(req, res){
-    upload(req, res,function(err){
+app.post('/upload',function(req,res){
+    upload(req,res,function(err){
         if(err){
             return res.end('Error uploading file');
-        } 
-        res.end('File upload successfully');
-    })
-})
+        }
+        res.end('File is uploaded successfully');
+    });
+});
 
 router.get('/', (req, res) => {
     res.render('staff/staffHome');

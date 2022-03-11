@@ -6,14 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
     <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
-
     <title>Submit File</title>
-
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
     <script>  
         $(document).ready(function () {
-            $('#uploadForm').submit(function () {
+            $('#uploadForm').submit(function (event) {
+                event.preventDefault();
                 $("#status").empty().text("File is uploading...");
 
                 $(this).ajaxSubmit({
@@ -27,8 +26,7 @@
                         $("#status").empty().text(response);
                     }
                 });
-
-                return false;
+                
             });
         });  
     </script>
@@ -45,7 +43,7 @@
                 </div>
 
                 <table>
-                    <form id="uploadForm" enctype="multipart/form-data" action="/upload" method="post">
+                    <form id="uploadForm" enctype="multipart/form-data" action="/staff/upload" method="post">
                         <input type="file" name="myfile" />
                         <br/>
                         <br/>

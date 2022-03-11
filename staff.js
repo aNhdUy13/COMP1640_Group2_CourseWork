@@ -21,7 +21,7 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + "/submit.hbs");
 });
 
-app.post('/upload',function(req,res){
+router.post('/upload',function(req,res){
     upload(req,res,function(err){
         if(err){
             return res.end('Error uploading file');

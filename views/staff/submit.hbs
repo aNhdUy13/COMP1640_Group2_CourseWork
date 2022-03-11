@@ -33,21 +33,29 @@
 </head>
 <body>
         <div class="container">
-        {{> headerAdmin}}
+        {{> headerStaff}}
 
         <!-- Content -->
         <div class="main_Content">
             <div class="top_content">
                 <div class="table_title">
-                    <h2>Add new Account</h2>
+                    <h2>Submit new File</h2>
                 </div>
 
                 <table>
+<<<<<<< HEAD
                     <form id="uploadForm" enctype="multipart/form-data" action="/staff/upload" method="post">
+=======
+                    <form id="uploadForm" enctype="multipart/form-data" action="/upload" method="post" onsubmit="if(document.getElementById('agree').checked) { return true; }
+                            else { alert('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy'); return false; }">
+>>>>>>> 9732d439962361f84b1540b8bccaeca0b6ef5367
                         <input type="file" name="myfile" />
                         <br/>
                         <br/>
-                        <input type="submit" value="Submit" name="submit">
+                            <input type="checkbox" name="checkbox" value="check" id="agree" /> I have read and agree to the Terms and Conditions and Privacy Policy
+                            <br/>
+                            <br/>
+                            <input type="submit" value="Submit" name="submit">
                         <br/>
                         <br/>
                         <span id="status"></span>

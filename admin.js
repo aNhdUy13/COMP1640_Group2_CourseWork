@@ -17,15 +17,24 @@ router.get('/accountManagement',async (req, res) => {
     res.render('admin/accountManagement', { viewAllAccount: result });
 })
 
-router.get('/viewManagerAccount', async (req, res) => {
-    const result = await dbHandler.viewAllAccount("users", "Quality Assurance Manager")
+// router.get('/viewManagerAccount', async (req, res) => {
+//     const result = await dbHandler.viewAllAccount("users", "Quality Assurance Manager")
+//     res.render('admin/accountManagement', { viewAllAccount: result });
+// })
+
+// router.get('/viewCoordinatorAccount', async (req, res) => {
+//     const result = await dbHandler.viewAllAccount("users", "Quality Assurance Coordinator")
+//     res.render('admin/accountManagement', { viewAllAccount: result });
+// })
+
+router.post('/showRoleAccount', async(req, res) => {
+    const selectedRole = req.body.txtRoleSelected_toShow;
+
+    const result = await dbHandler.viewAllAccount("users", selectedRole)
+
     res.render('admin/accountManagement', { viewAllAccount: result });
 })
 
-router.get('/viewCoordinatorAccount', async (req, res) => {
-    const result = await dbHandler.viewAllAccount("users", "Quality Assurance Coordinator")
-    res.render('admin/accountManagement', { viewAllAccount: result });
-})
 
 router.post('/doAddAccount',async(req, res) => {
     const newName = req.body.txtNewName;

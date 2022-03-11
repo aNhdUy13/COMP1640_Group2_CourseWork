@@ -52,6 +52,19 @@ td.accountManagement_title
     font-size: 14px;
 }
 
+div.dropbox_show {
+    width: 60%;
+    font-size: 10px;
+    margin-left: 1%;
+}
+
+div.dropbox_show select{
+    background-color: #203b5b;
+    color: white;
+    padding:5px;
+    border-radius: 3px;
+
+}
 /* =========== Center Content =========== */
 
 div.center_option {

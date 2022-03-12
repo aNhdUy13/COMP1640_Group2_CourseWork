@@ -13,10 +13,6 @@ async function getDBO() {
 }
 
 
-
-
-
-
 /* Login function*/
 async function checkUser(emailIn, passwordIn) {
     const dbo = await getDBO();
@@ -57,6 +53,7 @@ async function viewAllAccount(collectionName, roleChoice) {
     return result;
 }
 
+
 async function deleteFunction(collectionName,userId)
 {
     const dbo = await getDBO();
@@ -79,14 +76,24 @@ async function updateFunction(collectionName, userId)
     return accountToDelete;
 }
 
-async function doUpdateFunction(collectionName, userId, newValues)
+async function doUpdateFunction(collectionName, contentID, newValues)
 {
     const dbo = await getDBO();
 
     var ObjectID = require('mongodb').ObjectID;
     // Lấy Id gửi về
-    const condition = { "_id": ObjectID(userId) };
+    const condition = { "_id": ObjectID(contentID) };
     await dbo.collection(collectionName).updateOne(condition, newValues);
+}
+
+
+async function viewAllDataInTable(collectionName) {
+    const dbo = await getDBO();
+
+    const result = await dbo.collection(collectionName).find().toArray();
+
+    return result;
+
 }
 /* (End) Admin Role */
 
@@ -107,5 +114,6 @@ module.exports = {
     viewAllAccount,
     deleteFunction,
     updateFunction,
-    doUpdateFunction
+    doUpdateFunction,
+    viewAllDataInTable
 }

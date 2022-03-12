@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management</title>
+    <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
+
+</head>
+<body>
+    <div class="container">
+        {{> headerAdmin}}
+
+        <!-- Content -->
+        <div class="main_Content">
+            <div class="table_title_idea">
+                <h2>Post Idea Management</h2>
+            </div>
+            <div class="ideaManagement">
+                <table border="1" cellspacing ="0 " cellpadding="15">
+                        <thead>
+                            <tr>
+                                    <th>Topic</th>
+                                    <th>Description</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Categories</th>
+                                    <th>User</th>
+                                    <th>Email</th>
+
+                                    <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each viewAllDataInTable}}
+                                <tr>
+                                    <td>{{topic}}</td>
+                                    <td>{{description}}</td>
+                                    <td>{{startDate}}</td>
+                                    <td>{{endDate}}</td>
+                                    <td>{{categories}}</td>
+                                    <td>{{users}}</td>
+                                    <td>{{email}}</td>
+                                
+                                    <td>
+                                        <button>
+                                            <a href="../admin/updatePostIdea?id={{_id}}">
+                                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png"
+                                                width="18" height="18" alt="">
+                                                Update
+                                            </a>
+                                        </button>
+                                    </td>
+                                
+                                </tr>
+                            {{/each }}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- (End) Content -->
+
+        {{> footer}}
+    </div>
+
+
+</body>
+</html>

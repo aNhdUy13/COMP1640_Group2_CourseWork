@@ -95,6 +95,23 @@ async function viewAllDataInTable(collectionName) {
     return result;
 
 }
+async function getCategory(collectionName) {
+    const dbo = await getDBO();
+
+    const result = await dbo.collection(collectionName).find({}).toArray();
+
+    return result;
+
+}
+
+async function getUser(collectionName, email) {
+    const dbo = await getDBO();
+
+    const result = await dbo.collection(collectionName).find({email: email}).toArray();
+
+    return result;
+
+}
 /* (End) Admin Role */
 
 
@@ -115,5 +132,6 @@ module.exports = {
     deleteFunction,
     updateFunction,
     doUpdateFunction,
-    viewAllDataInTable
+    viewAllDataInTable,
+    getCategory
 }

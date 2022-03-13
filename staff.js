@@ -40,10 +40,10 @@ router.get('/submit',async (req, res) => {
     res.render('staff/submit');
 })
 
-router.get('/allFileSubmit',async (req, res) => {
-    const result = await dbHandler.getCategory("categories");
+router.get('/viewAll',async (req, res) => {
+    const result = await dbHandler.viewAll("postIdeas");
     
-    res.render('staff/allFileSubmit',{ viewCategory: result});
+    res.render('staff/seeIdea',{ viewAllIdea: result});
 
 })
 module.exports = router;    

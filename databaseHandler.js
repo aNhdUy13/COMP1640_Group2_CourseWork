@@ -140,7 +140,7 @@ module.exports = {
     deleteFunction,
     updateFunction,
     doUpdateFunction,
-    viewAllDataInTable,
+    viewAll,
     getCategory
 
 }

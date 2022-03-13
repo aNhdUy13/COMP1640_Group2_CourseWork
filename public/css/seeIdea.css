@@ -89,7 +89,7 @@ div.box{
     padding:10px;
     margin: auto;
     width: 70%;
-    height: 20%;
+    height: 27%;
     white-space: nowrap;
     border-radius: 20px;
 }
@@ -165,6 +165,17 @@ div.box div.inside-content{
     display: block;
     overflow: hidden;
     overflow-wrap: break-word;
+}
+div.wrapper{
+    justify-content: center;
+    align-items: center;
+    display:flex;
+}
+div.like{
+    margin: 10px;
+}
+div.dislike{
+    margin: 10px;
 }
 /*=============================== Footer ===============================*/
 div.footer {

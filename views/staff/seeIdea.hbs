@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Idea Page</title>
     <link rel="stylesheet" href="/css/seeIdea.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 
-<body>
-</body>
+
 <div class="container">
     {{> headerStaff }}
 
@@ -46,18 +46,40 @@
                     <span>End Date: {{endDate}}</span>
                     
                 </div>
-            </div>    
-            </div>    
+            </div>
+                <hr>
+                <div class="wrapper">
+                    <div class="like">
+                        <i class="fa-solid fa-thumbs-up"  onclick="like()"></i>
+                    </div>
+                    <div class="dislike">
+                        <i class="fa-solid fa-thumbs-down"  onclick="dislike()"></i>
+                    </div>
+                </div>
+                <script>
+                    var color1 = document.getElementsByClassName('fa-thumbs-up')[0];
+                    var color2 = document.getElementsByClassName('fa-thumbs-down')[0];
+                    function like() {
+                            color1.style.color = color1.style.color === 'blue' ? 'black': 'blue';
+                            color2.style.color = 'black';
+                        }
+
+                    function dislike() {
+                        color1.style.color = 'black';
+                        color2.style.color = color2.style.color === 'red' ? 'black' : 'red';
+                    }
+                </script>  
+            </div>
+            
         </div>
         <br>
-        
         {{/each}}
     </div>
 
     <!-- (End) Content -->
 
     {{> footer}}
-
+    
 </div>
 
 

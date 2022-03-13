@@ -52,6 +52,19 @@ td.accountManagement_title
     font-size: 14px;
 }
 
+div.dropbox_show {
+    width: 70%;
+    font-size: 10px;
+    margin-left: 1%;
+}
+
+div.dropbox_show select{
+    background-color: #203b5b;
+    color: white;
+    padding:5px;
+    border-radius: 3px;
+
+}
 /* =========== Center Content =========== */
 
 div.center_option {
@@ -102,4 +115,27 @@ div.top_content_updateFunc{
 div.top_content_updateFunc table {
     width: 40%;
     height: 40%;
+}
+
+
+/* =========== Post Idea Management Page =========== */
+div.ideaManagement {
+    width: 100%;
+    height: 90%;
+    overflow-y: auto;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+div.ideaManagement table{
+    width: 100%;
+}
+
+div.table_title_idea {
+    width: 100%;
+    margin-left: 1%;
+    font-size: 16px;
+    font-family: Courier;
+    /* text-align: center;
+     */
 }

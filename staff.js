@@ -30,6 +30,8 @@ router.post('/upload',function(req,res){
     });
 });
 
+// get categories
+
 router.get('/', (req, res) => {
     res.render('staff/staffHome');
 })
@@ -37,8 +39,11 @@ router.get('/', (req, res) => {
 router.get('/submit',async (req, res) => {
     res.render('staff/submit');
 })
-router.get('/viewAll', async (req, res) => {
-    const result = await dbHandler.viewAll("postIdeas")
-    res.render('staff/seeIdea',{viewAllIdea: result});
+
+router.get('/allFileSubmit',async (req, res) => {
+    const result = await dbHandler.getCategory("categories");
+    
+    res.render('staff/allFileSubmit',{ viewCategory: result});
+
 })
 module.exports = router;    

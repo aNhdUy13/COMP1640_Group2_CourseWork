@@ -67,7 +67,7 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="submit" value="Insert" class="insertButton"></td>
+                            <td><input type="submit" value="Add" class="insertButton"></td>
                         </tr>
                         <td style="width:40%; font-size:12px; color: rgb(32, 193, 59); ">{{implementSuccess}}</td>
 
@@ -78,23 +78,21 @@
             </div>
 
             <div class="center_option">
-                <button>
-                    <a href="../admin/accountManagement">
-                        Staff
-                    </a>
-                </button>
+                <div class="dropbox_show">
+                        <form  action="../admin/showRoleAccount" method="post">
+                            <select name="txtRoleSelected_toShow" onchange="this.form.submit()">
+                                <option value="">Select</option>
 
-                <button>
-                    <a href="../admin/viewManagerAccount">
-                        Manager
-                    </a>
-                </button>
+                                <option value="Staff">Staff</option>
 
-                <button>
-                    <a href="../admin/viewCoordinatorAccount">
-                        Coordinator
-                    </a>
-                </button>
+                                <option value="Quality Assurance Manager">Quality Assurance Manager </option>
+
+                                <option value="Quality Assurance Coordinator">Quality Assurance Coordinator</option>
+
+                            </select>
+                        </form>
+                </div>
+
             </div>
 
             <div class="bottom_content">

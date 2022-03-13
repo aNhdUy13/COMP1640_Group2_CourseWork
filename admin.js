@@ -12,20 +12,22 @@ router.get('/', (req, res) => {
 })
 
 
+
 router.get('/accountManagement',async (req, res) => {
     const result = await dbHandler.viewAllAccount("users", "Staff")
     res.render('admin/accountManagement', { viewAllAccount: result });
 })
 
-router.get('/viewManagerAccount', async (req, res) => {
-    const result = await dbHandler.viewAllAccount("users", "Quality Assurance Manager")
+
+
+router.post('/showRoleAccount', async(req, res) => {
+    const selectedRole = req.body.txtRoleSelected_toShow;
+
+    const result = await dbHandler.viewAllAccount("users", selectedRole)
+
     res.render('admin/accountManagement', { viewAllAccount: result });
 })
 
-router.get('/viewCoordinatorAccount', async (req, res) => {
-    const result = await dbHandler.viewAllAccount("users", "Quality Assurance Coordinator")
-    res.render('admin/accountManagement', { viewAllAccount: result });
-})
 
 router.post('/doAddAccount',async(req, res) => {
     const newName = req.body.txtNewName;
@@ -105,5 +107,38 @@ router.post('/doUpdateAccount', async (req, res) => {
 
     res.redirect('accountManagement')
 
+})
+
+
+/* Idea Management  */
+router.get('/postIdeaManagement', async (req, res) => {
+    const result = await dbHandler.viewAllDataInTable("postIdeas")
+    res.render('admin/postIdeaManagement', { viewAllDataInTable: result });
+})
+
+
+router.get('/updatePostIdea', async (req, res) => {
+    const ideaID = req.query.id;
+
+    var ideaEdit = await dbHandler.updateFunction("postIdeas", ideaID);
+    res.render('admin/updatePostIdea', { ideaDetail: ideaEdit })
+})
+
+
+router.post('/doUpdateIdea', async (req, res) => {
+    const ideaID = req.body.id;
+    const startDateUpdated = req.body.txtUpdateStartDate;
+    const endDateUpdated = req.body.txtUpdateEndDate;
+
+    const newValues = {
+        $set: {
+            startDate: startDateUpdated,
+            endDate: endDateUpdated
+        }
+    };
+
+    await dbHandler.doUpdateFunction("postIdeas", ideaID, newValues);
+
+    res.redirect('postIdeaManagement')
 })
 module.exports = router;

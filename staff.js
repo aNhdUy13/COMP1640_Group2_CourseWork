@@ -30,6 +30,27 @@ router.post('/upload',function(req,res){
     });
 });
 
+router.post('/doAddFile',async(req, res) => {
+    const newTopic = req.body.txtNewTopic;
+    const newDes = req.body.txtNewDescription;
+    const startDate = req.body.txtStartDate;
+    const result = await dbHandler.getCategory("categories");
+    const endDate = req.body.txtEndDate;
+    const newFile= req.body.txtFile;
+        const ideas = {
+            topic: newTopic,
+            description: newDes,
+            Category : result,
+            startDate: startDate,
+            endDate: endDate,
+            newFile: newFile,
+        }
+
+        await dbHandler.addNewAccount("postIdea", ideas);
+        res.render('staff/submit',{ viewCategory: result});
+        res.render('staff/submit', { implementSuccess: "Post idea uploaded" })
+})
+
 // get categories
 
 router.get('/', (req, res) => {
@@ -45,5 +66,11 @@ router.get('/viewAll',async (req, res) => {
     
     res.render('staff/seeIdea',{ viewAllIdea: result});
 
+})
+
+router.get('/allFileSubmit',async (req, res) => {
+    const result = await dbHandler.getCategory("categories");
+    
+    res.render('staff/allFileSubmit',{ viewCategory: result});
 })
 module.exports = router;    

@@ -141,6 +141,7 @@ module.exports = {
     updateFunction,
     doUpdateFunction,
     viewAll,
-    getCategory
+    getCategory,
+    viewAllDataInTable
 
 }

@@ -90,7 +90,15 @@ async function doUpdateFunction(collectionName, userId, newValues)
 }
 /* (End) Admin Role */
 
+/* Staff*/
+async function viewAll(collectionName) {
+    const dbo = await getDBO();
+    const result = await dbo.collection(collectionName).find().toArray();
 
+    return result;
+}
+
+/* End Staff function */ 
 
 
 /* Manager function */ 
@@ -107,5 +115,6 @@ module.exports = {
     viewAllAccount,
     deleteFunction,
     updateFunction,
-    doUpdateFunction
+    doUpdateFunction,
+    viewAll
 }

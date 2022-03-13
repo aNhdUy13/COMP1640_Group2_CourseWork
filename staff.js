@@ -37,4 +37,8 @@ router.get('/', (req, res) => {
 router.get('/submit',async (req, res) => {
     res.render('staff/submit');
 })
+router.get('/viewAll', async (req, res) => {
+    const result = await dbHandler.viewAll("postIdeas")
+    res.render('staff/seeIdea',{viewAllIdea: result});
+})
 module.exports = router;    

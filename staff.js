@@ -32,22 +32,26 @@ router.post('/upload',function(req,res){
 
 router.post('/doAddFile',async(req, res) => {
     const newTopic = req.body.txtNewTopic;
-    const newDes = req.body.txtNewDescription;
-    const startDate = req.body.txtStartDate;
-    const result = await dbHandler.getCategory("categories");
+    const newDes = req.body.txtNewDes;
+    const startDate = req.body.txtStartDat;
     const endDate = req.body.txtEndDate;
-    const newFile= req.body.txtFile;
+    const category = req.body.txtNameCategory;
+    const file = req.body.txtNewFile;
+
+    // const userName = ?
+    // const userEmail = ?
+
         const ideas = {
             topic: newTopic,
             description: newDes,
-            Category : result,
+            category: category,
             startDate: startDate,
             endDate: endDate,
-            newFile: newFile,
+            file: file,
         }
 
-        await dbHandler.addNewAccount("postIdea", ideas);
-        res.render('staff/submit',{ viewCategory: result});
+        await dbHandler.addNewAccount("postIdeas", ideas);
+        // res.render('staff/submit',{ viewCategory: result});
         res.render('staff/submit', { implementSuccess: "Post idea uploaded" })
 })
 

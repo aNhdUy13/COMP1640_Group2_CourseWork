@@ -7,7 +7,6 @@
     <title>Add Category</title>
     <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
     <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
-    <link href="vendor/jquery-ui/jquery-ui.min.css" type="text/css" rel="stylesheet" />
  
 </head>
 <body>
@@ -24,22 +23,39 @@
                 <table>
                     <form  action="../staff/doAddFile" method="post">
                         <tr>
+                            <label class="accountManagement_title" for="myFile">Select a file:</label>
+                            <input type="file" id="myFile" ><br><br>
+
+                            <button  onclick="LoadFile()">    
+                            <a id="downFile" href="" target="_blank" download> downFile</a>
+                            </button>
+                            <script type="text/javascript">
+                                
+                                function LoadFile() {
+                                    var name = document.getElementById('myFile'); 
+                                    var button = document.getElementById('downFile'); 
+                                    button.innerHTML = name.files.item(0).name;                        
+                                    button.href =  "/GitHub/uploads/" + name.files.item(0).name;                                             
+                                }              
+                            </script>
+                        </tr>
+                        <tr>
                             <td class="accountManagement_title">Topic : </td>
                             <td><input type="text" class="accountManagement" name="txtNewTopic"> </td> 
                         </tr>
                         <tr>
-                            <td class="accountManagement_title">Description : </td>
-                            <td><input type="text" class="accountManagement" name="txtNewDes"> </td> 
-                        </tr>    
+                            <td class="accountManagement_title">File Name : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewDes"></td>
+                        </tr>
                         <tr>                                            
-                            <td>Start Date : </td>
+                            <td class="accountManagement_title">Start Date : </td>
                             <td>
                                 <input type="date" name="txtStartDat"> 
                             </td> 
                             <td style="color: brown;">{{errorMessage}}</td>
                         </tr>
                         <tr>
-                            <td>End Date : </td>
+                            <td class="accountManagement_title">End Date : </td>
                             <td>
                                 <input type="date" name="txtEndDate">
                             </td>
@@ -57,8 +73,8 @@
                             </td> 
                         </tr>
                         <tr>
-                            <td class="accountManagement_title">File : </td>
-                            <td><input type="text" class="accountManagement" name="txtNewFile"> </td> 
+                            <td class="accountManagement_title">User : </td>
+                            <td name="txtNameUser"> {{viewProfile.name}}</td>
                         </tr>
                         <tr>
                             <td></td>

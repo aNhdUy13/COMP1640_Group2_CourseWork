@@ -10,6 +10,19 @@ var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.3vt1h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const dbName = "COMP1640_Project";
 
+
+router.use(session({
+    resave:true,
+    saveUninitialized:true,
+    secret:'group2huhuhu',
+    cookie:{maxAge:3600000}
+}))
+
+router.get('/', (req, res) => {
+    if(!req.session.username)
+    return res.render('login')
+    res.render('staff/staffHome');
+})
 //submit file
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -41,6 +54,7 @@ router.post('/doAddFile',async(req, res) => {
     const startDate = req.body.txtStartDat;
     const endDate = req.body.txtEndDate;
     const category = req.body.txtNameCategory;
+    const userName = req.body.txtUserName;
     const file = req.body.txtNewFile;
 
     // const userName = ?
@@ -52,6 +66,7 @@ router.post('/doAddFile',async(req, res) => {
             category: category,
             startDate: startDate,
             endDate: endDate,
+            userName: userName,
             file: file,
         }
 
@@ -77,10 +92,14 @@ router.get('/viewAll',async (req, res) => {
 
 })
 
+
 router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
-    
-    res.render('staff/allFileSubmit',{ viewCategory: result});
+    if(!req.session.username)
+    return res.render('login');
+    const newValues = await dbHandler.getUser("users",req.session.user.email);
+    console.log(newValues);
+    res.render('staff/allFileSubmit',{ viewCategory: result, getUser: newValues[0]});
 })
 router.post("/do-like", async function (request, result) {
     const client = await MongoClient.connect(url);

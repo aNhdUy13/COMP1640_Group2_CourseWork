@@ -92,7 +92,7 @@ router.post("/do-like", async function (request, result) {
             if(item == null){
                 //push likes in array
                 dbo.collection("postIdeas").updateOne({
-                    "_id:": ObjectId(request.body.userId)
+                    "_id": ObjectId(request.body.userId)
                 },{
                     $push: {
                         "likes": {
@@ -109,6 +109,37 @@ router.post("/do-like", async function (request, result) {
                 result.json({
                     "status": "error",
                     "message": "Already liked this video"
+                });
+            }
+    })
+})
+router.post("/do-dislike", async function (request, result) {
+    const client = await MongoClient.connect(url);
+    const dbo = client.db(dbName);
+    await dbo.collection("postIdeas").findOne({
+            "_id": ObjectId(request.body.userId),
+            "dislikes._id": request.session.viewerId
+        }, function (error, item){
+            if(item == null){
+                //push dislikes in array
+                dbo.collection("postIdeas").updateOne({
+                    "_id": ObjectId(request.body.userId)
+                },{
+                    $push: {
+                        "dislikes": {
+                            "_id": request.session.viewerId
+                        }
+                    }
+                },function (error,data){
+                    result.json({
+                        "status": "success",
+                        "message": "Video has been disliked"
+                    });
+                });
+            }else{
+                result.json({
+                    "status": "error",
+                    "message": "Already disliked this video"
                 });
             }
     })

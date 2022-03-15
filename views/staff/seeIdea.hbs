@@ -59,7 +59,7 @@
                     </div>
                     <div class="dislike">
                         <button type="button" class="btn btn-default" onclick="dislike()">
-                            <i class="fa-solid fa-thumbs-down"  onclick="dislike()"></i>
+                            <i class="fa-solid fa-thumbs-down"  ></i>
                             <span id="dislikes">
                                 {{dislikes.length}}
                             </span>
@@ -81,6 +81,28 @@
                                     likes = parseInt(likes);
                                     likes ++;
                                     document.getElementById("likes").innerHTML = likes;
+                                }else{
+                                    alert(response.message)
+                                }
+                            }
+                        };
+                        var userId = document.getElementById("userId").value;
+                        ajax.send("userId=" + userId)
+                    }
+                    function dislike() {
+                        var ajax = new XMLHttpRequest();
+                        ajax.open("POST", "../staff/do-dislike", true);
+                        ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                        ajax.onreadystatechange = function(){
+                            if (ajax.readyState == 4 && ajax.status == 200){
+                                var response =JSON.parse(ajax.responseText);
+                                if (response.status == "success"){
+                                    //update likes
+                                    var likes = document.getElementById("dislikes").innerHTML;
+                                    dislikes = parseInt(dislikes);
+                                    dislikes ++;
+                                    document.getElementById("dislikes").innerHTML = dislikes;
                                 }else{
                                     alert(response.message)
                                 }

@@ -4,6 +4,11 @@ var app = express();
 const router = express.Router();
 const session = require('express-session');
 const dbHandler = require('./databaseHandler');
+const { ObjectId } = require('mongodb');
+const { request } = require('https');
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.3vt1h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const dbName = "COMP1640_Project";
 
 //submit file
 var storage = multer.diskStorage({
@@ -76,5 +81,36 @@ router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
     
     res.render('staff/allFileSubmit',{ viewCategory: result});
+})
+router.post("/do-like", async function (request, result) {
+    const client = await MongoClient.connect(url);
+    const dbo = client.db(dbName);
+    await dbo.collection("postIdeas").findOne({
+            "_id": ObjectId(request.body.userId),
+            "likes._id": request.session.viewerId
+        }, function (error, item){
+            if(item == null){
+                //push likes in array
+                dbo.collection("postIdeas").updateOne({
+                    "_id:": ObjectId(request.body.userId)
+                },{
+                    $push: {
+                        "likes": {
+                            "_id": request.session.viewerId
+                        }
+                    }
+                },function (error,data){
+                    result.json({
+                        "status": "success",
+                        "message": "Video has been liked"
+                    });
+                });
+            }else{
+                result.json({
+                    "status": "error",
+                    "message": "Already liked this video"
+                });
+            }
+    })
 })
 module.exports = router;    

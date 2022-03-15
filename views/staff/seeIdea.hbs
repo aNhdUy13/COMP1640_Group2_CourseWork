@@ -44,29 +44,50 @@
                     <span>File: {{file}}</span>
                     <br>
                     <span>End Date: {{endDate}}</span>
-                    
+                    <input type="hidden" id="userId" value="{{_id}}">
                 </div>
             </div>
                 <hr>
                 <div class="wrapper">
                     <div class="like">
-                        <i class="fa-solid fa-thumbs-up"  onclick="like()"></i>
+                        <button type="button" class="btn btn-default" onclick="like()">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                            <span id="likes">
+                                {{likes.length}}
+                            </span>
+                        </button>
                     </div>
                     <div class="dislike">
-                        <i class="fa-solid fa-thumbs-down"  onclick="dislike()"></i>
+                        <button type="button" class="btn btn-default" onclick="dislike()">
+                            <i class="fa-solid fa-thumbs-down"  onclick="dislike()"></i>
+                            <span id="dislikes">
+                                {{dislikes.length}}
+                            </span>
+                        </button>
                     </div>
                 </div>
-                <script>
-                    var color1 = document.getElementsByClassName('fa-thumbs-up')[0];
-                    var color2 = document.getElementsByClassName('fa-thumbs-down')[0];
+                <script type="text/javascript">
                     function like() {
-                            color1.style.color = color1.style.color === 'blue' ? 'black': 'blue';
-                            color2.style.color = 'black';
-                        }
+                        var ajax = new XMLHttpRequest();
+                        ajax.open("POST", "../staff/do-like", true);
+                        ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-                    function dislike() {
-                        color1.style.color = 'black';
-                        color2.style.color = color2.style.color === 'red' ? 'black' : 'red';
+                        ajax.onreadystatechange = function(){
+                            if (ajax.readyState == 4 && ajax.status == 200){
+                                var response =JSON.parse(ajax.responseText);
+                                if (response.status == "success"){
+                                    //update likes
+                                    var likes = document.getElementById("likes").innerHTML;
+                                    likes = parseInt(likes);
+                                    likes ++;
+                                    document.getElementById("likes").innerHTML = likes;
+                                }else{
+                                    alert(response.message)
+                                }
+                            }
+                        };
+                        var userId = document.getElementById("userId").value;
+                        ajax.send("userId=" + userId)
                     }
                 </script>  
             </div>

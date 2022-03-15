@@ -7,17 +7,18 @@ body {
 div.container{
     width: 100%;
     height: 900px;
-
+    
 }
 
 /*=============================== Header ===============================*/
 
 div.leftSideHeader {
     width: 20%;
-    height: 90%;
+    height:130%;
     background-color: #203b5b;
     float: left;
     border-top-left-radius: 10px;
+    
 
 
 }
@@ -73,6 +74,7 @@ div.main_Content {
     background-color: #ffffff;
     float: left;
     border-top-right-radius: 10px;
+    display:table;
 
 }
 

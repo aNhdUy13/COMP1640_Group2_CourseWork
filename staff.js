@@ -75,6 +75,15 @@ router.post('/doAddFile',async(req, res) => {
         res.render('staff/submit', { implementSuccess: "Post idea uploaded" })
 })
 
+router.get('/allFileSubmit',async (req, res) => {
+    const result = await dbHandler.getCategory("categories");
+    if(!req.session.username)
+    return res.render('login');
+    const newValues = await dbHandler.getUser("users",req.session.user.email);
+    console.log(newValues);
+    res.render('staff/allFileSubmit',{ viewCategory: result, getUser: newValues[0]});
+})
+
 // get categories
 
 router.get('/', (req, res) => {
@@ -101,6 +110,8 @@ router.get('/allFileSubmit',async (req, res) => {
     console.log(newValues);
     res.render('staff/allFileSubmit',{ viewCategory: result, getUser: newValues[0]});
 })
+
+
 router.post("/do-like", async function (request, result) {
     const client = await MongoClient.connect(url);
     const dbo = client.db(dbName);

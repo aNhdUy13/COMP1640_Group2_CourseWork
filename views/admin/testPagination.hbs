@@ -16,14 +16,19 @@
         <!-- Content -->
         <div class="main_Content">
             
-            <div class="center_option">
-                <div class="dropbox_show">
-                        <form  action="../admin/showNumberPageTestPaging" method="post">
-                            <select name="txtNumberPageSelected_toShow" onchange="this.form.submit()">
-                                <option value="0">Select</option>
+            <div class="center_option_testPaging">
+                <div class="choosePage">
+                        {{!-- <form  action="../admin/showNumberPageTestPaging" method="post"> --}}
+                            {{!-- <select name="txtNumberPageSelected_toShow" onchange="this.form.submit()">
+                                <option value="0">Select</option> --}}
 
                                 {{#each viewNumPage as |val key|}}
-                                    <option value={{key}}>{{val}}</option>
+                                    <a href="../admin/choosePage?skipData={{key}}">
+                                        <button>
+                                                {{val}}
+                                        </button>
+                                    </a>
+
                                 {{/each}}
 
                                 {{!-- <option value="0">1</option>
@@ -36,8 +41,8 @@
 
                                 <option value="8">5</option> --}}
 
-                            </select>
-                        </form>
+                            {{!-- </select> --}}
+                        {{!-- </form> --}}
                 </div>
 
             </div>

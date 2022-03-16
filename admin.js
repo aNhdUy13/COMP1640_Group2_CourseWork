@@ -52,10 +52,10 @@ router.get('/testPagination', async (req, res) => {
 
 })
 
-router.post('/showNumberPageTestPaging', async (req, res) => {
-    const selectedPage = req.body.txtNumberPageSelected_toShow;
+router.get('/choosePage', async (req, res) => {
+    const skipData = req.query.skipData;
 
-    const result = await dbHandler.viewAllAccountPagination2("users", selectedPage);
+    const result = await dbHandler.viewAllAccountPagination2("users", skipData);
 
     const toCount = await dbHandler.viewAllDataInTable("users")
     const count = toCount.length;
@@ -69,6 +69,24 @@ router.post('/showNumberPageTestPaging', async (req, res) => {
 
     res.render('admin/testPagination', { viewAllAccount: result, viewNumPage: arrPage });
 })
+
+// router.post('/showNumberPageTestPaging', async (req, res) => {
+//     const selectedPage = req.body.txtNumberPageSelected_toShow;
+
+//     const result = await dbHandler.viewAllAccountPagination2("users", selectedPage);
+
+//     const toCount = await dbHandler.viewAllDataInTable("users")
+//     const count = toCount.length;
+//     //console.log(count);
+
+//     var numCalculator = 0;
+//     var finalNumber = 0;
+//     var arrPage = {};
+
+//     calculatePageNum(count, numCalculator, finalNumber, arrPage)
+
+//     res.render('admin/testPagination', { viewAllAccount: result, viewNumPage: arrPage });
+// })
 
 function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
     if (count % 2 == 0) {
@@ -97,7 +115,7 @@ function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
         { k = 2; }
         else
         { k = (i - 1)*2; }
-        
+
         arrPage[k] = i;
     }
 

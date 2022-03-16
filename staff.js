@@ -23,6 +23,9 @@ router.get('/', (req, res) => {
     return res.render('login')
     res.render('staff/staffHome');
 })
+
+
+
 //submit file
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -33,7 +36,8 @@ var storage = multer.diskStorage({
     }
 });
 
-var upload = multer({ storage: storage }).single('myfile');
+
+var upload = multer({ storage: storage }).single('myfile'); 
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + "/submit.hbs");
@@ -45,6 +49,7 @@ router.post('/upload',function(req,res){
             return res.end('Error uploading file');
         }
         res.end('File is uploaded successfully');
+
     });
 });
 
@@ -54,7 +59,7 @@ router.post('/doAddFile',async(req, res) => {
     const startDate = req.body.txtStartDat;
     const endDate = req.body.txtEndDate;
     const category = req.body.txtNameCategory;
-    const userName = req.body.txtUserName;
+    const username = req.body.txtNameUser;
     const file = req.body.txtNewFile;
 
     // const userName = ?
@@ -66,13 +71,13 @@ router.post('/doAddFile',async(req, res) => {
             category: category,
             startDate: startDate,
             endDate: endDate,
-            userName: userName,
+            username : username,
             file: file,
         }
 
         await dbHandler.addNewAccount("postIdeas", ideas);
         // res.render('staff/submit',{ viewCategory: result});
-        res.render('staff/submit', { implementSuccess: "Post idea uploaded" })
+        res.render('staff/allFileSubmit', { implementSuccess: "Post idea uploaded" })
 })
 
 router.get('/allFileSubmit',async (req, res) => {
@@ -87,6 +92,8 @@ router.get('/allFileSubmit',async (req, res) => {
 // get categories
 
 router.get('/', (req, res) => {
+    if(!req.session.username)
+    return res.render('login')
     res.render('staff/staffHome');
 })
 
@@ -104,6 +111,7 @@ router.get('/viewAll',async (req, res) => {
 
 router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
+
     if(!req.session.username)
     return res.render('login');
     const newValues = await dbHandler.getUser("users",req.session.user.email);
@@ -173,5 +181,14 @@ router.post("/do-dislike", async function (request, result) {
                 });
             }
     })
+
+    if(!req.session.username)
+        return res.render('login');
+        const newValues = await dbHandler.viewProfile("users",req.session.user.email);
+        console.log(newValues);
+    res.render('staff/allFileSubmit',{ viewCategory: result, viewProfile: newValues[0]});
+
 })
+app.use('/uploads', express.static('uploads'));
+
 module.exports = router;    

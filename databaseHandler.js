@@ -116,14 +116,6 @@ async function getCategory(collectionName) {
 
 }
 
-async function getUser(collectionName, email) {
-    const dbo = await getDBO();
-
-    const result = await dbo.collection(collectionName).find({email: email}).toArray();
-
-    return result;
-
-}
 /* (End) Admin Role */
 
 /* Staff*/
@@ -131,6 +123,14 @@ async function viewAll(collectionName) {
     const dbo = await getDBO();
     const result = await dbo.collection(collectionName).find().toArray();
 
+    return result;
+}
+
+
+
+async function viewProfile(collectionName,email) {
+    const dbo = await getDBO();
+    const result = await dbo.collection(collectionName).find({ email: email }).toArray();
     return result;
 }
 
@@ -157,5 +157,8 @@ module.exports = {
     getCategory,
     viewAllDataInTable,
     getUser,
-    viewAllAccountPagination
+    viewAllAccountPagination,
+    viewProfile
+
+
 }

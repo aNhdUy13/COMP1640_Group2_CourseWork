@@ -28,6 +28,12 @@ router.post('/showRoleAccount', async(req, res) => {
     res.render('admin/accountManagement', { viewAllAccount: result });
 })
 
+router.get('/testPagination', async (req, res) => {
+    const result = await dbHandler.viewAllAccount("users", "Staff")
+    res.render('admin/testPagination', { viewAllAccount: result });
+})
+
+
 
 router.post('/doAddAccount',async(req, res) => {
     const newName = req.body.txtNewName;

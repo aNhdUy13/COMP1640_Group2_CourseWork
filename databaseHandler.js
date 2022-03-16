@@ -95,6 +95,23 @@ async function viewAllDataInTable(collectionName) {
     return result;
 
 }
+
+async function viewAllAccountPagination(collectionName, roleChoice) {
+    const dbo = await getDBO();
+
+    let perPage = 6;
+    let currentPage = 1;
+    let start = 0;
+    let end = perPage;
+
+
+    const result = await dbo.collection(collectionName).find({ role: roleChoice }).limit(2).skip(0).toArray();
+
+    return result;
+}
+
+
+
 async function getCategory(collectionName) {
     const dbo = await getDBO();
 
@@ -145,4 +162,5 @@ module.exports = {
     getCategory,
     viewAllDataInTable,
     getUser,
+    viewAllAccountPagination
 }

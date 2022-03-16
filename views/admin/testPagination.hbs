@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>testPagination</title>
+    <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
+
+</head>
+<body>
+    <div class="container">
+        {{> headerAdmin}}
+
+        <!-- Content -->
+        <div class="main_Content">
+            <!-- Top Content -->
+            <div class="top_content">
+                <div class="table_title">
+                    <h2>Add new Account</h2>
+                </div>
+
+                <table>
+                    <form  action="../admin/doAddAccount" method="post">
+                        <tr>
+                            <td class="accountManagement_title">Name : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewName"> </td> 
+                        </tr>
+                            <td style="width:40%; font-size:12px; color: brown; ">{{errorName}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">Email : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewEmail"> </td> 
+                        </tr>
+                        <td style="width:40%; font-size:12px; color: brown; ">{{errorEmail}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">Password : </td>
+                            <td><input type="password" class="accountManagement" name="txtNewPassword"> </td> 
+                        </tr>
+                        <td style="width:40%; font-size:12px; color: brown; ">{{errorPassword}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">Age : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewAge"></td>
+                        </tr>
+                        <td style="width:40%; font-size:12px; color: brown; ">{{errorAge}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">PhoneNumber : </td>
+                            <td><input type="text" class="accountManagement" name="txtNewPhoneNumber"></td>
+                        </tr>
+                        <td style="width:40%; font-size:12px; color: brown; ">{{errorPhoneNumber}}</td>
+
+                        <tr>
+                            <td class="accountManagement_title">Role : </td>
+                            <td>
+                                <div class="dropbox">
+                                        <select name="txtRoleSelected">
+                                            <option value="Quality Assurance Manager">Quality Assurance Manager</option>
+                                            <option value="Quality Assurance Coordinator">Quality Assurance Coordinator</option>
+                                            <option value="Staff">Staff</option>
+                                        </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="submit" value="Add" class="insertButton"></td>
+                        </tr>
+                        <td style="width:40%; font-size:12px; color: rgb(32, 193, 59); ">{{implementSuccess}}</td>
+
+                    </form>
+                </table>
+
+                <div class="line_only"></div>
+            </div>
+
+            <div class="center_option">
+                <div class="dropbox_show">
+                        <form  action="../admin/showRoleAccount" method="post">
+                            <select name="txtRoleSelected_toShow" onchange="this.form.submit()">
+                                <option value="">Select</option>
+
+                                <option value="Staff">Staff</option>
+
+                                <option value="Quality Assurance Manager">Quality Assurance Manager </option>
+
+                                <option value="Quality Assurance Coordinator">Quality Assurance Coordinator</option>
+
+                            </select>
+                        </form>
+                </div>
+
+            </div>
+
+            <div class="bottom_content">
+                <!-- Bottom Content -->
+                <table border="1" cellspacing ="0 " cellpadding="15">
+                        <thead>
+                            <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Age</th>
+                                    <th>PhoneNumber</th>
+                                    <th>Role</th>
+                                    <th>Delete</th>
+                                    <th>Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each viewAllAccount}}
+                                <tr>
+                                    <td>{{name}}</td>
+                                    <td>{{email}}</td>
+                                    <td>{{age}}</td>
+                                    <td>{{phoneNumber}}</td>
+                                    <td>{{role}}</td>
+
+                                    <td>
+                                        <button>
+                                            <a href="../admin/deleteAccount?id={{_id}}" 
+                                            onclick="return confirm('Are You Sure to Delete ?')">
+                                                <img src="https://icon-library.com/images/red-recycle-bin-icon/red-recycle-bin-icon-18.jpg"
+                                                    width="18" height="18">
+                                                    Delete
+                                            </a>
+                                        </button>
+                                    </td>
+
+                                    <td>
+                                            <button>
+                                                <a href="../admin/updateAccount?id={{_id}}">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png"
+                                                    width="18" height="18" alt="">
+                                                    Update
+                                                </a>
+                                        </button>
+                                    </td>
+                                
+                                </tr>
+                            {{/each }}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- (End) Content -->
+
+        {{> footer}}
+    </div>
+
+
+</body>
+</html>

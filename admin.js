@@ -31,14 +31,97 @@ router.post('/showRoleAccount', async(req, res) => {
 /* =====================================Test ============================================= */
 
 router.get('/testPagination', async (req, res) => {
+    const selectedPage = req.body.txtNumberPageSelected_toShow;
 
     // const result = await dbHandler.viewAllAccountPagination("users", "Staff")
+    const result = await dbHandler.viewAllAccountPagination2("users", 0);
 
+    const toCount = await dbHandler.viewAllDataInTable("users")
+    const count = toCount.length;
 
-    // res.render('admin/testPagination', { viewAllAccount: result });
-    res.render('admin/testPagination');
+    //console.log(count);
+
+    var numCalculator = 0;
+    var finalNumber = 0;
+
+    // Create Dictionary
+    const arrPage = {}; 
+
+    calculatePageNum(count, numCalculator, finalNumber, arrPage)
+
+    res.render('admin/testPagination', { viewAllAccount: result, viewNumPage: arrPage });
 
 })
+
+router.post('/showNumberPageTestPaging', async (req, res) => {
+    const selectedPage = req.body.txtNumberPageSelected_toShow;
+
+    const result = await dbHandler.viewAllAccountPagination2("users", selectedPage);
+
+    const toCount = await dbHandler.viewAllDataInTable("users")
+    const count = toCount.length;
+
+    //console.log(count);
+
+    var numCalculator = 0;
+    var finalNumber = 0;
+    var arrPage = {};
+
+    calculatePageNum(count, numCalculator, finalNumber, arrPage)
+
+    res.render('admin/testPagination', { viewAllAccount: result, viewNumPage: arrPage });
+})
+
+function calculatePageNum(count, numCalculator, finalNumber, arrPage) {
+    if (count % 2 == 0) {
+
+        numCalculator = count / 2;
+
+        finalNumber = numCalculator;
+
+        // console.log("Chan ( Page ) = " + finalNumber);
+    }
+    else {
+        numCalculator = (count - 1) / 2;
+
+        finalNumber = numCalculator + 1;
+
+        // console.log("Le ( Page ) = " + finalNumber);
+
+    }
+
+    var k ;
+    for (i = 1; i <= finalNumber; i++) 
+    {
+
+        if (i == 1)
+        { k = 0; }
+        if (i == 2)
+        { k = 2; }
+        else
+        { k = (i - 1)*2; }
+        arrPage[k] = i;
+
+
+    }
+
+    // var arrPage2 = new Object();
+    // arrPage2["0"] = 1;
+    // arrPage2["2"] = 2;
+    // arrPage2["4"] = 3;
+    // arrPage2["6"] = 4;
+
+
+    // console.log(Object.keys(arrPage) ); 
+
+    // for (var value in arrPage) {
+
+    //     console.log(arrPage[value]); 
+
+    // }
+
+
+}
 
 /* ================================================================================== */
 

@@ -100,11 +100,25 @@ async function viewAllAccountPagination(collectionName, roleChoice) {
     const dbo = await getDBO();
 
 
-    const result = await dbo.collection(collectionName).find({ role: roleChoice }).limit(2).skip(0).toArray();
+    const result = await dbo.collection(collectionName).find({ role: roleChoice }).limit(2).skip(2).toArray();
 
     return result;
 }
 
+async function viewAllAccountPagination2(collectionName, page) {
+    const dbo = await getDBO();
+
+    const pageNum = parseInt(page);
+
+    const finalPageNum = pageNum * 2;
+
+    const count = await dbo.collection(collectionName).count();
+
+    const result = await dbo.collection(collectionName).find().limit(2).skip(pageNum).toArray();
+
+
+    return result;
+}
 
 
 async function getCategory(collectionName) {
@@ -131,6 +145,7 @@ async function viewAll(collectionName) {
 async function getUser(collectionName,email) {
     const dbo = await getDBO();
     const result = await dbo.collection(collectionName).find({ email: email }).toArray();
+    
     return result;
 }
 
@@ -158,6 +173,6 @@ module.exports = {
     viewAllDataInTable,
     getUser,
     viewAllAccountPagination,
-
+    viewAllAccountPagination2,
 
 }

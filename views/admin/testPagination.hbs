@@ -15,7 +15,34 @@
 
         <!-- Content -->
         <div class="main_Content">
-            {{!-- <div class="bottom_content_paging">
+            
+            <div class="center_option">
+                <div class="dropbox_show">
+                        <form  action="../admin/showNumberPageTestPaging" method="post">
+                            <select name="txtNumberPageSelected_toShow" onchange="this.form.submit()">
+                                <option value="0">Select</option>
+
+                                {{#each viewNumPage as |val key|}}
+                                    <option value={{key}}>{{val}}</option>
+                                {{/each}}
+
+                                {{!-- <option value="0">1</option>
+
+                                <option value="2">2</option>
+
+                                <option value="4">3</option>
+
+                                <option value="6">4</option>
+
+                                <option value="8">5</option> --}}
+
+                            </select>
+                        </form>
+                </div>
+
+            </div>
+
+            <div class="bottom_content_paging">
                 <!-- Bottom Content -->
                 <table border="1" cellspacing ="0 " cellpadding="15">
                         <thead>
@@ -63,8 +90,10 @@
                             {{/each }}
                     </tbody>
                 </table>
-            </div> --}}
-            <main>
+            </div>
+
+
+            {{!-- <main>
                 <div class="list" id="list"></div>
                 <div class="pagenumbers" id="pagination"></div>
             </main>
@@ -152,7 +181,7 @@
                 DisplayList(list_items, list_element, rows, current_page);
                 SetupPagination(list_items, pagination_element, rows);
 
-            </script>
+            </script> --}}
         </div>
 
         <!-- (End) Content -->

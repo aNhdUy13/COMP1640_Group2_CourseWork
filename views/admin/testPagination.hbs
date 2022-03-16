@@ -15,87 +15,7 @@
 
         <!-- Content -->
         <div class="main_Content">
-            <!-- Top Content -->
-            <div class="top_content">
-                <div class="table_title">
-                    <h2>Add new Account</h2>
-                </div>
-
-                <table>
-                    <form  action="../admin/doAddAccount" method="post">
-                        <tr>
-                            <td class="accountManagement_title">Name : </td>
-                            <td><input type="text" class="accountManagement" name="txtNewName"> </td> 
-                        </tr>
-                            <td style="width:40%; font-size:12px; color: brown; ">{{errorName}}</td>
-
-                        <tr>
-                            <td class="accountManagement_title">Email : </td>
-                            <td><input type="text" class="accountManagement" name="txtNewEmail"> </td> 
-                        </tr>
-                        <td style="width:40%; font-size:12px; color: brown; ">{{errorEmail}}</td>
-
-                        <tr>
-                            <td class="accountManagement_title">Password : </td>
-                            <td><input type="password" class="accountManagement" name="txtNewPassword"> </td> 
-                        </tr>
-                        <td style="width:40%; font-size:12px; color: brown; ">{{errorPassword}}</td>
-
-                        <tr>
-                            <td class="accountManagement_title">Age : </td>
-                            <td><input type="text" class="accountManagement" name="txtNewAge"></td>
-                        </tr>
-                        <td style="width:40%; font-size:12px; color: brown; ">{{errorAge}}</td>
-
-                        <tr>
-                            <td class="accountManagement_title">PhoneNumber : </td>
-                            <td><input type="text" class="accountManagement" name="txtNewPhoneNumber"></td>
-                        </tr>
-                        <td style="width:40%; font-size:12px; color: brown; ">{{errorPhoneNumber}}</td>
-
-                        <tr>
-                            <td class="accountManagement_title">Role : </td>
-                            <td>
-                                <div class="dropbox">
-                                        <select name="txtRoleSelected">
-                                            <option value="Quality Assurance Manager">Quality Assurance Manager</option>
-                                            <option value="Quality Assurance Coordinator">Quality Assurance Coordinator</option>
-                                            <option value="Staff">Staff</option>
-                                        </select>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><input type="submit" value="Add" class="insertButton"></td>
-                        </tr>
-                        <td style="width:40%; font-size:12px; color: rgb(32, 193, 59); ">{{implementSuccess}}</td>
-
-                    </form>
-                </table>
-
-                <div class="line_only"></div>
-            </div>
-
-            <div class="center_option">
-                <div class="dropbox_show">
-                        <form  action="../admin/showRoleAccount" method="post">
-                            <select name="txtRoleSelected_toShow" onchange="this.form.submit()">
-                                <option value="">Select</option>
-
-                                <option value="Staff">Staff</option>
-
-                                <option value="Quality Assurance Manager">Quality Assurance Manager </option>
-
-                                <option value="Quality Assurance Coordinator">Quality Assurance Coordinator</option>
-
-                            </select>
-                        </form>
-                </div>
-
-            </div>
-
-            <div class="bottom_content">
+            {{!-- <div class="bottom_content_paging">
                 <!-- Bottom Content -->
                 <table border="1" cellspacing ="0 " cellpadding="15">
                         <thead>
@@ -143,8 +63,96 @@
                             {{/each }}
                     </tbody>
                 </table>
-            </div>
+            </div> --}}
+            <main>
+                <div class="list" id="list"></div>
+                <div class="pagenumbers" id="pagination"></div>
+            </main>
 
+            <script type="text/javascript">
+                const list_items = [
+                    "Item 1",
+                    "Item 2",
+                    "Item 3",
+                    "Item 4",
+                    "Item 5",
+                    "Item 6",
+                    "Item 7",
+                    "Item 8",
+                    "Item 9",
+                    "Item 10",
+                    "Item 11",
+                    "Item 12",
+                    "Item 13",
+                    "Item 14",
+                    "Item 15",
+                    "Item 16",
+                    "Item 17",
+                    "Item 18",
+                    "Item 19",
+                    "Item 20",
+                    "Item 21",
+                    "Item 22"
+                ];
+
+                const list_element = document.getElementById('list');
+                const pagination_element = document.getElementById('pagination');
+
+                let current_page = 1;
+                let rows = 4;
+
+                function DisplayList (items, wrapper, rows_per_page, page) {
+                    wrapper.innerHTML = "";
+                    page--;
+
+                    let start = rows_per_page * page;
+                    let end = start + rows_per_page;
+                    let paginatedItems = items.slice(start, end);
+
+                    for (let i = 0; i < paginatedItems.length; i++) {
+                        let item = paginatedItems[i];
+
+                        let item_element = document.createElement('div');
+                        item_element.classList.add('item');
+                        item_element.innerText = item;
+                        
+                        wrapper.appendChild(item_element);
+                    }
+                }
+
+                function SetupPagination (items, wrapper, rows_per_page) {
+                    wrapper.innerHTML = "";
+
+                    let page_count = Math.ceil(items.length / rows_per_page);
+                    for (let i = 1; i < page_count + 1; i++) {
+                        let btn = PaginationButton(i, items);
+                        wrapper.appendChild(btn);
+                    }
+                }
+
+                function PaginationButton (page, items) {
+                    let button = document.createElement('button');
+                    button.innerText = page;
+
+                    if (current_page == page) button.classList.add('active');
+
+                    button.addEventListener('click', function () {
+                        current_page = page;
+                        DisplayList(items, list_element, rows, current_page);
+
+                        let current_btn = document.querySelector('.pagenumbers button.active');
+                        current_btn.classList.remove('active');
+
+                        button.classList.add('active');
+                    });
+
+                    return button;
+                }
+
+                DisplayList(list_items, list_element, rows, current_page);
+                SetupPagination(list_items, pagination_element, rows);
+
+            </script>
         </div>
 
         <!-- (End) Content -->

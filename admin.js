@@ -28,11 +28,19 @@ router.post('/showRoleAccount', async(req, res) => {
     res.render('admin/accountManagement', { viewAllAccount: result });
 })
 
+/* =====================================Test ============================================= */
+
 router.get('/testPagination', async (req, res) => {
-    const result = await dbHandler.viewAllAccount("users", "Staff")
-    res.render('admin/testPagination', { viewAllAccount: result });
+
+    // const result = await dbHandler.viewAllAccountPagination("users", "Staff")
+
+
+    // res.render('admin/testPagination', { viewAllAccount: result });
+    res.render('admin/testPagination');
+
 })
 
+/* ================================================================================== */
 
 
 router.post('/doAddAccount',async(req, res) => {

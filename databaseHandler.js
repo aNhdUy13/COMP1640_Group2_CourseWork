@@ -99,11 +99,6 @@ async function viewAllDataInTable(collectionName) {
 async function viewAllAccountPagination(collectionName, roleChoice) {
     const dbo = await getDBO();
 
-    let perPage = 6;
-    let currentPage = 1;
-    let start = 0;
-    let end = perPage;
-
 
     const result = await dbo.collection(collectionName).find({ role: roleChoice }).limit(2).skip(0).toArray();
 

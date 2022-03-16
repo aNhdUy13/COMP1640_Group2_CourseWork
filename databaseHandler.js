@@ -128,7 +128,7 @@ async function viewAll(collectionName) {
 
 
 
-async function viewProfile(collectionName,email) {
+async function getUser(collectionName,email) {
     const dbo = await getDBO();
     const result = await dbo.collection(collectionName).find({ email: email }).toArray();
     return result;
@@ -158,7 +158,6 @@ module.exports = {
     viewAllDataInTable,
     getUser,
     viewAllAccountPagination,
-    viewProfile
 
 
 }

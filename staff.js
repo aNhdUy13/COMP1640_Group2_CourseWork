@@ -181,13 +181,6 @@ router.post("/do-dislike", async function (request, result) {
                 });
             }
     })
-
-    if(!req.session.username)
-        return res.render('login');
-        const newValues = await dbHandler.viewProfile("users",req.session.user.email);
-        console.log(newValues);
-    res.render('staff/allFileSubmit',{ viewCategory: result, viewProfile: newValues[0]});
-
 })
 app.use('/uploads', express.static('uploads'));
 

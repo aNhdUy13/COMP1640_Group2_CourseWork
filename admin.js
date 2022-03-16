@@ -38,7 +38,6 @@ router.get('/testPagination', async (req, res) => {
 
     const toCount = await dbHandler.viewAllDataInTable("users")
     const count = toCount.length;
-
     //console.log(count);
 
     var numCalculator = 0;
@@ -60,7 +59,6 @@ router.post('/showNumberPageTestPaging', async (req, res) => {
 
     const toCount = await dbHandler.viewAllDataInTable("users")
     const count = toCount.length;
-
     //console.log(count);
 
     var numCalculator = 0;
@@ -72,37 +70,35 @@ router.post('/showNumberPageTestPaging', async (req, res) => {
     res.render('admin/testPagination', { viewAllAccount: result, viewNumPage: arrPage });
 })
 
-function calculatePageNum(count, numCalculator, finalNumber, arrPage) {
+function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
     if (count % 2 == 0) {
 
         numCalculator = count / 2;
 
-        finalNumber = numCalculator;
+        finalPageNumber = numCalculator;
 
         // console.log("Chan ( Page ) = " + finalNumber);
     }
     else {
         numCalculator = (count - 1) / 2;
 
-        finalNumber = numCalculator + 1;
+        finalPageNumber = numCalculator + 1;
 
         // console.log("Le ( Page ) = " + finalNumber);
 
     }
 
     var k ;
-    for (i = 1; i <= finalNumber; i++) 
+    for (i = 1; i <= finalPageNumber; i++) 
     {
-
         if (i == 1)
         { k = 0; }
         if (i == 2)
         { k = 2; }
         else
         { k = (i - 1)*2; }
+        
         arrPage[k] = i;
-
-
     }
 
     // var arrPage2 = new Object();
@@ -110,6 +106,8 @@ function calculatePageNum(count, numCalculator, finalNumber, arrPage) {
     // arrPage2["2"] = 2;
     // arrPage2["4"] = 3;
     // arrPage2["6"] = 4;
+    // arrPage2["8"] = 5;
+    // arrPage2["10"] = 6;
 
 
     // console.log(Object.keys(arrPage) ); 

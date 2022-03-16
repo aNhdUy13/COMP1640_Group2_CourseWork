@@ -105,16 +105,12 @@ async function viewAllAccountPagination(collectionName, roleChoice) {
     return result;
 }
 
-async function viewAllAccountPagination2(collectionName, page) {
+async function viewAllAccountPagination2(collectionName, data) {
     const dbo = await getDBO();
 
-    const pageNum = parseInt(page);
+    const skipData = parseInt(data);
 
-    const finalPageNum = pageNum * 2;
-
-    const count = await dbo.collection(collectionName).count();
-
-    const result = await dbo.collection(collectionName).find().limit(2).skip(pageNum).toArray();
+    const result = await dbo.collection(collectionName).find().limit(2).skip(skipData).toArray();
 
 
     return result;

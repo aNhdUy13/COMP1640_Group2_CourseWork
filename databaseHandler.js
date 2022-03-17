@@ -116,6 +116,15 @@ async function viewAllAccountPaginationCustom(collectionName, skipData) {
     return result;
 }
 
+async function searchAccount(collectionName, searchContent)
+{
+    const dbo = await getDBO();
+    const result = await dbo.collection(collectionName).find({
+        $or: [{ name: searchContent }, { email: searchContent }]
+    }).toArray();
+
+    return result;
+}
 
 async function getCategory(collectionName) {
     const dbo = await getDBO();
@@ -175,4 +184,5 @@ module.exports = {
     viewAllAccountPagination,
     viewAllAccountPaginationCustom,
     viewAllCategory,
+    searchAccount
 }

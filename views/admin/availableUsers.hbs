@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>testPagination</title>
+    <title>Available User</title>
     <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
     <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
 
@@ -15,39 +15,14 @@
 
         <!-- Content -->
         <div class="main_Content">
-            
-            <div class="center_option_testPaging">
-                <div class="choosePage">
-                        {{!-- <form  action="../admin/showNumberPageTestPaging" method="post"> --}}
-                            {{!-- <select name="txtNumberPageSelected_toShow" onchange="this.form.submit()">
-                                <option value="0">Select</option> --}}
-
-                                {{#each viewNumPage as |val key|}}
-                                    <a href="../admin/choosePage?skipData={{key}}">
-                                        <button>
-                                                {{val}}
-                                        </button>
-                                    </a>
-
-                                {{/each}}
-
-                                {{!-- <option value="0">1</option>
-
-                                <option value="2">2</option>
-
-                                <option value="4">3</option>
-
-                                <option value="6">4</option>
-
-                                <option value="8">5</option> --}}
-
-                            {{!-- </select> --}}
-                        {{!-- </form> --}}
-                </div>
-
+            <div class="searchBar">
+                <form method="POST" action="../admin/searchAccount">
+                    <input class="searchBar" type="text" name="txtNameEmailSearch">
+                    <input type="submit" value="Search">          
+                </form>
             </div>
 
-            <div class="bottom_content_paging">
+            <div class="content_paging">
                 <!-- Bottom Content -->
                 <table border="1" cellspacing ="0 " cellpadding="15">
                         <thead>
@@ -57,8 +32,8 @@
                                     <th>Age</th>
                                     <th>PhoneNumber</th>
                                     <th>Role</th>
-                                    <th>Delete</th>
-                                    <th>Update</th>
+                                    {{!-- <th>Delete</th>
+                                    <th>Update</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -69,7 +44,7 @@
                                     <td>{{age}}</td>
                                     <td>{{phoneNumber}}</td>
                                     <td>{{role}}</td>
-
+{{!-- 
                                     <td>
                                         <button>
                                             <a href="../admin/deleteAccount?id={{_id}}" 
@@ -89,7 +64,7 @@
                                                     Update
                                                 </a>
                                         </button>
-                                    </td>
+                                    </td> --}}
                                 
                                 </tr>
                             {{/each }}
@@ -97,96 +72,19 @@
                 </table>
             </div>
 
+            <div class="center_option_testPaging">
+                <div class="choosePage">
+                                {{#each viewNumPage as |val key|}}
+                                    <a href="../admin/choosePage?skipData={{key}}">
+                                        <button>
+                                                {{val}}
+                                        </button>
+                                    </a>
 
-            {{!-- <main>
-                <div class="list" id="list"></div>
-                <div class="pagenumbers" id="pagination"></div>
-            </main>
+                                {{/each}}
+                </div>
+            </div>
 
-            <script type="text/javascript">
-                const list_items = [
-                    "Item 1",
-                    "Item 2",
-                    "Item 3",
-                    "Item 4",
-                    "Item 5",
-                    "Item 6",
-                    "Item 7",
-                    "Item 8",
-                    "Item 9",
-                    "Item 10",
-                    "Item 11",
-                    "Item 12",
-                    "Item 13",
-                    "Item 14",
-                    "Item 15",
-                    "Item 16",
-                    "Item 17",
-                    "Item 18",
-                    "Item 19",
-                    "Item 20",
-                    "Item 21",
-                    "Item 22"
-                ];
-
-                const list_element = document.getElementById('list');
-                const pagination_element = document.getElementById('pagination');
-
-                let current_page = 1;
-                let rows = 4;
-
-                function DisplayList (items, wrapper, rows_per_page, page) {
-                    wrapper.innerHTML = "";
-                    page--;
-
-                    let start = rows_per_page * page;
-                    let end = start + rows_per_page;
-                    let paginatedItems = items.slice(start, end);
-
-                    for (let i = 0; i < paginatedItems.length; i++) {
-                        let item = paginatedItems[i];
-
-                        let item_element = document.createElement('div');
-                        item_element.classList.add('item');
-                        item_element.innerText = item;
-                        
-                        wrapper.appendChild(item_element);
-                    }
-                }
-
-                function SetupPagination (items, wrapper, rows_per_page) {
-                    wrapper.innerHTML = "";
-
-                    let page_count = Math.ceil(items.length / rows_per_page);
-                    for (let i = 1; i < page_count + 1; i++) {
-                        let btn = PaginationButton(i, items);
-                        wrapper.appendChild(btn);
-                    }
-                }
-
-                function PaginationButton (page, items) {
-                    let button = document.createElement('button');
-                    button.innerText = page;
-
-                    if (current_page == page) button.classList.add('active');
-
-                    button.addEventListener('click', function () {
-                        current_page = page;
-                        DisplayList(items, list_element, rows, current_page);
-
-                        let current_btn = document.querySelector('.pagenumbers button.active');
-                        current_btn.classList.remove('active');
-
-                        button.classList.add('active');
-                    });
-
-                    return button;
-                }
-
-                DisplayList(list_items, list_element, rows, current_page);
-                SetupPagination(list_items, pagination_element, rows);
-
-            </script> --}}
         </div>
 
         <!-- (End) Content -->

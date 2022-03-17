@@ -28,99 +28,6 @@ router.post('/showRoleAccount', async(req, res) => {
     res.render('admin/accountManagement', { viewAllAccount: result });
 })
 
-/* =====================================Test ============================================= */
-
-router.get('/availableUsers', async (req, res) => {
-    const result = await dbHandler.viewAllAccountPaginationCustom("users", 0);
-
-    const toCount = await dbHandler.viewAllDataInTable("users")
-    const countData = toCount.length;
-    console.log(countData);
-
-    var numCalculator = 0;
-    var finalNumber = 0;
-
-    // Create Dictionary
-    const arrPage = {}; 
-
-    calculatePageNum(countData, numCalculator, finalNumber, arrPage)
-
-    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
-
-})
-
-router.get('/choosePage', async (req, res) => {
-    const skipData = req.query.skipData;
-
-    const result = await dbHandler.viewAllAccountPaginationCustom("users", skipData);
-
-    const toCount = await dbHandler.viewAllDataInTable("users")
-    const countData = toCount.length;
-    console.log(countData);
-
-    var numCalculator = 0;
-    var finalNumber = 0;
-    var arrPage = {};
-
-    calculatePageNum(countData, numCalculator, finalNumber, arrPage)
-
-    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
-})
-
-function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
-    if (count % 2 == 0) {
-
-        numCalculator = count / 4;
-
-        finalPageNumber = numCalculator;
-
-        console.log("Chan ( Page ) = " + finalPageNumber);
-    }
-    else {
-        numCalculator = (count - 1) / 4;
-
-        finalPageNumber = numCalculator + 1;
-
-        console.log("Le ( Page ) = " + finalPageNumber);
-
-    }
-
-    var k ;
-    for (i = 1; i <= finalPageNumber; i++) 
-    {
-        if (i == 1)
-        { k = 0; }
-        if (i == 2)
-        { k = 6; }
-        else
-        { k = (i - 1)*2; }
-
-        arrPage[k] = i;
-    }
-
-    // var arrPage2 = new Object();
-    // arrPage2["0"] = 1;
-    // arrPage2["2"] = 2;
-    // arrPage2["4"] = 3;
-    // arrPage2["6"] = 4;
-    // arrPage2["8"] = 5;
-    // arrPage2["10"] = 6;
-
-
-    // console.log(Object.keys(arrPage) ); 
-
-    // for (var value in arrPage) {
-
-    //     console.log(arrPage[value]); 
-
-    // }
-
-
-}
-
-/* ================================================================================== */
-
-
 router.post('/doAddAccount',async(req, res) => {
     const newName = req.body.txtNewName;
     const newEmail = req.body.txtNewEmail;
@@ -233,4 +140,103 @@ router.post('/doUpdateIdea', async (req, res) => {
 
     res.redirect('postIdeaManagement')
 })
+
+
+/* ===================================== Related "Available User" Page ============================================= */
+
+router.get('/availableUsers', async (req, res) => {
+    const result = await dbHandler.viewAllAccountPaginationCustom("users", 0);
+
+    const toCount = await dbHandler.viewAllDataInTable("users")
+    const countData = toCount.length;
+    console.log(countData);
+
+    var numCalculator = 0;
+    var finalNumber = 0;
+
+    // Create Dictionary
+    const arrPage = {};
+
+    calculatePageNum(countData, numCalculator, finalNumber, arrPage)
+
+    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
+
+})
+
+router.get('/choosePage', async (req, res) => {
+    const skipData = req.query.skipData;
+
+    const result = await dbHandler.viewAllAccountPaginationCustom("users", skipData);
+
+    const toCount = await dbHandler.viewAllDataInTable("users")
+    const countData = toCount.length;
+    console.log(countData);
+
+    var numCalculator = 0;
+    var finalNumber = 0;
+    var arrPage = {};
+
+    calculatePageNum(countData, numCalculator, finalNumber, arrPage)
+
+    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
+})
+
+function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
+    if (count % 2 == 0) {
+
+        numCalculator = count / 4;
+
+        finalPageNumber = numCalculator;
+
+        console.log("Chan ( Page ) = " + finalPageNumber);
+    }
+    else {
+        numCalculator = (count - 1) / 4;
+
+        finalPageNumber = numCalculator + 1;
+
+        console.log("Le ( Page ) = " + finalPageNumber);
+
+    }
+
+    var k;
+    for (i = 1; i <= finalPageNumber; i++) {
+
+        k = (i - 1) * 4;
+
+        arrPage[k] = i;
+    }
+
+    // var arrPage2 = new Object();
+    // arrPage2["0"] = 1;
+    // arrPage2["4"] = 2;
+    // arrPage2["8"] = 3;
+    // arrPage2["12"] = 4;
+    // arrPage2["16"] = 5;
+    // arrPage2["20"] = 6;
+
+
+    console.log(Object.keys(arrPage));
+
+    for (var value in arrPage) {
+
+        console.log(arrPage[value]);
+
+    }
+
+
+}
+
+router.post('/searchAccount', async (req, res) => {
+    const searchContent = req.body.txtNameEmailSearch;
+
+    const result = await dbHandler.searchAccount("users", searchContent);
+
+    res.render('admin/availableUsers', { viewAllAccount: result });
+
+})
+/* ================================================================================== */
+
+
+
 module.exports = router;

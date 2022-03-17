@@ -95,6 +95,7 @@ div.bottom_content {
     width: 100%;
     height: 56%;
     overflow-y: auto;
+    padding:10px;
 }
 
 div.bottom_content table {
@@ -141,7 +142,30 @@ div.table_title_idea {
 }
 
 
-/* =========== Test Pagination Page =========== */
+/* =========== Available Page =========== */
+div.searchBar{
+    width: 100%;
+    padding:10px;
+    margin-top: 30px;
+}
+div.searchBar input.searchBar{
+    width: 30%;
+}
+
+div.content_paging {
+    width: 100%;
+    padding: 10px;
+}
+
+div.content_paging table{
+    width: 100%;
+}
+
+div.choosePage {
+    margin-left: 10px;
+
+}
+
 div.choosePage a{
     text-decoration: none;
     color: white;

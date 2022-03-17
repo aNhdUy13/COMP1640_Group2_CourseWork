@@ -21,7 +21,9 @@ router.get('/', (req, res) => {
 })
 
 router.get('/addCategory',async (req, res) => {
-    res.render('manager/addCategory');
+    
+    const result = await dbHandler.viewAllCategory("categories")
+    res.render('manager/addCategory', {viewAllCategory: result});
 })
 
 router.post('/doAddCategory',async(req, res) => {
@@ -32,8 +34,16 @@ router.post('/doAddCategory',async(req, res) => {
         }
 
         await dbHandler.addNewAccount("categories", categoryData);
-
-        res.render('manager/addCategory', { implementSuccess: "New Account Added Successfully !" })
+        const result = await dbHandler.viewAllCategory("categories")
+        res.render('manager/addCategory', { implementSuccess: "New Account Added Successfully !",  viewAllCategory: result})
 })
 
+router.get('/deleteCategory',async function (req, res) {
+
+    const categoryId = req.query.id;
+
+    await dbHandler.deleteFunction("categories", categoryId);
+    res.redirect('addCategory')
+
+})
 module.exports = router;

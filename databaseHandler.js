@@ -150,7 +150,11 @@ async function getUser(collectionName,email) {
 
 
 /* Manager function */ 
-
+async function viewAllCategory(collectionName) {
+    const dbo = await getDBO();
+    const result = await dbo.collection(collectionName).find().toArray();
+    return result;
+}
 
 /* End Manager function*/
 
@@ -170,5 +174,5 @@ module.exports = {
     getUser,
     viewAllAccountPagination,
     viewAllAccountPagination2,
-
+    viewAllCategory,
 }

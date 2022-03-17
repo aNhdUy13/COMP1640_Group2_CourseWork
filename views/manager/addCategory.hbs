@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Category</title>
+    <title>Category Management</title>
     <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
     <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
 
@@ -17,7 +17,7 @@
         <div class="main_Content">
             <div class="top_content">
                 <div class="table_title">
-                    <h2>Add new Category</h2>
+                    <h2>Add new category</h2>
                 </div>
 
                 <table>
@@ -38,8 +38,36 @@
                 <div class="line_only"></div>
             </div>
 
-            <div class="bottom_content">
 
+
+
+            <div class="bottom_content">
+                <!-- Bottom Content -->
+                <table border="1" cellspacing ="0 " cellpadding="15">
+                        <thead>
+                            <tr>
+                                    <th>Name</th>
+                                    <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each viewAllCategory}}
+                                <tr>
+                                    <td>{{name}}</td>
+                                    <td>
+                                        <button>
+                                            <a href="../manager/deleteCategory?id={{_id}}" 
+                                            onclick="return confirm('Are You Sure to Delete ?')">
+                                                <img src="https://icon-library.com/images/red-recycle-bin-icon/red-recycle-bin-icon-18.jpg"
+                                                    width="18" height="18">
+                                                    Delete
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {{/each }}
+                    </tbody>
+                </table>
             </div>
         </div>
 

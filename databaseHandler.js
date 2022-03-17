@@ -105,12 +105,12 @@ async function viewAllAccountPagination(collectionName, roleChoice) {
     return result;
 }
 
-async function viewAllAccountPagination2(collectionName, data) {
+async function viewAllAccountPaginationCustom(collectionName, skipData) {
     const dbo = await getDBO();
 
-    const skipData = parseInt(data);
+    const mSkipData = parseInt(skipData);
 
-    const result = await dbo.collection(collectionName).find().limit(2).skip(skipData).toArray();
+    const result = await dbo.collection(collectionName).find().limit(4).skip(mSkipData).toArray();
 
 
     return result;
@@ -173,6 +173,6 @@ module.exports = {
     viewAllDataInTable,
     getUser,
     viewAllAccountPagination,
-    viewAllAccountPagination2,
+    viewAllAccountPaginationCustom,
     viewAllCategory,
 }

@@ -31,12 +31,11 @@ router.post('/showRoleAccount', async(req, res) => {
 /* =====================================Test ============================================= */
 
 router.get('/availableUsers', async (req, res) => {
-    // const result = await dbHandler.viewAllAccountPagination("users", "Staff")
-    const result = await dbHandler.viewAllAccountPagination2("users", 0);
+    const result = await dbHandler.viewAllAccountPaginationCustom("users", 0);
 
     const toCount = await dbHandler.viewAllDataInTable("users")
-    const count = toCount.length;
-    //console.log(count);
+    const countData = toCount.length;
+    console.log(countData);
 
     var numCalculator = 0;
     var finalNumber = 0;
@@ -44,7 +43,7 @@ router.get('/availableUsers', async (req, res) => {
     // Create Dictionary
     const arrPage = {}; 
 
-    calculatePageNum(count, numCalculator, finalNumber, arrPage)
+    calculatePageNum(countData, numCalculator, finalNumber, arrPage)
 
     res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
 
@@ -53,17 +52,17 @@ router.get('/availableUsers', async (req, res) => {
 router.get('/choosePage', async (req, res) => {
     const skipData = req.query.skipData;
 
-    const result = await dbHandler.viewAllAccountPagination2("users", skipData);
+    const result = await dbHandler.viewAllAccountPaginationCustom("users", skipData);
 
     const toCount = await dbHandler.viewAllDataInTable("users")
-    const count = toCount.length;
-    //console.log(count);
+    const countData = toCount.length;
+    console.log(countData);
 
     var numCalculator = 0;
     var finalNumber = 0;
     var arrPage = {};
 
-    calculatePageNum(count, numCalculator, finalNumber, arrPage)
+    calculatePageNum(countData, numCalculator, finalNumber, arrPage)
 
     res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
 })
@@ -71,18 +70,18 @@ router.get('/choosePage', async (req, res) => {
 function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
     if (count % 2 == 0) {
 
-        numCalculator = count / 2;
+        numCalculator = count / 4;
 
         finalPageNumber = numCalculator;
 
-        // console.log("Chan ( Page ) = " + finalNumber);
+        console.log("Chan ( Page ) = " + finalPageNumber);
     }
     else {
-        numCalculator = (count - 1) / 2;
+        numCalculator = (count - 1) / 4;
 
         finalPageNumber = numCalculator + 1;
 
-        // console.log("Le ( Page ) = " + finalNumber);
+        console.log("Le ( Page ) = " + finalPageNumber);
 
     }
 
@@ -92,7 +91,7 @@ function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
         if (i == 1)
         { k = 0; }
         if (i == 2)
-        { k = 2; }
+        { k = 6; }
         else
         { k = (i - 1)*2; }
 

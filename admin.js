@@ -11,7 +11,6 @@ router.get('/', (req, res) => {
 })
 
 
-
 router.get('/accountManagement',async (req, res) => {
     const result = await dbHandler.viewAllAccount("users", "Staff")
     res.render('admin/accountManagement', { viewAllAccount: result });

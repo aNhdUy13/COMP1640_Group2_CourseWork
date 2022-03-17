@@ -5,7 +5,6 @@ const dbHandler = require('./databaseHandler');
 
 // Import dependencies to hash passwordToCompare
 const bcrypt = require('bcrypt');
-const { route } = require('express/lib/router');
 
 router.get('/', (req, res) => {
     res.render('admin/adminHome');
@@ -35,6 +34,7 @@ router.post('/doAddAccount',async(req, res) => {
     const newAge = req.body.txtNewAge;
     const newPhoneNumber = req.body.txtNewPhoneNumber;
     const selectedRole = req.body.txtRoleSelected;
+
 
     if (newName.trim().length < 3)
     {
@@ -66,7 +66,10 @@ router.post('/doAddAccount',async(req, res) => {
 
         await dbHandler.addNewAccount("users", accountData);
 
-        res.render('admin/accountManagement', { implementSuccess: "New Account Added Successfully !" })
+        const result = await dbHandler.viewAllAccount("users", selectedRole)
+
+
+        res.render('admin/accountManagement', { viewAllAccount: result , implementSuccess: "New Account Added Successfully !" })
     }
 
 

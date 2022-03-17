@@ -17,7 +17,6 @@ router.get('/accountManagement',async (req, res) => {
 })
 
 
-
 router.post('/showRoleAccount', async(req, res) => {
     const selectedRole = req.body.txtRoleSelected_toShow;
 

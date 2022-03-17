@@ -44,7 +44,7 @@
                     <span>File: {{file}}</span>
                     <br>
                     <span>End Date: {{endDate}}</span>
-                    <input type="hidden" id="userId" value="{{_id}}">
+                    <input type="hidden" id="postId" value="{{_id}}">
                 </div>
             </div>
                 <hr>
@@ -53,7 +53,7 @@
                         <button type="button" class="btn btn-default" onclick="like()">
                             <i class="fa-solid fa-thumbs-up"></i>
                             <span id="likes">
-                                {{likes.length}}
+                                {{likers.length}}
                             </span>
                         </button>
                     </div>
@@ -61,7 +61,7 @@
                         <button type="button" class="btn btn-default" onclick="dislike()">
                             <i class="fa-solid fa-thumbs-down"  ></i>
                             <span id="dislikes">
-                                {{dislikes.length}}
+                                {{dislikers.length}}
                             </span>
                         </button>
                     </div>
@@ -86,8 +86,8 @@
                                 }
                             }
                         };
-                        var userId = document.getElementById("userId").value;
-                        ajax.send("userId=" + userId)
+                        var postId = document.getElementById("postId").value;
+                        ajax.send("postId="+ postId);
                     }
                     function dislike() {
                         var ajax = new XMLHttpRequest();
@@ -108,8 +108,8 @@
                                 }
                             }
                         };
-                        var userId = document.getElementById("userId").value;
-                        ajax.send("userId=" + userId)
+                        var postId = document.getElementById("postId").value;
+                        ajax.send("postId="+ postId);
                     }
                 </script>  
             </div>

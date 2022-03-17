@@ -121,51 +121,156 @@ router.get('/allFileSubmit',async (req, res) => {
 
 
 router.post("/do-like", async function (request, result) {
-    const client = await MongoClient.connect(url);
-    const dbo = client.db(dbName);
-    await dbo.collection("postIdeas").findOne({
-            "_id": ObjectId(request.body.userId),
-            "likes._id": request.session.viewerId
-        }, function (error, item){
-            if(item == null){
-                //push likes in array
-                dbo.collection("postIdeas").updateOne({
-                    "_id": ObjectId(request.body.userId)
-                },{
-                    $push: {
-                        "likes": {
-                            "_id": request.session.viewerId
+
+        const client = await MongoClient.connect(url);
+        const dbo = client.db(dbName);
+        dbo.collection("postIdeas").findOne({
+            $and: [{
+                "_id": ObjectId(request.body.postId)
+                
+            },{
+                "likers._id": request.session.user_id
+            }]
+            }, function (error, item){
+                if(item == null){
+                    //push likes in array
+                    dbo.collection("postIdeas").updateOne({
+                        "_id": ObjectId(request.body.postId),
+                        
+                    },{
+                        $push: {
+                            "likers": {
+                                "_id": request.session.user_Id
+                            }
                         }
-                    }
-                },function (error,data){
-                    result.json({
-                        "status": "success",
-                        "message": "Video has been liked"
+                    },function (error,data){
+                        result.json({
+                            "status": "success",
+                            "message": "Video has been liked"
+                        });
                     });
-                });
-            }else{
-                result.json({
-                    "status": "error",
-                    "message": "Already liked this video"
-                });
-            }
-    })
+                }else{
+                    result.json({
+                        "status": "error",
+                        "message": "Already liked this video"
+                    });
+                }
+        })
+        
+
+
+        // dbo.collection("users").find({
+    //     "accessToken": accessToken
+    // }, function (error, user){
+    //     if (user = null) {
+    //         result.json({
+    //             "status": "error",
+    //             "message": "User has been logged out. Please log in again. "
+    //         });
+    //     }else {
+    //         dbo.collection("postIdeas").find({
+    //             "_id": ObjectId(_id)
+    //         }, function (err, post){
+    //             if (post == null) {
+    //                 result.json({
+    //                     "status": "error",
+    //                     "message": "Post does not exist."
+    //                 });
+    //             }else{
+    //                 var isLiked = false;
+    //                 for (var a = 0; a < post.likers.length; a++){
+    //                     var liker = post.likers[a];
+
+    //                     if (liker._id.toString() == user._id.toString()) {
+    //                         isLiked = true;
+    //                         break;
+    //                     }
+    //                 }
+    //             if(isLiked){
+    //                 dbo.collection("postIdeas").updateOne({
+    //                     "_id": ObjectId(_id)
+    //                 },{
+    //                     $pull: {
+    //                         "likers": {
+    //                             "_id": user._id,
+    //                         }
+    //                     }
+    //                 }, function(error, data){
+    //                     dbo.collection("users").updateOne({
+    //                         $and: [{
+    //                             "_id": post.user._id,
+    //                         },{
+    //                             "postIdeas._id": post._id
+    //                         }]
+    //                     },{
+    //                         $pull: {
+    //                             "postIdeas.$[].likers": {
+    //                                 "_id": user._id,
+    //                             }
+    //                         }
+    //                     });
+    //                     result.json({
+    //                         "status": "unliked",
+    //                         "message": "Post has been unliked."
+    //                     });
+    //                 });
+    //             } else{
+    //                 dbo.collection("postIdeas").updateOne({
+    //                     "_id": ObjectId(_id)
+    //                 },{
+    //                     $push:{
+    //                         "likers": {
+    //                             "_id" : user._id,
+    //                             "name": user.name,
+                                
+    //                         }
+    //                     }
+    //                 }, function(error, data) {
+    //                     dbo.collection("users").updateOne({
+    //                         $and: [{
+    //                             "_id" : post.user._id
+    //                         },{
+    //                             "posts._id" : post._id
+    //                         }]
+    //                     },{
+    //                         $push:{
+    //                             "postIdeas.$[].likers":{
+    //                                 "_id" : user._id,
+    //                                 "name": user.name,
+
+    //                             }
+    //                         }
+    //                     });
+    //                     result.json({
+    //                         "status": "success",
+    //                         "message": "Post has been liked."
+    //                     })
+    //                 })
+    //             }
+    //             }
+    //         })
+    //     }
+    // })
+
 })
 router.post("/do-dislike", async function (request, result) {
     const client = await MongoClient.connect(url);
     const dbo = client.db(dbName);
     await dbo.collection("postIdeas").findOne({
-            "_id": ObjectId(request.body.userId),
-            "dislikes._id": request.session.viewerId
+        $and: [{
+            "_id": ObjectId(request.body.postId)
+        },{
+            "dislikers._id": request.session.user_id
+        }]
         }, function (error, item){
             if(item == null){
                 //push dislikes in array
                 dbo.collection("postIdeas").updateOne({
-                    "_id": ObjectId(request.body.userId)
+                    "_id": ObjectId(request.body.postId),
                 },{
                     $push: {
-                        "dislikes": {
-                            "_id": request.session.viewerId
+                        "dislikers": {
+                            "_id": request.session.user_id
                         }
                     }
                 },function (error,data){

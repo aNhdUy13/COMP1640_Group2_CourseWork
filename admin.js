@@ -30,9 +30,7 @@ router.post('/showRoleAccount', async(req, res) => {
 
 /* =====================================Test ============================================= */
 
-router.get('/testPagination', async (req, res) => {
-    const selectedPage = req.body.txtNumberPageSelected_toShow;
-
+router.get('/availableUsers', async (req, res) => {
     // const result = await dbHandler.viewAllAccountPagination("users", "Staff")
     const result = await dbHandler.viewAllAccountPagination2("users", 0);
 
@@ -48,7 +46,7 @@ router.get('/testPagination', async (req, res) => {
 
     calculatePageNum(count, numCalculator, finalNumber, arrPage)
 
-    res.render('admin/testPagination', { viewAllAccount: result, viewNumPage: arrPage });
+    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
 
 })
 
@@ -67,26 +65,8 @@ router.get('/choosePage', async (req, res) => {
 
     calculatePageNum(count, numCalculator, finalNumber, arrPage)
 
-    res.render('admin/testPagination', { viewAllAccount: result, viewNumPage: arrPage });
+    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
 })
-
-// router.post('/showNumberPageTestPaging', async (req, res) => {
-//     const selectedPage = req.body.txtNumberPageSelected_toShow;
-
-//     const result = await dbHandler.viewAllAccountPagination2("users", selectedPage);
-
-//     const toCount = await dbHandler.viewAllDataInTable("users")
-//     const count = toCount.length;
-//     //console.log(count);
-
-//     var numCalculator = 0;
-//     var finalNumber = 0;
-//     var arrPage = {};
-
-//     calculatePageNum(count, numCalculator, finalNumber, arrPage)
-
-//     res.render('admin/testPagination', { viewAllAccount: result, viewNumPage: arrPage });
-// })
 
 function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
     if (count % 2 == 0) {

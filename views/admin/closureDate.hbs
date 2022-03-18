@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Available User</title>
+    <title>Closure Date</title>
     <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
     <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
 
@@ -49,26 +49,15 @@
 
                 <div class="line_only"></div>
             </div>
-            
-            <div class="searchBar">
-                <form method="POST" action="../admin/searchAccount">
-                    <input class="searchBar" type="text" name="txtNameEmailSearch">
-                    <input type="submit" value="Search">          
-                </form>
-            </div>
-
-            <div class="content_paging">
+    
+    <div class="bottom_content">
                 <!-- Bottom Content -->
                 <table border="1" cellspacing ="0 " cellpadding="15">
                         <thead>
                             <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Age</th>
-                                    <th>PhoneNumber</th>
-                                    <th>Role</th>
-                                    {{!-- <th>Delete</th>
-                                    <th>Update</th> --}}
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Update</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,50 +65,21 @@
                                 <tr>
                                     <td>{{name}}</td>
                                     <td>{{email}}</td>
-                                    <td>{{age}}</td>
-                                    <td>{{phoneNumber}}</td>
-                                    <td>{{role}}</td>
-{{!-- 
-                                    <td>
-                                        <button>
-                                            <a href="../admin/deleteAccount?id={{_id}}" 
-                                            onclick="return confirm('Are You Sure to Delete ?')">
-                                                <img src="https://icon-library.com/images/red-recycle-bin-icon/red-recycle-bin-icon-18.jpg"
-                                                    width="18" height="18">
-                                                    Delete
-                                            </a>
-                                        </button>
-                                    </td>
-
                                     <td>
                                             <button>
-                                                <a href="../admin/updateAccount?id={{_id}}">
+                                                <a href="../admin/closureDate?id={{_id}}">
                                                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png"
                                                     width="18" height="18" alt="">
                                                     Update
                                                 </a>
                                         </button>
-                                    </td> --}}
+                                    </td>
                                 
                                 </tr>
                             {{/each }}
                     </tbody>
                 </table>
             </div>
-
-            <div class="center_option_testPaging">
-                <div class="choosePage">
-                                {{#each viewNumPage as |val key|}}
-                                    <a href="../admin/choosePage?skipData={{key}}">
-                                        <button>
-                                                {{val}}
-                                        </button>
-                                    </a>
-
-                                {{/each}}
-                </div>
-            </div>
-
         </div>
 
         <!-- (End) Content -->

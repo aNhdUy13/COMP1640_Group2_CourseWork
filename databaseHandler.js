@@ -40,7 +40,7 @@ async function emailFinding(emailIn) {
 
 
 
-/* Admin Role */
+/* =================== Admin Role =================== */
 async function addNewAccount(collectionName, data) {
     const dbo = await getDBO();
     await dbo.collection(collectionName).insertOne(data);
@@ -135,7 +135,8 @@ async function getCategory(collectionName) {
 
 }
 
-/* (End) Admin Role */
+/* =================== (End) Admin Role =================  */
+
 
 /* Staff*/
 async function viewAll(collectionName) {

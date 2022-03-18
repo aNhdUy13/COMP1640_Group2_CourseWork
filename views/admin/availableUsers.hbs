@@ -15,41 +15,6 @@
 
         <!-- Content -->
         <div class="main_Content">
-            <div class="top_content">
-                    <div class="table_title">
-                        <h2>Set Closure Date</h2>
-                    </div>
-
-                    <table>
-                        <form  action="../admin/doSetDate" method="post">
-                            <tr>
-                                <td>Start Date : </td>
-                                <td>
-                                    <input type="date" name="txtStartDate"> 
-                                </td> 
-                                <td style="color: brown;">{{errorMessage}}</td>
-                            </tr>
-                            <tr>
-                                <td>End Date : </td>
-                                <td>
-                                    <input type="date" name="txtEndDate">
-                                </td>
-                                <td  style="color: brown;">{{errorMessage}}</td>
-
-                            </tr>
-
-                            <tr>
-                                <td></td>
-                                <td><input type="submit" value="Add" class="insertButton"></td>
-                            </tr>
-                            <td style="width:40%; font-size:12px; color: rgb(32, 193, 59); ">{{implementSuccess}}</td>
-
-                        </form>
-                    </table>
-
-                <div class="line_only"></div>
-            </div>
-            
             <div class="searchBar">
                 <form method="POST" action="../admin/searchAccount">
                     <input class="searchBar" type="text" name="txtNameEmailSearch">

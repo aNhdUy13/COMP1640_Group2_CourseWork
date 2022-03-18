@@ -185,14 +185,14 @@ router.get('/choosePage', async (req, res) => {
 function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
     if (count % 2 == 0) {
 
-        numCalculator = count / 4;
+        numCalculator = count / 5;
 
-        finalPageNumber = numCalculator;
+        finalPageNumber = numCalculator + 1;
 
         console.log("Chan ( Page ) = " + finalPageNumber);
     }
     else {
-        numCalculator = (count - 1) / 4;
+        numCalculator = (count - 1) / 5;
 
         finalPageNumber = numCalculator + 1;
 
@@ -203,16 +203,16 @@ function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
     var k;
     for (i = 1; i <= finalPageNumber; i++) {
 
-        k = (i - 1) * 4;
+        k = (i - 1) * 5;
 
         arrPage[k] = i;
     }
 
     // var arrPage2 = new Object();
     // arrPage2["0"] = 1;
-    // arrPage2["4"] = 2;
-    // arrPage2["8"] = 3;
-    // arrPage2["12"] = 4;
+    // arrPage2["5"] = 2;
+    // arrPage2["10"] = 3;
+    // arrPage2["15"] = 4;
     // arrPage2["16"] = 5;
     // arrPage2["20"] = 6;
 

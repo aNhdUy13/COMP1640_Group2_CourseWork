@@ -112,8 +112,26 @@ router.post('/doUpdateAccount', async (req, res) => {
 
 /* Idea Management  */
 router.get('/postIdeaManagement', async (req, res) => {
-    const result = await dbHandler.viewAllDataInTable("postIdeas")
-    res.render('admin/postIdeaManagement', { viewAllDataInTable: result });
+
+    // const result = await dbHandler.viewAllDataInTable("postIdeas");
+
+    const date = await dbHandler.viewAllDataInTable("closureDates");
+
+    const result = await dbHandler.viewAllAccountPaginationCustom("postIdeas", 0);
+
+    const toCount = await dbHandler.viewAllDataInTable("postIdeas")
+    const countData = toCount.length;
+    console.log(countData);
+
+    var numCalculator = 0;
+    var finalNumber = 0;
+
+    // Create Dictionary
+    const arrPage = {};
+
+    calculatePageNum(countData, numCalculator, finalNumber, arrPage)
+
+    res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage , dateDetail: date });
 })
 
 
@@ -182,17 +200,30 @@ router.get('/choosePage', async (req, res) => {
     res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
 })
 
-function calculatePageNum(count, numCalculator, finalPageNumber, arrPage) {
-    if (count % 2 == 0) {
+function calculatePageNum(countData, numCalculator, finalPageNumber, arrPage) {
+    if (countData % 5 == 0) {
 
-        numCalculator = count / 5;
+        // ( 5 Item per page )
+        // Total item = 5 (/5) => finalPageNumber = 1 ( Page )
+        // Total item = 10 (/5) => finalPageNumber = 2 ( Pages )
+        // Total item = 15 (/5) => finalPageNumber = 3 ( Pages )
+        // Total item = 20 (/5) => finalPageNumber = 4 ( Pages )
+        numCalculator = countData / 5;
 
-        finalPageNumber = numCalculator + 1;
+        finalPageNumber = numCalculator;
 
         console.log("Chan ( Page ) = " + finalPageNumber);
     }
     else {
-        numCalculator = (count - 1) / 5;
+        // ( 5 Item per page )
+        // Total item = 1 (/5) => finalPageNumber = 1.2 ( 1 Page )
+        // Total item = 4 (/5) => finalPageNumber = 1.8 ( 1 Page )
+        // Total item = 6 (/5) => finalPageNumber = 2.2 ( 2 Page )
+        // Total item = 9 (/5) => finalPageNumber = 2.8 ( 2 Page )
+        // Total item = 11 (/5) => finalPageNumber = 3.2 ( 3 Page )
+        // Total item = 14 (/5) => finalPageNumber = 3.8 ( 3 Page )
+
+        numCalculator = countData  / 5;
 
         finalPageNumber = numCalculator + 1;
 

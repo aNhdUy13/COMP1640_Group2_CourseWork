@@ -18,6 +18,14 @@
             <div class="table_title_idea">
                 <h2>Post Idea Management</h2>
             </div>
+
+            <div class="show_closureDate">
+                {{#each dateDetail}}
+                    <p>( Start Date : {{startDate}} )</p>
+                    <p>( End Date : {{endDate}} )</p>
+                {{/each }}
+            </div>
+
             <div class="ideaManagement">
                 <table border="1" cellspacing ="0 " cellpadding="15">
                         <thead>
@@ -59,7 +67,19 @@
                     </tbody>
                 </table>
             </div>
+            
+            <div class="center_option_testPaging">
+                <div class="choosePage">
+                                {{#each viewNumPage as |val key|}}
+                                    <a href="../admin/choosePage?skipData={{key}}">
+                                        <button>
+                                                {{val}}
+                                        </button>
+                                    </a>
 
+                                {{/each}}
+                </div>
+            </div>
         </div>
 
         <!-- (End) Content -->

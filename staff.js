@@ -121,38 +121,72 @@ router.get('/allFileSubmit',async (req, res) => {
 
 
 router.post("/do-like", async function (request, result) {
-
+        if (!request.session.user || !request.session.user._id) return result.status(401).json({status: 'error'});
         const client = await MongoClient.connect(url);
         const dbo = client.db(dbName);
         dbo.collection("postIdeas").findOne({
-            $and: [{
-                "_id": ObjectId(request.body.postId)
-                
-            },{
-                "likers._id": request.session.user_id
-            }]
+            "_id": ObjectId(request.body.postId)
             }, function (error, item){
-                if(item == null){
-                    //push likes in array
-                    dbo.collection("postIdeas").updateOne({
+                if (item.likers === null || item.likers === undefined) {
+                    dbo.collection("postIdeas").findOneAndUpdate({
+                        "_id": ObjectId(request.body.postId),
+                        
+                    },{
+                        $set: {
+                            likers: [
+                                { "_id": request.session.user._id }
+                            ]
+                        },
+                        $pull: {
+                            dislikers: {
+                                "_id": request.session.user._id
+                            }
+                        }
+                    },{
+                        returnDocument: 'after'
+                    },
+                    function (error, data){
+                        console.log(data);
+                        return result.json({
+                            "status": "success",
+                            "message": "Video has been liked",
+                            count: {
+                                like: data.value.likers ? data.value.likers.length : 0,
+                                dislike: data.value.dislikers ? data.value.dislikers.length : 0
+                            }
+                        });
+                    });
+                } else if (item.likers.find(e => e._id.toString() === request.session.user._id)) {
+                    return result.json({
+                        "status": "error",
+                        "message": "Already liked this video"
+                    });
+                } else {
+                    dbo.collection("postIdeas").findOneAndUpdate({
                         "_id": ObjectId(request.body.postId),
                         
                     },{
                         $push: {
-                            "likers": {
-                                "_id": request.session.user_Id
+                            "likers": { "_id": request.session.user._id }
+                        },
+                        $pull: {
+                            dislikers: {
+                                "_id": request.session.user._id
                             }
                         }
-                    },function (error,data){
-                        result.json({
+                    },{
+                        returnDocument: 'after'
+                    },
+                    function (error, data){
+                        console.log(data);
+                        return result.json({
                             "status": "success",
-                            "message": "Video has been liked"
+                            "message": "Video has been liked",
+                            count: {
+                                like: data.value.likers ? data.value.likers.length : 0,
+                                dislike: data.value.dislikers ? data.value.dislikers.length : 0
+                            }
                         });
-                    });
-                }else{
-                    result.json({
-                        "status": "error",
-                        "message": "Already liked this video"
                     });
                 }
         })
@@ -254,38 +288,73 @@ router.post("/do-like", async function (request, result) {
 
 })
 router.post("/do-dislike", async function (request, result) {
-    const client = await MongoClient.connect(url);
-    const dbo = client.db(dbName);
-    await dbo.collection("postIdeas").findOne({
-        $and: [{
+    if (!request.session.user || !request.session.user._id) return result.status(401).json({status: 'error'});
+        const client = await MongoClient.connect(url);
+        const dbo = client.db(dbName);
+        dbo.collection("postIdeas").findOne({
             "_id": ObjectId(request.body.postId)
-        },{
-            "dislikers._id": request.session.user_id
-        }]
-        }, function (error, item){
-            if(item == null){
-                //push dislikes in array
-                dbo.collection("postIdeas").updateOne({
-                    "_id": ObjectId(request.body.postId),
-                },{
-                    $push: {
-                        "dislikers": {
-                            "_id": request.session.user_id
+            }, function (error, item){
+                if (item.dislikers === null || item.dislikers === undefined) {
+                    dbo.collection("postIdeas").findOneAndUpdate({
+                        "_id": ObjectId(request.body.postId),
+                        
+                    },{
+                        $set: {
+                            dislikers: [
+                                { "_id": request.session.user._id }
+                            ]
+                        },
+                        $pull: {
+                            likers: {
+                                "_id": request.session.user._id
+                            }
                         }
-                    }
-                },function (error,data){
-                    result.json({
-                        "status": "success",
-                        "message": "Video has been disliked"
+                    }, {
+                        returnDocument: 'after'
+                    }, 
+                    function (error, data){
+                        return result.json({
+                            "status": "success",
+                            "message": "Video has been disliked",
+                            count: {
+                                like: data.value.likers ? data.value.likers.length : 0,
+                                dislike: data.value.dislikers ? data.value.dislikers.length : 0
+                            }
+                        });
                     });
-                });
-            }else{
-                result.json({
-                    "status": "error",
-                    "message": "Already disliked this video"
-                });
-            }
-    })
+                } else if (item.dislikers.find(e => e._id.toString() === request.session.user._id)) {
+                    return result.json({
+                        "status": "error",
+                        "message": "Already disliked this video"
+                    });
+                } else {
+                    dbo.collection("postIdeas").findOneAndUpdate({
+                        "_id": ObjectId(request.body.postId),
+                        
+                    },{
+                        $push: {
+                            "dislikers": { "_id": request.session.user._id }
+                        },
+                        $pull: {
+                            likers: {
+                                "_id": request.session.user._id
+                            }
+                        }
+                    },{
+                        returnDocument: 'after'
+                    },
+                    function (error, data){
+                        return result.json({
+                            "status": "success",
+                            "message": "Video has been disliked",
+                            count: {
+                                like: data.value.likers ? data.value.likers.length : 0,
+                                dislike: data.value.dislikers ? data.value.dislikers.length : 0
+                            }
+                        });
+                    });
+                }
+        })
 })
 app.use('/uploads', express.static('uploads'));
 

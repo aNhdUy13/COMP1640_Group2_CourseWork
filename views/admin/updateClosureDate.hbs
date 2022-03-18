@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Closure Date</title>
+    <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
+</head>
+
+<body>
+    <div class="container ">
+
+        {{> headerAdmin}}
+
+        <!-- Content -->
+        <div class="main_Content">
+            <div class="top_content_updateDate">
+                <div class="table_title">
+                    <h2>Update Closure Date </h2>
+                    <p>( Start Date : {{dateDetail.startDate}} )</p>
+                    <p>( End Date : {{dateDetail.endDate}} )</p>
+                </div>
+
+                <table>
+                    <form action="../admin/doUpdateClosureDate" method="post">
+                        <td><input type="hidden" name="id" value="{{dateDetail._id}}"></td>
+                        <tr>
+                            <td>Start Date : 
+                                <input type="date" name="txtUpdateStartDate"  value="{{dateDetail.startDate}}"> 
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>End Date : 
+                                <input type="date" name="txtUpdateEndDate" value="{{dateDetail.endDate}}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: brown;">{{errorMessage}}</td>
+                        </tr>
+
+                        <tr>
+                            <td><input type="submit" value="Update" class="updateButton"></td>
+                        </tr>
+                    </form>
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- (End) Content -->
+
+        {{> footer}}
+
+    </div>
+</body>
+</html>

@@ -183,3 +183,30 @@ div.choosePage a button:hover{
     background-color: #fdbe01;
 
 }
+
+
+div.bottom_content_closureDate {
+    width: 100%;
+    height: 56%;
+    overflow-y: auto;
+    padding:10px;
+}
+
+
+
+div.bottom_content_closureDate table{
+    width: 47%;
+}
+
+
+div.top_content_updateDate{
+    width: 70%;
+    height: 50%;
+    margin-left: 2%;
+    margin-top: 4%;
+}
+
+div.top_content_updateDate table {
+    width: 50%;
+    height: 40%;
+}

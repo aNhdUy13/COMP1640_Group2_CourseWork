@@ -242,9 +242,84 @@ router.post('/searchAccount', async (req, res) => {
 /* ===================================== Related "Closure Date" Page ============================================= */
 router.get('/closureDate', async (req, res) => {
 
-    
+    const result = await dbHandler.viewAllDataInTable("closureDates");
+
+    res.render('admin/closureDate', {viewAllClosureDate: result});
 })
 
+
+router.post('/doSetDate', async (req, res) => {
+    const newStartDate = req.body.txtStartDate;
+    const newEndDate = req.body.txtEndDate;
+
+    // console.log(newStartDate);
+    // console.log(newEndDate);
+
+    const splitStartD = newStartDate.split('-');
+    const startYear = splitStartD[0];
+    const startMonth = splitStartD[1];
+    const startDay = splitStartD[2];
+    const FinalStartDate = startDay + "-" + startMonth + "-" + startYear;
+
+    const splitEndD = newEndDate.split('-');
+    const endYear = splitEndD[0];
+    const endMonth = splitEndD[1];
+    const endDay = splitEndD[2];
+    const FinalEndDate = endDay + "-" + endMonth + "-" + endYear;
+
+
+    const setDateValue = {
+        startDate: FinalStartDate,
+        endDate: FinalEndDate
+    };
+
+    await dbHandler.addNewAccount("closureDates", setDateValue);
+
+    res.redirect('closureDate');
+})
+
+
+
+router.get('/updateClosureDate', async (req, res) => {
+    const dateId = req.query.id;
+
+    var dateEdit = await dbHandler.updateFunction("closureDates", dateId);
+
+    res.render('admin/updateClosureDate', { dateDetail: dateEdit })
+})
+
+router.post('/doUpdateClosureDate', async (req, res) => {
+    const dateId = req.body.id;
+    const updateStartDate = req.body.txtUpdateStartDate;
+    const updateEndDate = req.body.txtUpdateEndDate;
+
+    console.log(updateStartDate);
+    console.log(updateEndDate);
+
+    var err = "Start Date & End Date Cannot Be bull";
+    var getDateData = await dbHandler.updateFunction("closureDates", dateId);
+
+    if (updateStartDate == "")
+    {
+        res.render('admin/updateClosureDate', { dateDetail: getDateData, errorMessage: err })
+    } else if (updateEndDate == "")
+    {
+        res.render('admin/updateClosureDate', { dateDetail: getDateData, errorMessage: err })    }
+    else {
+        console.log("Let's update")
+        const updateDateValue = {
+            $set: {
+                startDate: updateStartDate,
+                endDate: updateEndDate
+            }
+        };
+
+        await dbHandler.doUpdateFunction("closureDates", dateId, updateDateValue);
+        res.redirect('closureDate');
+
+    }
+
+})
 /* ================================================================================== */
 
 module.exports = router;

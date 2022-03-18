@@ -110,30 +110,41 @@ router.post('/doUpdateAccount', async (req, res) => {
 })
 
 
-/* Idea Management  */
+/* ===================================== Idea Management  ===================================== */
 router.get('/postIdeaManagement', async (req, res) => {
-
-    // const result = await dbHandler.viewAllDataInTable("postIdeas");
-
     const date = await dbHandler.viewAllDataInTable("closureDates");
 
+    // const result = await dbHandler.viewAllDataInTable("postIdeas");
     const result = await dbHandler.viewAllAccountPaginationCustom("postIdeas", 0);
 
     const toCount = await dbHandler.viewAllDataInTable("postIdeas")
     const countData = toCount.length;
     console.log(countData);
 
-    var numCalculator = 0;
-    var finalNumber = 0;
-
     // Create Dictionary
     const arrPage = {};
 
-    calculatePageNum(countData, numCalculator, finalNumber, arrPage)
+    calculatePageNum(countData , arrPage);
 
     res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage , dateDetail: date });
 })
 
+router.get('/choosePageIdea', async (req, res) => {
+    const skipData = req.query.skipData;
+
+    const date = await dbHandler.viewAllDataInTable("closureDates");
+    const result = await dbHandler.viewAllAccountPaginationCustom("postIdeas", skipData);
+
+    const toCount = await dbHandler.viewAllDataInTable("postIdeas")
+    const countData = toCount.length;
+    console.log(countData);
+
+    var arrPage = {};
+
+    calculatePageNum(countData,  arrPage)
+
+    res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage, dateDetail: date });
+})
 
 router.get('/updatePostIdea', async (req, res) => {
     const ideaID = req.query.id;
@@ -170,19 +181,18 @@ router.get('/availableUsers', async (req, res) => {
     const countData = toCount.length;
     console.log(countData);
 
-    var numCalculator = 0;
-    var finalNumber = 0;
+
 
     // Create Dictionary
     const arrPage = {};
 
-    calculatePageNum(countData, numCalculator, finalNumber, arrPage)
+    calculatePageNum(countData, arrPage)
 
     res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
 
 })
 
-router.get('/choosePage', async (req, res) => {
+router.get('/choosePageUser', async (req, res) => {
     const skipData = req.query.skipData;
 
     const result = await dbHandler.viewAllAccountPaginationCustom("users", skipData);
@@ -191,16 +201,29 @@ router.get('/choosePage', async (req, res) => {
     const countData = toCount.length;
     console.log(countData);
 
-    var numCalculator = 0;
-    var finalNumber = 0;
     var arrPage = {};
 
-    calculatePageNum(countData, numCalculator, finalNumber, arrPage)
+    calculatePageNum(countData, arrPage)
 
     res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
 })
 
-function calculatePageNum(countData, numCalculator, finalPageNumber, arrPage) {
+router.post('/searchAccount', async (req, res) => {
+    const searchContent = req.body.txtNameEmailSearch;
+
+    const result = await dbHandler.searchAccount("users", searchContent);
+
+    res.render('admin/availableUsers', { viewAllAccount: result });
+
+})
+
+/* ================================================================================== */
+
+
+function calculatePageNum(countData,  arrPage) {
+    var numCalculator = 0;
+    var finalPageNumber = 0;
+    
     if (countData % 5 == 0) {
 
         // ( 5 Item per page )
@@ -259,15 +282,7 @@ function calculatePageNum(countData, numCalculator, finalPageNumber, arrPage) {
 
 }
 
-router.post('/searchAccount', async (req, res) => {
-    const searchContent = req.body.txtNameEmailSearch;
 
-    const result = await dbHandler.searchAccount("users", searchContent);
-
-    res.render('admin/availableUsers', { viewAllAccount: result });
-
-})
-/* ================================================================================== */
 
 
 /* ===================================== Related "Closure Date" Page ============================================= */

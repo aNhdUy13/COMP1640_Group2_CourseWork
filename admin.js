@@ -293,8 +293,6 @@ router.post('/doUpdateClosureDate', async (req, res) => {
     const updateStartDate = req.body.txtUpdateStartDate;
     const updateEndDate = req.body.txtUpdateEndDate;
 
-    console.log(updateStartDate);
-    console.log(updateEndDate);
 
     var err = "Start Date & End Date Cannot Be bull";
     var getDateData = await dbHandler.updateFunction("closureDates", dateId);
@@ -307,10 +305,26 @@ router.post('/doUpdateClosureDate', async (req, res) => {
         res.render('admin/updateClosureDate', { dateDetail: getDateData, errorMessage: err })    }
     else {
         console.log("Let's update")
+
+        const splitStartD = updateStartDate.split('-');
+        const startYear = splitStartD[0];
+        const startMonth = splitStartD[1];
+        const startDay = splitStartD[2];
+        const finalStartDate = startDay + "-" + startMonth + "-" + startYear;
+
+        const splitEndD = updateEndDate.split('-');
+        const endYear = splitEndD[0];
+        const endMonth = splitEndD[1];
+        const endDay = splitEndD[2];
+        const finalEndDate = endDay + "-" + endMonth + "-" + endYear;
+
+        console.log(finalStartDate);
+        console.log(finalEndDate);
+
         const updateDateValue = {
             $set: {
-                startDate: updateStartDate,
-                endDate: updateEndDate
+                startDate: finalStartDate,
+                endDate: finalEndDate
             }
         };
 

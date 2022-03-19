@@ -183,8 +183,8 @@ div.choosePage a{
 
 div.choosePage a button{
     color: white;
-    width: 20px;
     background-color: #203b5b;
+    padding: 5px;
 
 
 }

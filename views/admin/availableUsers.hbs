@@ -74,14 +74,27 @@
 
             <div class="center_option_testPaging">
                 <div class="choosePage">
-                                {{#each viewNumPage as |val key|}}
-                                    <a href="../admin/choosePageUser?skipData={{key}}">
-                                        <button>
-                                                {{val}}
-                                        </button>
-                                    </a>
+                    <a href="../admin/choosePageUser?skipData=0">
+                        <button>
+                            <<
+                        </button>
+                    </a>
+            
 
-                                {{/each}}
+                    {{#each viewNumPage as |val key|}}
+                        <a href="../admin/choosePageUser?skipData={{key}}">
+                            <button>
+                                    {{val}}
+                            </button>
+                        </a>
+
+                    {{/each}}
+
+                    <a href="../admin/choosePageUser?skipData={{lastPage}}">
+                        <button>
+                            >>
+                        </button>
+                    </a>
                 </div>
             </div>
 

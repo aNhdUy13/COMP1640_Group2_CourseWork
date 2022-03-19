@@ -175,20 +175,41 @@ router.post('/doUpdateIdea', async (req, res) => {
 /* ===================================== Related "Available User" Page ============================================= */
 
 router.get('/availableUsers', async (req, res) => {
+    // View all data in "users" table and skip 0 value
+    // "viewAllAccountPaginationCustom" has limit item to display ( 5 )
     const result = await dbHandler.viewAllAccountPaginationCustom("users", 0);
 
+    // Get all data in "users" table to count as well as calculate 
+    // the number of of page
     const toCount = await dbHandler.viewAllDataInTable("users")
     const countData = toCount.length;
     console.log(countData);
 
+    // create variable to get the max key ( Value to skip )
+    var arrGetKeyOnly = [];
 
-
-    // Create Dictionary
+    // Create Dictionary to store KEY ( as value to skip in mongoDB)
+    // and VALUE ( as the number of page )
     const arrPage = {};
 
-    calculatePageNum(countData, arrPage)
 
-    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
+    calculatePageNum(countData, arrPage, arrGetKeyOnly)
+
+
+    // Calculate to get max key.
+    console.log("Key ( Array ) = " + arrGetKeyOnly);
+    let max = arrGetKeyOnly[0];
+
+    for (i = 1; i <= arrGetKeyOnly.length; i++) {
+        if (arrGetKeyOnly[i] > max) {
+            max = arrGetKeyOnly[i];
+        }
+    }
+    console.log("Max Key = " + typeof max + " " + max);
+
+
+
+    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage, lastPage: max });
 
 })
 
@@ -201,11 +222,25 @@ router.get('/choosePageUser', async (req, res) => {
     const countData = toCount.length;
     console.log(countData);
 
+    // create variable to get the max key ( Value to skip )
+    var arrGetKeyOnly = [];
+
     var arrPage = {};
 
-    calculatePageNum(countData, arrPage)
+    calculatePageNum(countData, arrPage, arrGetKeyOnly)
 
-    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage });
+    // Calculate to get max key.
+    // console.log("Key ( Array ) = " + arrGetKeyOnly);
+    let max = arrGetKeyOnly[0];
+
+    for (i = 1; i <= arrGetKeyOnly.length; i++) {
+        if (arrGetKeyOnly[i] > max) {
+            max = arrGetKeyOnly[i];
+        }
+    }
+    // console.log("Max Key = " + typeof max + " " + max);
+
+    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage, lastPage: max });
 })
 
 router.post('/searchAccount', async (req, res) => {
@@ -220,7 +255,9 @@ router.post('/searchAccount', async (req, res) => {
 /* ================================================================================== */
 
 
-function calculatePageNum(countData,  arrPage) {
+function calculatePageNum(countData, arrPage, arrGetKeyOnly) {
+    
+
     var numCalculator = 0;
     var finalPageNumber = 0;
     
@@ -259,6 +296,8 @@ function calculatePageNum(countData,  arrPage) {
 
         k = (i - 1) * 5;
 
+        arrGetKeyOnly.push(k);
+
         arrPage[k] = i;
     }
 
@@ -271,8 +310,11 @@ function calculatePageNum(countData,  arrPage) {
     // arrPage2["20"] = 6;
 
 
+
+    // Display key of dictionary ( value to skip in mongoDB )
     console.log(Object.keys(arrPage));
 
+    // Display value of dictionary ( number of page )
     for (var value in arrPage) {
 
         console.log(arrPage[value]);

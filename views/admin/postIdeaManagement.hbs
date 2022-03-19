@@ -69,8 +69,34 @@
             </div>
 
             <div class="center_option_testPaging">
-                <div class="choosePage">
+                    <div class="choosePageFirst">
+                        <a href="../admin/choosePageIdea?skipData=0">
+                            <button>
+                                <<
+                            </button>
+                        </a>
+                    </div>
 
+                    <div class="choosePage">
+                        <div class="choosePage_inside">
+                            {{#each viewNumPage as |val key|}}
+                                <a href="../admin/choosePageIdea?skipData={{key}}">
+                                    <button>
+                                            {{val}}
+                                    </button>
+                                </a>
+                            {{/each}}
+                        </div>
+                    </div>
+
+                    <div class="choosePageLast">
+                        <a href="../admin/choosePageIdea?skipData={{lastPage}}">
+                            <button>
+                                >>
+                            </button>
+                        </a>
+                    </div>
+{{!-- 
                     <a href="../admin/choosePageIdea?skipData=0">
                         <button>
                             <<
@@ -92,9 +118,7 @@
                         <button>
                             >>
                         </button>
-                    </a>
-
-                </div>
+                    </a> --}}
             </div>
         </div>
 

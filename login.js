@@ -4,8 +4,8 @@ const session = require('express-session');
 const dbHandler = require('./databaseHandler');
 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.3vt1h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const dbName = "COMP1640_Project";
+var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.letwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const dbName = "COMP1640_Web_DBnew_2";
 
 
 // Import dependencies to hash passwordToCompare
@@ -58,6 +58,10 @@ router.post('/doLogin', async(req, res) => {
         // Compare password with hash
         const match = await bcrypt.compare(passInput, hashPassword);
 
+        console.log("Input Pass :" + passInput);
+        console.log("Has Pass :" + hashPassword);
+        console.log(match);
+
         if (match) {
             if (findEmail[0].role == "Quality Assurance Manager") {
                 res.render('manager/managerHome')
@@ -77,6 +81,8 @@ router.post('/doLogin', async(req, res) => {
         }
     }
     else {
+        console.log("No Result Found !");
+
         res.render('login');
     }
 

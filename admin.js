@@ -62,6 +62,13 @@ router.post('/doAddAccount',async(req, res) => {
             phoneNumber: newPhoneNumber, role: selectedRole
         }
 
+
+        // Compare the PASSWORD with HASH PASSWORD & Display in the system
+        const compare = await bcrypt.compare(newPassword, hashPassword);
+        console.log("New Pass :" + newPassword);
+        console.log("Has Pass :" + hashPassword);
+        console.log(compare);
+
         await dbHandler.addNewAccount("users", accountData);
 
         const result = await dbHandler.viewAllAccount("users", selectedRole)

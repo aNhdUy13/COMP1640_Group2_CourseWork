@@ -121,12 +121,29 @@ router.get('/postIdeaManagement', async (req, res) => {
     const countData = toCount.length;
     console.log(countData);
 
+    // create variable to get the max key ( Value to skip )
+    var arrGetKeyOnly = [];
+
     // Create Dictionary
     const arrPage = {};
 
-    calculatePageNum(countData , arrPage);
+    calculatePageNum(countData, arrPage, arrGetKeyOnly);
 
-    res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage , dateDetail: date });
+
+    // Calculate to get max key.
+    console.log("Key ( Array ) = " + arrGetKeyOnly);
+    let max = arrGetKeyOnly[0];
+
+    for (i = 1; i <= arrGetKeyOnly.length; i++) {
+        if (arrGetKeyOnly[i] > max) {
+            max = arrGetKeyOnly[i];
+        }
+    }
+    console.log("Max Key = " + typeof max + " " + max);
+
+
+    res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage , 
+        dateDetail: date, lastPage: max });
 })
 
 router.get('/choosePageIdea', async (req, res) => {
@@ -139,11 +156,28 @@ router.get('/choosePageIdea', async (req, res) => {
     const countData = toCount.length;
     console.log(countData);
 
+    // create variable to get the max key ( Value to skip )
+    var arrGetKeyOnly = [];
+
     var arrPage = {};
 
-    calculatePageNum(countData,  arrPage)
+    calculatePageNum(countData, arrPage, arrGetKeyOnly)
 
-    res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage, dateDetail: date });
+
+    // Calculate to get max key.
+    console.log("Key ( Array ) = " + arrGetKeyOnly);
+    let max = arrGetKeyOnly[0];
+
+    for (i = 1; i <= arrGetKeyOnly.length; i++) {
+        if (arrGetKeyOnly[i] > max) {
+            max = arrGetKeyOnly[i];
+        }
+    }
+    console.log("Max Key = " + typeof max + " " + max);
+
+
+    res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage, 
+        dateDetail: date, lastPage: max });
 })
 
 router.get('/updatePostIdea', async (req, res) => {

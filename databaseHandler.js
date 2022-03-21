@@ -110,6 +110,9 @@ async function viewAllAccountPaginationCustom(collectionName, skipData) {
 
     const mSkipData = parseInt(skipData);
 
+    // sort({{_id : -1}}) => Sort descending by id
+    // const result = await dbo.collection(collectionName).find().sort({ _id: -1 }).limit(5).skip(mSkipData).toArray();
+
     const result = await dbo.collection(collectionName).find().limit(5).skip(mSkipData).toArray();
 
 

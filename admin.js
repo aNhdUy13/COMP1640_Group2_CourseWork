@@ -16,7 +16,6 @@ router.get('/accountManagement',async (req, res) => {
     res.render('admin/accountManagement', { viewAllAccount: result });
 })
 
-
 router.post('/showRoleAccount', async(req, res) => {
     const selectedRole = req.body.txtRoleSelected_toShow;
 
@@ -464,5 +463,194 @@ router.post('/doUpdateClosureDate', async (req, res) => {
 
 })
 /* ================================================================================== */
+
+
+
+/* ================== TEST ================== */
+router.get('/accountManagementTEST', async (req, res) => {
+    // Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
+    //     return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+    // });
+
+    const result = await dbHandler.viewAccountPagination("users", 2, "Staff", 0)
+
+    const toCount = await dbHandler.viewAccountPagination("users", 0, "Staff", 0)
+    const countData = toCount.length;
+    console.log(countData);
+
+    var currRole = "Staff";
+
+    
+
+    // create variable to get the max key ( Value to skip )
+    var arrGetKeyOnly = [];
+
+    // Create Dictionary to store KEY ( as value to skip in mongoDB)
+    // and VALUE ( as the number of page )
+    const arrPage = {};
+
+    var numCalculator = 0;
+    var finalPageNumber = 0;
+
+    if (countData % 2 == 0) {
+        numCalculator = countData / 2;
+
+        finalPageNumber = numCalculator;
+
+        console.log("Chan ( Page ) = " + finalPageNumber);
+    }
+    else {
+        numCalculator = countData / 2;
+
+        finalPageNumber = numCalculator + 1;
+
+        console.log("Le ( Page ) = " + finalPageNumber);
+
+    }
+
+    var k;
+    for (i = 1; i <= finalPageNumber; i++) {
+
+        k = (i - 1) * 2;
+
+        arrGetKeyOnly.push(k);
+
+        arrPage[k] = i;
+    }
+
+    res.render('admin/accountManagementTEST', { viewAllAccount: result, viewNumPage: arrPage, 
+        currRole: currRole, isStaffRole: true });
+})
+
+
+router.post('/showRoleAccountTEST', async (req, res) => {
+    const selectedRole = req.body.txtRoleSelected_toShow;
+
+    var isStaffRole = false;
+    var isManagerRole = false;
+    var isCorrRole = false;
+
+    if (selectedRole == "Staff")
+    {
+        isStaffRole = true;
+    }
+    if (selectedRole == "Quality Assurance Manager") {
+        isManagerRole = true;
+    }
+    if (selectedRole == "Quality Assurance Coordinator") {
+        isCorrRole= true;
+    }
+
+    const result = await dbHandler.viewAccountPagination("users", 2, selectedRole, 0)
+
+    const toCount = await dbHandler.viewAccountPagination("users", 0, selectedRole, 0)
+    const countData = toCount.length;
+    console.log(selectedRole + " has " + countData);
+
+
+
+    // Create Dictionary to store KEY ( as value to skip in mongoDB)
+    // and VALUE ( as the number of page )
+    const arrPage = {};
+
+    var numCalculator = 0;
+    var finalPageNumber = 0;
+
+    if (countData % 2 == 0) {
+        numCalculator = countData / 2;
+
+        finalPageNumber = numCalculator;
+
+        console.log("Chan ( Page ) = " + finalPageNumber);
+    }
+    else {
+        numCalculator = countData / 2;
+
+        finalPageNumber = numCalculator + 1;
+
+        console.log("Le ( Page ) = " + finalPageNumber);
+
+    }
+
+    var k;
+    for (i = 1; i <= finalPageNumber; i++) {
+
+        k = (i - 1) * 2;
+
+
+        arrPage[k] = i;
+    }
+
+    res.render('admin/accountManagementTEST', { viewAllAccount: result, viewNumPage: arrPage, 
+        isStaffRole: isStaffRole, isManagerRole: isManagerRole, isCorrRole: isCorrRole});
+})
+
+
+
+router.get('/choosePageUserTEST', async (req, res) => {
+    const skipDataGet = req.query.skipData;
+    const selectedRole = req.query.currRole;
+
+    var isStaffRole = false;
+    var isManagerRole = false;
+    var isCorrRole = false;
+
+    if (selectedRole == "Staff") {
+        isStaffRole = true;
+    }
+    if (selectedRole == "Quality Assurance Manager") {
+        isManagerRole = true;
+    }
+    if (selectedRole == "Quality Assurance Coordinator") {
+        isCorrRole = true;
+    }
+
+    var skipData = parseInt(skipDataGet);
+    const result = await dbHandler.viewAccountPagination("users", 2, selectedRole, skipData)
+
+    const toCount = await dbHandler.viewAccountPagination("users", 0, selectedRole, 0)
+    const countData = toCount.length;
+    console.log(selectedRole + " has " + countData);
+
+
+    // Create Dictionary to store KEY ( as value to skip in mongoDB)
+    // and VALUE ( as the number of page )
+    const arrPage = {};
+
+    var numCalculator = 0;
+    var finalPageNumber = 0;
+
+    if (countData % 2 == 0) {
+        numCalculator = countData / 2;
+
+        finalPageNumber = numCalculator;
+
+        console.log("Chan ( Page ) = " + finalPageNumber);
+    }
+    else {
+        numCalculator = countData / 2;
+
+        finalPageNumber = numCalculator + 1;
+
+        console.log("Le ( Page ) = " + finalPageNumber);
+
+    }
+
+    var k;
+    for (i = 1; i <= finalPageNumber; i++) {
+
+        k = (i - 1) * 2;
+
+
+        arrPage[k] = i;
+    }
+
+    res.render('admin/accountManagementTEST', { viewAllAccount: result, viewNumPage: arrPage, 
+        isStaffRole, isManagerRole: isManagerRole, isCorrRole: isCorrRole
+    });
+})
+/* ================== TEST ================== */
+
+
 
 module.exports = router;

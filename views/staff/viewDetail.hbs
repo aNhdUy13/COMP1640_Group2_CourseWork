@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idea Page</title>
+    <link rel="stylesheet" href="/css/seeIdea.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+
+<div class="container">
+    {{> headerStaff }}
+
+    <!-- Content -->
+    <div class="main_Content">
+
+        <div class="intro_image_content">
+            <img src="">
+        </div>
+        <div class="box">
+            <div class="inside">
+                <div class="padding align">
+                    <img class="size border" src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png" alt="">
+                    <div class="span">
+                        <div class="name1">
+                            <div class="name2">
+                                <span class="font space">{{viewDetail.users}}</span>
+                            </div>
+                        </div>
+                        <span class="email">{{viewDetail.email}}</span>                        
+                    </div>
+                </div>
+            <div class="content">
+                <div class="inside-content">
+                    <span>Topic is {{viewDetail.topic}}</span>
+                    <br>
+                    <span>Description: {{viewDetail.description}}</span>
+                    <br>
+                    <span>File: {{viewDetail.file}}</span>
+                    <br>
+                    <span>Category: {{viewDetail.category}}</span>
+                    <br>
+                    <span>{{viewDetail.views}}</span>
+                </div>
+            </div>
+            </div>   
+        </div>
+        <br>
+    </div>
+
+    <!-- (End) Content -->
+
+    {{> footer}}
+    
+</div>
+
+
+</html>

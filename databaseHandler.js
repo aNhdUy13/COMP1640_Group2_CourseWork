@@ -157,6 +157,16 @@ async function getUser(collectionName,email) {
     
     return result;
 }
+async function viewDetail(collectionName, userId)
+{
+    const dbo = await getDBO();
+    var ObjectID = require('mongodb').ObjectID;
+    // Lấy Id gửi về
+    const condition = { "_id": ObjectID(userId) };
+    dbo.collection(collectionName).updateOne(condition, {$inc: { 'views': 1}});
+    const detailIdea = await dbo.collection(collectionName).findOne(condition);
+    return detailIdea;
+}
 
 
 /* End Staff function */ 
@@ -188,5 +198,6 @@ module.exports = {
     viewAccountPagination,
     viewAllAccountPaginationCustom,
     viewAllCategory,
-    searchAccount
+    searchAccount,
+    viewDetail
 }

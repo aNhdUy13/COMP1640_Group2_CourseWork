@@ -7,8 +7,8 @@ const dbHandler = require('./databaseHandler');
 const { ObjectId } = require('mongodb');
 const { request } = require('https');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.3vt1h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const dbName = "COMP1640_Project";
+var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.letwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const dbName = "COMP1640_Web_DBnew_2";
 
 
 router.use(session({
@@ -356,6 +356,15 @@ router.post("/do-dislike", async function (request, result) {
                 }
         })
 })
+router.get('/viewIdea', async (req, res) => {
+    const userId = req.query.id;
+    // const client = await MongoClient.connect(url);
+    // const dbo = client.db(dbName);
+    // dbo.collection("postIdeas").findOneAndUpdate({_id: userId}, {$inc: { views: 1}});
+    var detailIdea = await dbHandler.viewDetail("postIdeas", userId);
+    res.render('staff/viewDetail', { viewDetail: detailIdea })
+})
+
 app.use('/uploads', express.static('uploads'));
 
 module.exports = router;    

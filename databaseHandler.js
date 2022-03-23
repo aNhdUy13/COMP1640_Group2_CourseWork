@@ -160,7 +160,6 @@ async function mostViewed(collectionName) {
 async function getUser(collectionName,email) {
     const dbo = await getDBO();
     const result = await dbo.collection(collectionName).find({ email: email }).toArray();
-    
     return result;
 }
 async function viewDetail(collectionName, userId)

@@ -56,10 +56,11 @@ router.post('/upload',function(req,res){
 router.post('/doAddFile',async(req, res) => {
     const newTopic = req.body.txtNewTopic;
     const newDes = req.body.txtNewDes;
-    const startDate = req.body.txtStartDat;
-    const endDate = req.body.txtEndDate;
+    const liker = req.body.arrLiker;
+    const disliker = req.body.arrDisLiker;
     const category = req.body.txtNameCategory;
     const username = req.body.txtNameUser;
+    const email = req.body.txtEmail;
     const file = req.body.txtNewFile;
 
     // const userName = ?
@@ -69,8 +70,9 @@ router.post('/doAddFile',async(req, res) => {
             topic: newTopic,
             description: newDes,
             category: category,
-            startDate: startDate,
-            endDate: endDate,
+            likers: liker,
+            disliker: disliker,
+            email: email,
             username : username,
             file: file,
         }

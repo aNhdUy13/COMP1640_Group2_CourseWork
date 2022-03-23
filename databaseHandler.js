@@ -148,7 +148,13 @@ async function viewAll(collectionName) {
 
     return result;
 }
+async function mostViewed(collectionName) {
+    const dbo = await getDBO();
+    const mysort = {views: -1}
+    const result = await dbo.collection(collectionName).find().sort(mysort).toArray();
 
+    return result;
+}
 
 
 async function getUser(collectionName,email) {
@@ -199,5 +205,6 @@ module.exports = {
     viewAllAccountPaginationCustom,
     viewAllCategory,
     searchAccount,
-    viewDetail
+    viewDetail,
+    mostViewed
 }

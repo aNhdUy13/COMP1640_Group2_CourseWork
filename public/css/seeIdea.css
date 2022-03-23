@@ -91,7 +91,7 @@ div.box{
     padding:10px;
     margin: auto;
     width: 70%;
-    height: 27%;
+    /* height: 27%; */
     white-space: nowrap;
     border-radius: 20px;
 }
@@ -168,6 +168,14 @@ div.box div.inside-content{
     overflow: hidden;
     overflow-wrap: break-word;
 }
+div.box div.inside-content ul{
+    margin: 0;
+}
+div.box div.inside-content ul li button{
+    padding: 0 5px;
+    font-size: 12px;
+}
+
 div.wrapper{
     justify-content: center;
     align-items: center;

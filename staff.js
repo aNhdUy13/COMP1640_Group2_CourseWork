@@ -1,43 +1,27 @@
 const express = require('express');
-var multer = require('multer');
-var app = express();
+const app = express();
 const router = express.Router();
-const session = require('express-session');
 const dbHandler = require('./databaseHandler');
 const { ObjectId } = require('mongodb');
 const { request } = require('https');
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.letwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const MongoClient = require('mongodb').MongoClient;
+const url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.letwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const dbName = "COMP1640_Web_DBnew_2";
+const formidable = require('formidable');
+const fs = require('fs');
 
+const options = {
+    multiples: true,
+    uploadDir: __dirname + '/uploads'
+};
 
-router.use(session({
-    resave:true,
-    saveUninitialized:true,
-    secret:'group2huhuhu',
-    cookie:{maxAge:3600000}
-}))
+const form = formidable(options);
 
 router.get('/', (req, res) => {
     if(!req.session.username)
     return res.render('login')
     res.render('staff/staffHome');
 })
-
-
-
-//submit file
-var storage = multer.diskStorage({
-    destination: function (req, file, callback) {
-        callback(null, './uploads');
-    },
-    filename: function (req, file, callback) {
-        callback(null, file.originalname);
-    }
-});
-
-
-var upload = multer({ storage: storage }).single('myfile'); 
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + "/submit.hbs");
@@ -53,33 +37,93 @@ router.post('/upload',function(req,res){
     });
 });
 
-router.post('/doAddFile',async(req, res) => {
-    const newTopic = req.body.txtNewTopic;
-    const newDes = req.body.txtNewDes;
-    const liker = req.body.arrLiker;
-    const disliker = req.body.arrDisLiker;
-    const category = req.body.txtNameCategory;
-    const username = req.body.txtNameUser;
-    const email = req.body.txtEmail;
-    const file = req.body.txtNewFile;
-
-    // const userName = ?
-    // const userEmail = ?
-
+router.post('/doAddIdea',async(req, res, next) => {
+    if (!req.session || !req.session.username || !req.session.user) return res.sendStatus(401);
+    form.parse(req, async function (err, fields, files) {
+        if (err) return res.sendStatus(500);
+        const newTopic = fields.txtNewTopic;
+        const newDes = fields.txtNewDes;
+        const category = fields.txtNameCategory;
+        const username = req.session.username;
+        const email = req.session.user.email;
+        const uploadFiles = [];
+        if (!Array.isArray(files.uploadFiles)) files.uploadFiles = [files.uploadFiles];
+        for (let file of files.uploadFiles) {
+            const oldPath = file.filepath;
+            const url = '/uploads/' + Date.now().toString() + '_' + file.originalFilename;
+            const newPath = __dirname + '/public' + url;
+            try {
+                fs.renameSync(oldPath, newPath);
+                uploadFiles.push({
+                    fileName: file.originalFilename,
+                    url: url
+                });
+            } catch (error) {
+                console.log(error)
+            };
+            
+        }
         const ideas = {
             topic: newTopic,
             description: newDes,
             category: category,
-            likers: liker,
-            disliker: disliker,
             email: email,
             username : username,
-            file: file,
+            files: uploadFiles,
         }
-
         await dbHandler.addNewAccount("postIdeas", ideas);
-        // res.render('staff/submit',{ viewCategory: result});
         res.render('staff/allFileSubmit', { implementSuccess: "Post idea uploaded" })
+    })
+    
+
+        
+})
+
+router.post('/doAddFile', async function(req, res, next) {
+    if (!req.session || !req.session.username || !req.session.user) return res.sendStatus(401);
+    form.parse(req, async function (err, fields, files) {
+        const idea = fields.idea;
+        const exists = await dbHandler.checkExists("postIdeas", idea);
+        if (exists.length < 1) return res.sendStatus(404);
+        const uploadFiles = [];
+        if (!Array.isArray(files.uploadFiles)) files.uploadFiles = [files.uploadFiles];
+        for (let file of files.uploadFiles) {
+            const oldPath = file.filepath;
+            const url = '/uploads/' + Date.now().toString() + '_' + file.originalFilename;
+            const newPath = __dirname + '/public' + url;
+            try {
+                fs.renameSync(oldPath, newPath);
+                uploadFiles.push({
+                    fileName: file.originalFilename,
+                    url: url
+                });
+            } catch (error) {
+                console.log(error)
+            };
+        }
+        await dbHandler.addIdeaFile("postIdeas", idea, uploadFiles);
+        res.render('staff/allFileSubmit', { implementSuccess: "File added" })
+    })
+})
+
+router.post('/doRemoveFile', async function(req, res, next) {
+    if (!req.session || !req.session.username || !req.session.user) return res.status(401).json({
+        success: false
+    });
+    const idea = req.body.idea;
+    
+    const exists = await dbHandler.checkExists("postIdeas", idea);
+    const file = {
+        fileName: req.body.fileName,
+        url: req.body.fileUrl
+    }
+    if (exists.length < 1) return res.status(404).json({
+        success: false
+    });
+    await dbHandler.removeIdeaFile("postIdeas", idea, file);
+    return res.json({
+        success: true
+    })
 })
 
 router.get('/allFileSubmit',async (req, res) => {
@@ -370,8 +414,13 @@ router.get('/viewIdea', async (req, res) => {
     // const client = await MongoClient.connect(url);
     // const dbo = client.db(dbName);
     // dbo.collection("postIdeas").findOneAndUpdate({_id: userId}, {$inc: { views: 1}});
-    var detailIdea = await dbHandler.viewDetail("postIdeas", userId);
-    res.render('staff/viewDetail', { viewDetail: detailIdea })
+    const detailIdea = await dbHandler.viewDetail("postIdeas", userId);
+    res.render('staff/viewDetail', { 
+        viewDetail: detailIdea,
+        permissions: {
+            canRemoveAttachment: req.session.username && (detailIdea.username === req.session.username || req.session.user.role === "Admin" || req.session.user.role === "Staff")
+        }
+    })
 })
 
 app.use('/uploads', express.static('uploads'));

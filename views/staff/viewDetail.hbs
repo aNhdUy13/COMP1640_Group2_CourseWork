@@ -39,12 +39,22 @@
                     <span>Topic is {{viewDetail.topic}}</span>
                     <br>
                     <span>Description: {{viewDetail.description}}</span>
-                    <br>
-                    <span>File: {{viewDetail.file}}</span>
-                    <br>
+                    <br>Files:
+                    {{permissions.canRemoveAttachment}}
+                    <ul idea="{{viewDetail._id}}">
+                        {{#each viewDetail.files}} 
+                            <li file-url="{{this.url}}" file-name="{{this.fileName}}">
+                                
+                                {{!-- {{#ifCond permissions.canRemoveAttachment true}} --}}
+                                <button onclick="removeAttachment(this)">Remove</button>&nbsp;
+                                {{!-- {{/ifCond}} --}}
+                                {{this.fileName}}
+                            </li>
+                        {{/each}}
+                    </ul>
                     <span>Category: {{viewDetail.category}}</span>
                     <br>
-                    <span>{{viewDetail.views}}</span>
+                    <span>Views: {{viewDetail.views}}</span>
                 </div>
             </div>
             </div>   
@@ -56,6 +66,40 @@
 
     {{> footer}}
     
+</div>
+
+<script>
+    function removeAttachment(btn) {
+        btn.disabled = true;
+        const data = {
+            idea: btn.parentElement.parentElement.getAttribute('idea'),
+            fileUrl: btn.parentElement.getAttribute('file-url'),
+            fileName: btn.parentElement.getAttribute('file-name'),
+        }
+        fetch('/staff/doRemoveFile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(res => res.json()).then(res => {
+            btn.disabled = false;
+            if (res.success) {
+                btn.parentElement.remove();
+            }
+        }).catch(err => {
+            btn.disabled = false;
+        })
+    }
+</script>
+
+<div style="display: block">
+    <form action="/staff/doAddFile" method="POST" enctype="multipart/form-data">    
+        <input type="hidden" name="idea" value="{{viewDetail._id}}">
+        <label for="uploadFiles">Select files:</label>
+        <input type="file" name="uploadFiles" multiple>
+        <input type="submit" value="Submit">
+    </form>
 </div>
 
 

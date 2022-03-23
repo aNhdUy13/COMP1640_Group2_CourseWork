@@ -11,9 +11,19 @@ app.set('view engine', 'hbs');
 var bodyParser = require("body-parser");
 //const { Console } = require('console');
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(bodyParser.json());
+app.use(session({
+    resave: true,
+    saveUninitialized:true,
+    secret:'group2huhuhu',
+    cookie:{maxAge:3600000}
+}))
 const viewPath = path.join(__dirname, 'views/partial')
 hbs.registerPartials(viewPath)
+hbs.registerHelper('ifCond', function(value1, value2, options) {
+    if (value1 == value2) return options.fn(this);
+    else return options.inverse(this);
+});
 
 
 var loginController = require('./login.js');

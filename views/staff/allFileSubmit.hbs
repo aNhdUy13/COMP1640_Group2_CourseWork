@@ -21,24 +21,7 @@
                 </div>
 
                 <table>
-                    <form  action="../staff/doAddFile" method="post">
-                        <tr>
-                            <label class="accountManagement_title" for="myFile">Select a file:</label>
-                            <input type="file" id="myFile" ><br><br>
-
-                            <button  onclick="LoadFile()">    
-                            <a id="downFile" href="" target="_blank" download> downFile</a>
-                            </button>
-                            <script type="text/javascript">
-                                
-                                function LoadFile() {
-                                    var name = document.getElementById('myFile'); 
-                                    var button = document.getElementById('downFile'); 
-                                    button.innerHTML = name.files.item(0).name;                        
-                                    button.href =  "/COMP1640_GROUP2_COURSEWORK/uploads/" + name.files.item(0).name;                                             
-                                }              
-                            </script>
-                        </tr>
+                    <form  action="/staff/doAddIdea" method="post" enctype="multipart/form-data">
                         <tr>
                             <td class="accountManagement_title">Topic : </td>
                             <td><input type="text" class="accountManagement" name="txtNewTopic"> </td> 
@@ -46,19 +29,6 @@
                         <tr>
                             <td class="accountManagement_title">Description : </td>
                             <td><input type="text" class="accountManagement" name="txtNewDes"></td>
-                        </tr>
-                        <tr>                                            
-                            <td class="accountManagement_title">Email : </td>
-
-                        </tr>
-                        <tr>
-                            <td class="accountManagement_title">Likers : </td>
-                            <td ><input type="text" class="accountManagement" name="arrLiker"></td>
-                        </tr> 
-                                                <tr>
-                            <td class="accountManagement_title">DisLikers : </td>
-
-                            <td ><input type="text" class="accountManagement" name="arrDisLiker"></td>
                         </tr>
                         <tr>
                             <td class="accountManagement_title">Category : </td>
@@ -70,6 +40,10 @@
                                     {{/each}}
                                 </select>
                             </td> 
+                        </tr>
+                        <tr>
+                            <label class="accountManagement_title" for="myFile">Select a file:</label>
+                            <input type="file" id="myFile" name="uploadFiles" multiple><br><br>
                         </tr>
                         <tr>
                             <td class="accountManagement_title">User : </td>

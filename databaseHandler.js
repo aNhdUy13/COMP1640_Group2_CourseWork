@@ -1,6 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.letwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const dbName = "COMP1640_Web_DBnew_2";
+const fs = require('fs');
 
 // Import dependencies to hash passwordToCompare
 const bcrypt = require('bcrypt');
@@ -165,12 +166,52 @@ async function getUser(collectionName,email) {
 async function viewDetail(collectionName, userId)
 {
     const dbo = await getDBO();
-    var ObjectID = require('mongodb').ObjectID;
+    var ObjectId = require('mongodb').ObjectId;
     // Lấy Id gửi về
-    const condition = { "_id": ObjectID(userId) };
-    dbo.collection(collectionName).updateOne(condition, {$inc: { 'views': 1}});
+    const condition = { "_id": ObjectId(userId) };
+    await dbo.collection(collectionName).updateOne(condition, {$inc: { 'views': 1}});
     const detailIdea = await dbo.collection(collectionName).findOne(condition);
     return detailIdea;
+}
+
+async function checkExists(collectionName, ideaId) {
+    const dbo = await getDBO();
+    const ObjectId = require('mongodb').ObjectId;
+    const condition = { "_id": ObjectId(ideaId) };
+    const result = await dbo.collection(collectionName).countDocuments(condition, {limit: 1});
+    return result;
+}
+
+async function addIdeaFile(collectionName, ideaId, files) {
+    const dbo = await getDBO();
+    const ObjectId = require('mongodb').ObjectId;
+    const condition = { "_id": ObjectId(ideaId) };
+    const result = await dbo.collection(collectionName).updateOne(condition, {
+        $push: {
+            files: {
+                $each: files
+            }
+        }
+    })
+    return result;
+}
+
+async function removeIdeaFile(collectionName, ideaId, file) {
+    const dbo = await getDBO();
+    const ObjectId = require('mongodb').ObjectId;
+    const condition = { "_id": ObjectId(ideaId) };
+    const result = await dbo.collection(collectionName).updateOne(condition, {
+        $pull: {
+            files: {
+                fileName: file.fileName,
+                url: file.url
+            }
+        }
+    });
+    fs.unlink(__dirname + '/public' + file.url, function (err) {
+        console.log(err)
+    });
+    return result;
 }
 
 
@@ -205,5 +246,8 @@ module.exports = {
     viewAllCategory,
     searchAccount,
     viewDetail,
-    mostViewed
+    mostViewed,
+    checkExists,
+    addIdeaFile,
+    removeIdeaFile,
 }

@@ -165,12 +165,6 @@ router.get('/allFileSubmit',async (req, res) => {
     res.render('staff/allFileSubmit',{ viewCategory: result, getUser: newValues[0]});
 })
 
-router.get('/mostViewedIdeas',async (req, res) => {
-    const result = await dbHandler.mostViewed("postIdeas");
-    
-    res.render('staff/mostViewed',{ mostViewed: result});
-
-})
 
 
 router.post("/do-like", async function (request, result) {

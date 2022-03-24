@@ -434,7 +434,7 @@ router.post('/ChoseViewType', async (req, res) => {
         result = await dbHandler.mostViewed("postIdeas");
     }
     else{
-        result = await dbHandler.viewLatestPostIdeas();
+        result = await dbHandler.viewAll("postIdeas");
     }
 
     res.render('staff/seeIdea', { viewAllIdea: result })

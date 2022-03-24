@@ -65,6 +65,20 @@
                                 </div>
                             </td>
                         </tr>
+
+                        <tr>
+                            <td class="accountManagement_title">Department : </td>
+                            <td>
+                                <div class="dropbox">
+                                        <select name="txtDepartmentSelected">
+                                            <option value="None">None</option>
+                                            <option value="Academic">Academic</option>
+                                            <option value="Support">Support</option>
+                                        </select>
+                                </div>
+                            </td>
+                        </tr>
+
                         <tr>
                             <td></td>
                             <td><input type="submit" value="Add" class="insertButton"></td>
@@ -105,6 +119,8 @@
                                     <th>Age</th>
                                     <th>PhoneNumber</th>
                                     <th>Role</th>
+                                    <th>Department</th>
+
                                     <th>Delete</th>
                                     <th>Update</th>
                             </tr>
@@ -117,6 +133,7 @@
                                     <td>{{age}}</td>
                                     <td>{{phoneNumber}}</td>
                                     <td>{{role}}</td>
+                                    <td>{{department}}</td>
 
                                     <td>
                                         <button>

@@ -31,7 +31,7 @@ router.post('/doAddAccount',async(req, res) => {
     const newAge = req.body.txtNewAge;
     const newPhoneNumber = req.body.txtNewPhoneNumber;
     const selectedRole = req.body.txtRoleSelected;
-
+    const selectedDepartment = req.body.txtDepartmentSelected;
 
     if (newName.trim().length < 3)
     {
@@ -58,7 +58,7 @@ router.post('/doAddAccount',async(req, res) => {
 
         const accountData = {
             name: newName, email: newEmail, password: hashPassword, age: newAge,
-            phoneNumber: newPhoneNumber, role: selectedRole
+            phoneNumber: newPhoneNumber, role: selectedRole, department: selectedDepartment
         }
 
 

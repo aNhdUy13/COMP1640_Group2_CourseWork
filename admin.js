@@ -466,6 +466,44 @@ router.post('/doUpdateClosureDate', async (req, res) => {
 
 
 
+
+/* ===================================== Related "View Popular Ideas" Page ============================================= */
+router.get('/viewPopularIdeas', async (req, res) => {
+    result = await dbHandler.viewLatestPostIdeas();
+
+    res.render('admin/viewPopularIdeas', { viewLatestIdeas: result})
+})
+
+router.post('/ChoseViewTypePopularIdeas', async (req, res) => {
+    const selectedViewType = req.body.txtSelectedViewType;
+
+    let result;
+    if (selectedViewType == "LatestIdeas") {
+        result = await dbHandler.viewLatestPostIdeas();
+    }
+    else if (selectedViewType == "LatestComments")
+    {
+
+    }
+    else if (selectedViewType == "MostLikeAndDislike") {
+
+    }
+    else if (selectedViewType == "MostViewed") {
+
+    }
+    else{
+        result = await dbHandler.viewLatestPostIdeas();
+    }
+
+    res.render('admin/viewPopularIdeas', { viewLatestIdeas: result })
+})
+/* ================================================================================== */
+
+
+
+
+
+
 /* ================== TEST ================== */
 router.get('/accountManagementTEST', async (req, res) => {
     // Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {

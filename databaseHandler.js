@@ -139,6 +139,15 @@ async function getCategory(collectionName) {
 
 }
 
+async function viewLatestPostIdeas(){
+    const dbo = await getDBO();
+
+
+    // sort({{_id : -1}}) => Sort descending by id
+    const result = await dbo.collection("postIdeas").find().sort({ _id: -1 }).toArray();
+
+    return result;
+}
 /* =================== (End) Admin Role =================  */
 
 
@@ -250,4 +259,5 @@ module.exports = {
     checkExists,
     addIdeaFile,
     removeIdeaFile,
+    viewLatestPostIdeas
 }

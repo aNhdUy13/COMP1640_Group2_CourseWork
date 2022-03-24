@@ -18,9 +18,25 @@
     <!-- Content -->
     <div class="main_Content">
 
-        <div class="intro_image_content">
-            <img src="">
-        </div>
+                    <div class="topViewPopular">
+                <div class="dropbox_show">
+                        <form  action="../staff/ChoseViewType" method="post">
+                            <select name="txtSelectedViewType" onchange="this.form.submit()">
+                                <option value="">Select</option>
+
+                                <option value="LatestIdeas">Latest Ideas</option>
+
+                                <option value="LatestComments">Latest Comments</option>
+
+                                <option value="MostLikeAndDislike">Most Like & Dislike Ideas</option>
+
+                                <option value="MostViewed">Most Viewed Idea</option>
+
+                            </select>
+                        </form>
+                </div>
+            </div>
+        <div class="bottomViewIdeas">
         {{#each viewAllIdea}}
         <div class="box">
             <div class="inside">
@@ -41,9 +57,9 @@
                     <br>
                     <span>Description: {{description}}</span>
                     <br>
-                    <span>File: {{file}}</span>
-                    <br>
                     <span>Category: {{category}}</span>
+                    <br>
+                    <span>Viewers: {{views}}</span>
                     <br>
                     <span><a href="/staff/viewIdea?id={{_id}}">View more</a></span>
                     <br>
@@ -136,6 +152,8 @@
         </div>
         <br>
         {{/each}}
+        </div>
+
     </div>
 
     <!-- (End) Content -->

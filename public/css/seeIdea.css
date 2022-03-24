@@ -6,7 +6,7 @@ body {
 }
 div.container{
     width: 100%;
-    height: 900px;
+    height: 800px;
     
 }
 
@@ -14,7 +14,7 @@ div.container{
 
 div.leftSideHeader {
     width: 20%;
-    height:130%;
+    height:90%;
     background-color: #203b5b;
     float: left;
     border-top-left-radius: 10px;
@@ -77,14 +77,31 @@ div.main_Content {
     display:table;
 
 }
-
-
-div.main_Content div.intro_image_content img{
+div.bottomViewIdeas{
     width: 100%;
-    background-repeat: no-repeat;
-    height: 100%;
-    background-size: cover;
-    border-top-right-radius: 10px;
+    height: 95%;
+    overflow-y: auto;
+
+}
+div.topViewPopular{
+    width: 100%;
+    height: 5%;
+}
+
+div.dropbox_show {
+    width: 70%;
+    height: 90%;
+    font-size: 10px;
+    margin-left: 1%;
+
+}
+
+div.dropbox_show select{
+    background-color: #203b5b;
+    color: white;
+    padding:5px;
+    border-radius: 3px;
+    margin-top: 5px;
 }
 div.box{
     border:1px solid black;

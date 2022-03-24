@@ -422,6 +422,29 @@ router.get('/viewIdea', async (req, res) => {
         }
     })
 })
+router.post('/ChoseViewType', async (req, res) => {
+    const selectedViewType = req.body.txtSelectedViewType;
+
+    let result;
+    if (selectedViewType == "LatestIdeas") {
+        result = await dbHandler.viewLatestPostIdeas();
+    }
+    else if (selectedViewType == "LatestComments")
+    {
+
+    }
+    else if (selectedViewType == "MostLikeAndDislike") {
+
+    }
+    else if (selectedViewType == "MostViewed") {
+        result = await dbHandler.mostViewed("postIdeas");
+    }
+    else{
+        result = await dbHandler.viewLatestPostIdeas();
+    }
+
+    res.render('staff/seeIdea', { viewAllIdea: result })
+})
 
 app.use('/uploads', express.static('uploads'));
 

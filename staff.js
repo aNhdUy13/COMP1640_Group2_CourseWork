@@ -47,6 +47,10 @@ router.post('/doAddIdea',async(req, res, next) => {
         const username = req.session.username;
         const email = req.session.user.email;
         const uploadFiles = [];
+        const likers = [];
+        const dislikers = [];
+        const views = 0;
+        const popularpoint =0;
         if (!Array.isArray(files.uploadFiles)) files.uploadFiles = [files.uploadFiles];
         for (let file of files.uploadFiles) {
             const oldPath = file.filepath;
@@ -70,6 +74,10 @@ router.post('/doAddIdea',async(req, res, next) => {
             email: email,
             username : username,
             files: uploadFiles,
+            likers: likers,
+            dislikers: dislikers,
+            views: views,
+            popularpoint: popularpoint
         }
         await dbHandler.addNewAccount("postIdeas", ideas);
         res.render('staff/allFileSubmit', { implementSuccess: "Post idea uploaded" })

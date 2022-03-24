@@ -489,7 +489,7 @@ router.post('/ChoseViewTypePopularIdeas', async (req, res) => {
 
     }
     else if (selectedViewType == "MostViewed") {
-
+        result = await dbHandler.mostViewed("postIdeas");
     }
     else{
         result = await dbHandler.viewLatestPostIdeas();

@@ -486,7 +486,7 @@ router.post('/ChoseViewTypePopularIdeas', async (req, res) => {
 
     }
     else if (selectedViewType == "MostLikeAndDislike") {
-
+        result = await dbHandler.mostPopular("postIdeas");
     }
     else if (selectedViewType == "MostViewed") {
         result = await dbHandler.mostViewed("postIdeas");

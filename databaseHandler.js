@@ -234,6 +234,14 @@ async function viewAllCategory(collectionName) {
     return result;
 }
 
+async function mostPopular(collectionName) {
+    const dbo = await getDBO();
+    const sort111 = {popularpoint: -1}
+    const result = await dbo.collection(collectionName).find().sort(sort111).toArray();
+
+    return result;
+}
+
 /* End Manager function*/
 
 
@@ -259,5 +267,6 @@ module.exports = {
     checkExists,
     addIdeaFile,
     removeIdeaFile,
-    viewLatestPostIdeas
+    viewLatestPostIdeas,
+    mostPopular,
 }

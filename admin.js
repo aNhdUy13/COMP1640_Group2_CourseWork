@@ -687,6 +687,98 @@ router.get('/choosePageUserTEST', async (req, res) => {
         isStaffRole, isManagerRole: isManagerRole, isCorrRole: isCorrRole
     });
 })
+
+
+router.get('/duyanhTest', async (req, res) => {
+    const result = await dbHandler.viewAllDataInTable("closureDates");
+
+    res.render('admin/DuyAnhTest.hbs', { dateDetail: result });
+})
+
+
+router.post('/doSubmitFileWithTime',async (req, res) =>{
+    const result = await dbHandler.viewAllDataInTable("closureDates");
+
+    var countDateInDB = result.length;
+    console.log("Count : " + countDateInDB);
+
+    var currDate = new Date();
+    var currDate2 = currDate.toISOString().slice(0, 10);
+    var splitCurrDate = currDate2.split("-");
+    var currDay = splitCurrDate[2];
+    var currMonth = splitCurrDate[1];
+    var currYear = splitCurrDate[0]
+    var finalCurrDate = currMonth + "-" + currDay + "-" + currYear;
+
+    let finalEndDate, finalStartDate;
+
+    for (i = 0; i < countDateInDB; i++) {
+        const objectDate = JSON.stringify(result[i], null, 2);
+        console.log(objectDate)
+        const splitDate = objectDate.split(",");
+        const fullStartDate = splitDate[1];
+        const fullEndDate = splitDate[2];
+
+        // Implement Start Date
+        const splitStartDate = fullStartDate.split(":");
+        const startDate = splitStartDate[1];
+        const startDateSlice = startDate.slice(2, 12);
+        const splitStartDate2 = startDateSlice.split("-");
+        const dayStartDate = splitStartDate2[0];
+        const monthStartDate = splitStartDate2[1];
+        const yearStartDate = splitStartDate2[2];
+
+        // Implement End Date
+        const splitEndDate = fullEndDate.split(":");
+        const endDate = splitEndDate[1];
+        const endDateSlice = endDate.slice(2, 12);
+        const splitEndDate2 = endDateSlice.split("-");
+        const dayEndDate = splitEndDate2[0];
+        const monthEndDate = splitEndDate2[1];
+        const yearEndDate = splitEndDate2[2];
+
+        if (currYear == yearStartDate) {
+            console.log("Found !");
+            finalStartDate = monthStartDate + "-" + dayStartDate + "-" + yearStartDate;
+            finalEndDate = monthEndDate + "-" + dayEndDate + "-" + yearEndDate;
+        }
+        else {
+            console.log("Not Found !");
+
+        }
+
+    }
+
+    // Date Format : Month-Day-Year
+    console.log("Start Date : " + finalStartDate);
+    console.log("End Date : " + finalEndDate);
+    console.log("Current Date : " + finalCurrDate);
+
+    var formatStartDate, formatEndDate, formatCurrDate;
+    formatStartDate = Date.parse(finalStartDate);
+    console.log(formatStartDate);
+
+    formatEndDate = Date.parse(finalEndDate);
+    console.log(formatEndDate);
+
+    formatCurrDate = Date.parse(finalCurrDate);
+    console.log(formatCurrDate);
+
+    var messageHere;
+    if ((formatCurrDate >= formatStartDate && formatCurrDate <= formatEndDate ) )
+    {
+        messageHere = "Staff CAN Submit File !"
+        console.log(messageHere);
+    }
+    else {
+        messageHere = "Staff CANNOT Submit File !"
+        console.log(messageHere);
+
+    }
+
+    
+    res.render('admin/DuyAnhTest.hbs', { dateDetail: result, message: messageHere });
+})
 /* ================== TEST ================== */
 
 

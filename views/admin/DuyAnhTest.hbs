@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management</title>
+    <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin_layout.css" type="text/css">
+
+</head>
+<body>
+    <div class="container">
+        {{> headerAdmin}}
+
+        <!-- Content -->
+        <div class="main_Content">
+            <div class="table_title_idea">
+                <h2>Post Idea Management</h2>
+            </div>
+
+            <div class="show_closureDate">
+                {{#each dateDetail}}
+                    <p>( Start Date : {{startDate}} )</p>
+                    <p>( End Date : {{endDate}} )</p>
+                {{/each }}
+            </div>
+
+            <div class="ideaManagement">
+                <form action="../admin/doSubmitFileWithTime" method="post">
+                        <input type="submit" value="Add" class="insertButton">
+                        <p>{{message}}</p>
+
+                </form>
+            </div>
+
+        </div>
+
+        <!-- (End) Content -->
+
+        {{> footer}}
+    </div>
+
+
+</body>
+</html>

@@ -118,8 +118,61 @@ router.post('/doUpdateAccount', async (req, res) => {
 
 /* ===================================== Idea Management  ===================================== */
 router.get('/postIdeaManagement', async (req, res) => {
-    const date = await dbHandler.viewAllDataInTable("closureDates");
+    /* 
+        Get start date & end date to display
+    */
+    const dateResult = await dbHandler.viewAllDataInTable("closureDates");
+    let finalEndDate, finalStartDate;
+    var countDateInDB = dateResult.length;
+    console.log("Count Closure Date : " + countDateInDB);
 
+    var currDate = new Date();
+    var currDate2 = currDate.toISOString().slice(0, 10);
+    var splitCurrDate = currDate2.split("-");
+    
+    var currYear = splitCurrDate[0]
+
+    for (i = 0; i < countDateInDB; i++) {
+        const objectDate = JSON.stringify(dateResult[i], null, 2);
+        console.log(objectDate)
+        const splitDate = objectDate.split(",");
+        const fullStartDate = splitDate[1];
+        const fullEndDate = splitDate[2];
+
+        // Implement Start Date
+        const splitStartDate = fullStartDate.split(":");
+        const startDate = splitStartDate[1];
+        const startDateSlice = startDate.slice(2, 12);
+        const splitStartDate2 = startDateSlice.split("-");
+        const dayStartDate = splitStartDate2[0];
+        const monthStartDate = splitStartDate2[1];
+        const yearStartDate = splitStartDate2[2];
+
+        // Implement End Date
+        const splitEndDate = fullEndDate.split(":");
+        const endDate = splitEndDate[1];
+        const endDateSlice = endDate.slice(2, 12);
+        const splitEndDate2 = endDateSlice.split("-");
+        const dayEndDate = splitEndDate2[0];
+        const monthEndDate = splitEndDate2[1];
+        const yearEndDate = splitEndDate2[2];
+
+        if (currYear == yearStartDate) {
+            console.log("Found !");
+            finalStartDate = dayStartDate + "-" + monthStartDate + "-" + yearStartDate;
+            finalEndDate = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
+        }
+        else {
+            console.log("Not Found !");
+
+        }
+
+    }
+
+
+    /* 
+        Get Post Idea to display with default skip data (0)
+    */
     // const result = await dbHandler.viewAllDataInTable("postIdeas");
     const result = await dbHandler.viewAllAccountPaginationCustom("postIdeas", 0);
 
@@ -149,10 +202,65 @@ router.get('/postIdeaManagement', async (req, res) => {
 
 
     res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage , 
-        dateDetail: date, lastPage: max });
+        startDate: finalStartDate, endDate: finalEndDate, lastPage: max });
 })
 
 router.get('/choosePageIdea', async (req, res) => {
+    /* 
+        Get start date & end date to display
+    */
+    const dateResult = await dbHandler.viewAllDataInTable("closureDates");
+    let finalEndDate, finalStartDate;
+    var countDateInDB = dateResult.length;
+    console.log("Count Closure Date : " + countDateInDB);
+
+    var currDate = new Date();
+    var currDate2 = currDate.toISOString().slice(0, 10);
+    var splitCurrDate = currDate2.split("-");
+    var currYear = splitCurrDate[0]
+
+    for (i = 0; i < countDateInDB; i++) {
+        const objectDate = JSON.stringify(dateResult[i], null, 2);
+        console.log(objectDate)
+        const splitDate = objectDate.split(",");
+        const fullStartDate = splitDate[1];
+        const fullEndDate = splitDate[2];
+
+        // Implement Start Date
+        const splitStartDate = fullStartDate.split(":");
+        const startDate = splitStartDate[1];
+        const startDateSlice = startDate.slice(2, 12);
+        const splitStartDate2 = startDateSlice.split("-");
+        const dayStartDate = splitStartDate2[0];
+        const monthStartDate = splitStartDate2[1];
+        const yearStartDate = splitStartDate2[2];
+
+        // Implement End Date
+        const splitEndDate = fullEndDate.split(":");
+        const endDate = splitEndDate[1];
+        const endDateSlice = endDate.slice(2, 12);
+        const splitEndDate2 = endDateSlice.split("-");
+        const dayEndDate = splitEndDate2[0];
+        const monthEndDate = splitEndDate2[1];
+        const yearEndDate = splitEndDate2[2];
+
+        if (currYear == yearStartDate) {
+            console.log("Found !");
+            finalStartDate = dayStartDate + "-" + monthStartDate + "-" + yearStartDate;
+            finalEndDate = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
+        }
+        else {
+            console.log("Not Found !");
+
+        }
+
+    }
+
+
+
+    /* 
+        Get Idea to display with custom skip data
+    */
     const skipData = req.query.skipData;
 
     const date = await dbHandler.viewAllDataInTable("closureDates");
@@ -181,10 +289,10 @@ router.get('/choosePageIdea', async (req, res) => {
     }
     console.log("Max Key = " + typeof max + " " + max);
 
-
     res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage, 
-        dateDetail: date, lastPage: max });
+        startDate: finalStartDate, endDate: finalEndDate, lastPage: max });
 })
+
 
 router.get('/updatePostIdea', async (req, res) => {
     const ideaID = req.query.id;
@@ -377,6 +485,7 @@ router.get('/closureDate', async (req, res) => {
 
 
 router.post('/doSetDate', async (req, res) => {
+    
     const newStartDate = req.body.txtStartDate;
     const newEndDate = req.body.txtEndDate;
 
@@ -395,15 +504,15 @@ router.post('/doSetDate', async (req, res) => {
     const endDay = splitEndD[2];
     const FinalEndDate = endDay + "-" + endMonth + "-" + endYear;
 
+        const setDateValue = {
+            startDate: FinalStartDate,
+            endDate: FinalEndDate
+        };
 
-    const setDateValue = {
-        startDate: FinalStartDate,
-        endDate: FinalEndDate
-    };
+        await dbHandler.addNewAccount("closureDates", setDateValue);
 
-    await dbHandler.addNewAccount("closureDates", setDateValue);
+        res.redirect('closureDate');
 
-    res.redirect('closureDate');
 })
 
 
@@ -413,7 +522,7 @@ router.get('/updateClosureDate', async (req, res) => {
 
     var dateEdit = await dbHandler.updateFunction("closureDates", dateId);
 
-    res.render('admin/updateClosureDate', { dateDetail: dateEdit })
+    res.render('admin/updateClosureDate', { dateDetail: dateEdit  })
 })
 
 router.post('/doUpdateClosureDate', async (req, res) => {
@@ -689,14 +798,73 @@ router.get('/choosePageUserTEST', async (req, res) => {
 })
 
 
-router.get('/duyanhTest', async (req, res) => {
-    const result = await dbHandler.viewAllDataInTable("closureDates");
 
-    res.render('admin/DuyAnhTest.hbs', { dateDetail: result });
+
+
+
+
+
+router.get('/duyanhTest', async (req, res) => {
+    /* 
+    Get start date & end date to display
+   */
+    const dateResult = await dbHandler.viewAllDataInTable("closureDates");
+    let finalEndDate, finalStartDate;
+    var countDateInDB = dateResult.length;
+    console.log("Count Closure Date : " + countDateInDB);
+
+    var currDate = new Date();
+    var currDate2 = currDate.toISOString().slice(0, 10);
+    var splitCurrDate = currDate2.split("-");
+
+    var currYear = splitCurrDate[0]
+
+    for (i = 0; i < countDateInDB; i++) {
+        const objectDate = JSON.stringify(dateResult[i], null, 2);
+        console.log(objectDate)
+        const splitDate = objectDate.split(",");
+        const fullStartDate = splitDate[1];
+        const fullEndDate = splitDate[2];
+
+        // Implement Start Date
+        const splitStartDate = fullStartDate.split(":");
+        const startDate = splitStartDate[1];
+        const startDateSlice = startDate.slice(2, 12);
+        const splitStartDate2 = startDateSlice.split("-");
+        const dayStartDate = splitStartDate2[0];
+        const monthStartDate = splitStartDate2[1];
+        const yearStartDate = splitStartDate2[2];
+
+        // Implement End Date
+        const splitEndDate = fullEndDate.split(":");
+        const endDate = splitEndDate[1];
+        const endDateSlice = endDate.slice(2, 12);
+        const splitEndDate2 = endDateSlice.split("-");
+        const dayEndDate = splitEndDate2[0];
+        const monthEndDate = splitEndDate2[1];
+        const yearEndDate = splitEndDate2[2];
+
+        if (currYear == yearStartDate) {
+            console.log("Found !");
+            finalStartDate = dayStartDate + "-" + monthStartDate + "-" + yearStartDate;
+            finalEndDate = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
+        }
+        else {
+            console.log("Not Found !");
+
+        }
+
+    }
+
+    res.render('admin/DuyAnhTest.hbs', {startDate: finalStartDate, endDate:  finalEndDate});
 })
 
 
 router.post('/doSubmitFileWithTime',async (req, res) =>{
+    /*
+        Start to process when staff click to submib button
+        (Check the curr date in is in between start and end date)
+    */
     const result = await dbHandler.viewAllDataInTable("closureDates");
 
     var countDateInDB = result.length;
@@ -710,7 +878,7 @@ router.post('/doSubmitFileWithTime',async (req, res) =>{
     var currYear = splitCurrDate[0]
     var finalCurrDate = currMonth + "-" + currDay + "-" + currYear;
 
-    let finalEndDate, finalStartDate;
+    let finalEndDate, finalStartDate, finalStartDate2, finalEndDate2;
 
     for (i = 0; i < countDateInDB; i++) {
         const objectDate = JSON.stringify(result[i], null, 2);
@@ -741,6 +909,9 @@ router.post('/doSubmitFileWithTime',async (req, res) =>{
             console.log("Found !");
             finalStartDate = monthStartDate + "-" + dayStartDate + "-" + yearStartDate;
             finalEndDate = monthEndDate + "-" + dayEndDate + "-" + yearEndDate;
+
+            finalStartDate2 = dayStartDate + "-" + monthStartDate+ "-" + yearStartDate;
+            finalEndDate2 = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
         }
         else {
             console.log("Not Found !");
@@ -777,7 +948,7 @@ router.post('/doSubmitFileWithTime',async (req, res) =>{
     }
 
     
-    res.render('admin/DuyAnhTest.hbs', { dateDetail: result, message: messageHere });
+    res.render('admin/DuyAnhTest.hbs', { startDate: finalStartDate2, endDate: finalEndDate2, message: messageHere });
 })
 /* ================== TEST ================== */
 

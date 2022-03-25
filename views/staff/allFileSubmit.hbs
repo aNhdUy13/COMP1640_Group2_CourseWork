@@ -23,6 +23,10 @@
                 <table>
                     <form  action="/staff/doAddIdea" method="post" enctype="multipart/form-data">
                         <tr>
+                            <td class="accountManagement_title">User : </td>
+                            <td name = "txtUserName"> {{getUser.name}}</td>
+                        </tr>
+                        <tr>
                             <td class="accountManagement_title">Topic : </td>
                             <td><input type="text" class="accountManagement" name="txtNewTopic"> </td> 
                         </tr>
@@ -42,17 +46,16 @@
                             </td> 
                         </tr>
                         <tr>
-                            <label class="accountManagement_title" for="myFile">Select a file:</label>
-                            <input type="file" id="myFile" name="uploadFiles" multiple><br><br>
+                            <td><label class="accountManagement_title" for="myFile">Select a file:</label></td>
+                            <td><input type="file" id="myFile" name="uploadFiles" multiple></td>
                         </tr>
-                        <tr>
-                            <td class="accountManagement_title">User : </td>
-
-                            <td name = "txtUserName"> {{getUser.name}}</td>
+                        <tr> 
+                            <td><input type="checkbox" name="checkbox" value="check" id="agree" /></td>
+                            <td><label> I have read and agree to the Terms and Conditions and Privacy Policy</label></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="submit" value="Submit" class="insertButton"></td>
+                            <td><input type="submit" value="Submit" class="insertButton" name="submit" onclick="if(!this.form.checkbox.checked){alert('You must agree to the terms first.');return false}"></td>
                         </tr>
                     </form>
                 </table>

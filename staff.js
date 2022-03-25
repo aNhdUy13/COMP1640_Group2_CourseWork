@@ -72,7 +72,7 @@ router.post('/doAddIdea',async(req, res, next) => {
             description: newDes,
             category: category,
             email: email,
-            username : username,
+            users : username,
             files: uploadFiles,
             likers: likers,
             dislikers: dislikers,

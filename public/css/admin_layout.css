@@ -202,6 +202,19 @@ div.choosePage a button{
     padding: 5px;
 
 }
+
+div.showButtonPaging a{
+    text-decoration: none;
+}
+div.showButtonPaging a button{
+    color: white;
+    background-color: #203b5b;
+    text-decoration: none;
+
+}
+div.showButtonPaging {
+    width: 100%;
+}
 div.choosePage a button:hover{
     background-color: #fdbe01;
 

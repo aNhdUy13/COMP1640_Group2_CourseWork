@@ -16,12 +16,7 @@
         <!-- Content -->
         <div class="main_Content">
             <div class="table_title_idea">
-                <h2>Post Idea Management</h2>
-            </div>
-
-            <div class="show_closureDate">
-                    <p>( Start Date : {{startDate}} )</p>
-                    <p>( End Date : {{endDate}} )</p>
+                <h2>Test Pagination ( Post Idea Management )</h2>
             </div>
 
             <div class="ideaManagement">
@@ -67,6 +62,30 @@
             </div>
 
             <div class="showButtonPaging">
+                    <a href="../admin/TESTchoosePageIdea?skipData=0" style="margin-left:10px">
+                        <button>
+                            <<
+                        </button>
+                    </a>
+            
+
+                    {{#each viewNumPage as |val key|}}
+                        <a href="../admin/TESTchoosePageIdea?skipData={{key}}">
+                            <button>
+                                {{val}}
+                            </button>
+                        </a>
+
+                    {{/each}}
+
+                    
+                    <a href="../admin/TESTchoosePageIdea?skipData={{lastPage}}">
+                        <button>
+                            >>
+                        </button>
+                    </a> 
+
+
                     {{!-- <div class="choosePageFirst">
                         <a href="../admin/choosePageIdea?skipData=0">
                             <button>
@@ -93,30 +112,10 @@
                                 >>
                             </button>
                         </a>
-                    </div> --}}
-                    
-                    <a href="../admin/choosePageIdea?skipData=0" style="margin-left:10px">
-                        <button>
-                            <<
-                        </button>
-                    </a>
+                    </div> 
+                    --}}
+
             
-
-                    {{#each viewNumPage as |val key|}}
-                        <a href="../admin/choosePageIdea?skipData={{key}}">
-                            <button>
-                                {{val}}
-                            </button>
-                        </a>
-
-                    {{/each}}
-
-                    
-                    <a href="../admin/choosePageIdea?skipData={{lastPage}}">
-                        <button>
-                            >>
-                        </button>
-                    </a> 
             </div>
         </div>
 

@@ -85,6 +85,19 @@
                         </button>
                     </div>
                 </div>
+                <div>
+                    <div>
+                        <div class="card-body">
+                            Leave a comment:
+                        </div>
+                    </div>
+                    <form action="" onsubmit="return postComment(this);">
+                        <div class="form-group">
+                            <textarea class="form-control" name="comment"></textarea>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Post comment">
+                    </form>
+                </div>
                 <script type="text/javascript">
                     function like(btn) {
                         btn.disabled = true;
@@ -146,6 +159,25 @@
                         const postId = input.value;
                         ajax.send("postId="+ postId);
                     }
+                </script>
+                <script type="text/javascript"> 
+                    function postComment(self){
+                        var ajax = new XMLHttpRequest();
+                        ajax.open("POST","../staff/do-comment",true);
+                        ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+                        ajax.onreadystatechange = function(){
+                            if(this.readyS == 4 && this.status == 200 ){
+                                //append in comments layout 
+                                var response = JSON.parse(this.responseText); 
+                            }
+                        };
+
+                        var.videoId = document.getElementById("videoId").value;
+                        ajax.send("videoId" + videoId +"comment=" + self.comment.value );
+
+                        return false; 
+                    }
+
                 </script>  
             </div>
             

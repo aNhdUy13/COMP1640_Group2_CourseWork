@@ -424,6 +424,35 @@ router.get('/viewIdea', async (req, res) => {
         }
     })
 })
+//comment
+router.post('/do-comment', async function(req, res) {
+    if(req.session.user_id){
+        getUser(req.session.user_id, function(user){
+            dbo.collection("postIdeas").findOneAndUpdate({
+                "_id": ObjectId(req.body.postId)
+            },{
+                $push:{
+                    "comment" :{
+                        "_id": request.session.user._id
+                    }
+                },
+                $pull: {
+                    commenter: {
+                        "_id": request.session.user._id
+                    }
+                }
+            }, function(error,data){
+                //send notification to publisher
+                return result.json({
+                    "status": "success",
+                    "message": "PostIdea has been commented",
+                });
+            })
+        })
+    }
+})
+
+
 router.post('/ChoseViewType', async (req, res) => {
     const selectedViewType = req.body.txtSelectedViewType;
 

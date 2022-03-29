@@ -41,6 +41,11 @@ router.post('/doAddIdea',async(req, res, next) => {
     if (!req.session || !req.session.username || !req.session.user) return res.sendStatus(401);
     form.parse(req, async function (err, fields, files) {
         if (err) return res.sendStatus(500);
+        //curent date
+        var currDate = new Date();
+        var currDate2 = currDate.toISOString().slice(0, 10);
+        var splitCurrDate = currDate2.split("-");
+
         const newTopic = fields.txtNewTopic;
         const newDes = fields.txtNewDes;
         const category = fields.txtNameCategory;
@@ -51,6 +56,7 @@ router.post('/doAddIdea',async(req, res, next) => {
         const dislikers = [];
         const views = 0;
         const popularpoint =0;
+        const yearcurr = splitCurrDate[0];
         if (!Array.isArray(files.uploadFiles)) files.uploadFiles = [files.uploadFiles];
         for (let file of files.uploadFiles) {
             const oldPath = file.filepath;
@@ -77,7 +83,8 @@ router.post('/doAddIdea',async(req, res, next) => {
             likers: likers,
             dislikers: dislikers,
             views: views,
-            popularpoint: popularpoint
+            popularpoint: popularpoint,
+            year: yearcurr
         }
         await dbHandler.addNewAccount("postIdeas", ideas);
         res.render('staff/allFileSubmit', { implementSuccess: "Post idea uploaded" })

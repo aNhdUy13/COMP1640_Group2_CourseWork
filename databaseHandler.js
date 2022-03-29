@@ -4,6 +4,7 @@ const dbName = "COMP1640_Web_DBnew_2";
 const fs = require('fs');
 // Import dependencies to hash passwordToCompare
 const bcrypt = require('bcrypt');
+const { ObjectId } = require('mongodb');
 
 
 async function getDBO() {
@@ -252,7 +253,79 @@ async function mostPopular(collectionName) {
 
 /* End Manager function*/
 
+/* Comment */
 
+async function getComments(filter = {}, options = {}) {
+    const pipeline = [
+        {
+            $match: {
+                ...filter //{_id: abc}
+            }
+        },
+        {
+            $lookup: {
+                from: 'users',
+                let: { userId: "$userId" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$_id", "$$userId"]
+                            },
+                        }
+                    }
+                ],
+                as: 'author',
+            }
+        },
+        {
+            $unwind: "$author"
+        },
+        {
+            $lookup: {
+                from: 'postIdeas',
+                let: { ideaId: "$postIdeaId" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$_id", "$$ideaId"]
+                            },
+                        }
+                    }
+                ],
+                as: 'postIdea',
+            }
+        },
+        {
+            $unwind: "$postIdea"
+        },
+        {
+            $skip: options.skip ?? 0
+        },
+        {
+            $sort: options.sort ?? { commentTime: -1 }
+        }
+    ];
+    if (options.limit) pipeline.push({
+        $limit: options.limit
+    })
+    const dbo = getDBO();
+    const result = await dbo.collection('comments').aggregate(pipeline).toArray();
+    return result;
+    
+}
+
+async function addComment(body) {
+    const dbo = getDBO();
+    const result = await dbo.collection("comments").insertOne({
+        "postIdeaId": ObjectId(body.postId),
+        "userId":  ObjectId(body.userId),
+        "content": body.content,
+        "commentTime": Date.now()
+    })
+    return result;
+}
 
 module.exports = {
     addNewAccount,
@@ -278,4 +351,7 @@ module.exports = {
     viewLatestPostIdeas,
     mostPopular,
     countDataInTable,
+    getComments,
+    addComment,
+
 }

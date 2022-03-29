@@ -86,25 +86,45 @@
                     </div>
                 </div>
                 <div>
+                    {{!-- <div id="comment">
+                        <%
+                        video.comments = video.comments.reverse();
+                        video.comments.forEach(function(comment){
+                        %>    
+                        
+                        <div>
+                            <h5 class="mt-0"><%= comment.user.name %> </h5>
+                            <%= comment.comment %>
+                        </div>
+                        
+                    </div>
+                    <% }) %> --}}
                     <div>
                         <div class="card-body">
                             Leave a comment:
                         </div>
                     </div>
-                    <form action="" onsubmit="return postComment(this);">
+                    <form action="/staff/do-comment" action="POST" class="comment-form">
                         <div class="form-group">
-                            <textarea class="form-control" name="comment"></textarea>
+                            <input type="hidden" value="{{_id}}" name="postId">
+                            <textarea class="form-control" name="content"></textarea>
                         </div>
-                        <input type="submit" class="btn btn-primary" value="Post comment">
+                        <button type="submit" class="btn btn-primary">Post comment</button>
                     </form>
                 </div>
-                <script type="text/javascript">
+
+            </div>
+            
+        </div>
+        <br>
+        {{/each}}
+        <script type="text/javascript">
                     function like(btn) {
                         btn.disabled = true;
                         const dislikeBtn = btn.parentElement.parentElement.querySelector('div.dislike button');
                         dislikeBtn.disabled = true;
                         var ajax = new XMLHttpRequest();
-                        ajax.open("POST", "../staff/do-like", true);
+                        ajax.open("POST", "/staff/do-like", true);
                         ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                         ajax.onreadystatechange = function(){
@@ -134,7 +154,7 @@
                         const likeBtn = btn.parentElement.parentElement.querySelector('div.like button');
                         likeBtn.disabled = true;
                         var ajax = new XMLHttpRequest();
-                        ajax.open("POST", "../staff/do-dislike", true);
+                        ajax.open("POST", "/staff/do-dislike", true);
                         ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                         ajax.onreadystatechange = function(){
@@ -159,31 +179,39 @@
                         const postId = input.value;
                         ajax.send("postId="+ postId);
                     }
+                    /*window.addEventListener('load', () => {
+                        const cmtForm = document.querySelectorAll('.comment-form');
+                        cmtForm.forEach(form => {
+                            form.addEventListener('submit', (event) => {
+                                event.preventDefault();
+                                const btn = form.querySelector('button[type="submit"]');
+                                btn.disabled = true;
+                                const formData = new FormData(form);
+                                const json = {};
+                                for (const [key, value] of formData.entries()) {
+                                    json[key] = value;
+                                }
+                                const ajax = new XMLHttpRequest();
+                                ajax.open("POST", "/staff/do-comment", true);
+                                ajax.setRequestHeader("Content-Type", "application/json");
+                                ajax.onreadystatechange = function(){
+                                    if (ajax.readyState == 4)
+                                    {
+                                        btn.disabled = false;
+                                        const response =JSON.parse(ajax.responseText);
+                                        if (ajax.status == 200 && response.status == "success") {
+                                            console.log(response);
+                                        }
+                                        else {
+                                            alert(response.message)
+                                        }
+                                    }
+                                };
+                                ajax.send(JSON.stringify(json));
+                            })
+                        })
+                    })*/
                 </script>
-                <script type="text/javascript"> 
-                    function postComment(self){
-                        var ajax = new XMLHttpRequest();
-                        ajax.open("POST","../staff/do-comment",true);
-                        ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-                        ajax.onreadystatechange = function(){
-                            if(this.readyS == 4 && this.status == 200 ){
-                                //append in comments layout 
-                                var response = JSON.parse(this.responseText); 
-                            }
-                        };
-
-                        var.videoId = document.getElementById("videoId").value;
-                        ajax.send("videoId" + videoId +"comment=" + self.comment.value );
-
-                        return false; 
-                    }
-
-                </script>  
-            </div>
-            
-        </div>
-        <br>
-        {{/each}}
         </div>
 
     </div>

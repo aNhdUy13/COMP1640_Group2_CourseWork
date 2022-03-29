@@ -252,101 +252,6 @@ router.post("/do-like", async function (request, result) {
                     });
                 }
         })
-        
-
-
-        // dbo.collection("users").find({
-    //     "accessToken": accessToken
-    // }, function (error, user){
-    //     if (user = null) {
-    //         result.json({
-    //             "status": "error",
-    //             "message": "User has been logged out. Please log in again. "
-    //         });
-    //     }else {
-    //         dbo.collection("postIdeas").find({
-    //             "_id": ObjectId(_id)
-    //         }, function (err, post){
-    //             if (post == null) {
-    //                 result.json({
-    //                     "status": "error",
-    //                     "message": "Post does not exist."
-    //                 });
-    //             }else{
-    //                 var isLiked = false;
-    //                 for (var a = 0; a < post.likers.length; a++){
-    //                     var liker = post.likers[a];
-
-    //                     if (liker._id.toString() == user._id.toString()) {
-    //                         isLiked = true;
-    //                         break;
-    //                     }
-    //                 }
-    //             if(isLiked){
-    //                 dbo.collection("postIdeas").updateOne({
-    //                     "_id": ObjectId(_id)
-    //                 },{
-    //                     $pull: {
-    //                         "likers": {
-    //                             "_id": user._id,
-    //                         }
-    //                     }
-    //                 }, function(error, data){
-    //                     dbo.collection("users").updateOne({
-    //                         $and: [{
-    //                             "_id": post.user._id,
-    //                         },{
-    //                             "postIdeas._id": post._id
-    //                         }]
-    //                     },{
-    //                         $pull: {
-    //                             "postIdeas.$[].likers": {
-    //                                 "_id": user._id,
-    //                             }
-    //                         }
-    //                     });
-    //                     result.json({
-    //                         "status": "unliked",
-    //                         "message": "Post has been unliked."
-    //                     });
-    //                 });
-    //             } else{
-    //                 dbo.collection("postIdeas").updateOne({
-    //                     "_id": ObjectId(_id)
-    //                 },{
-    //                     $push:{
-    //                         "likers": {
-    //                             "_id" : user._id,
-    //                             "name": user.name,
-                                
-    //                         }
-    //                     }
-    //                 }, function(error, data) {
-    //                     dbo.collection("users").updateOne({
-    //                         $and: [{
-    //                             "_id" : post.user._id
-    //                         },{
-    //                             "posts._id" : post._id
-    //                         }]
-    //                     },{
-    //                         $push:{
-    //                             "postIdeas.$[].likers":{
-    //                                 "_id" : user._id,
-    //                                 "name": user.name,
-
-    //                             }
-    //                         }
-    //                     });
-    //                     result.json({
-    //                         "status": "success",
-    //                         "message": "Post has been liked."
-    //                     })
-    //                 })
-    //             }
-    //             }
-    //         })
-    //     }
-    // })
 
 })
 router.post("/do-dislike", async function (request, result) {
@@ -431,30 +336,36 @@ router.get('/viewIdea', async (req, res) => {
         }
     })
 })
+function htmlEntities (str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>');
+}
+
+// router.get('/get-comments', async (req, res) => {
+//     const result = await findComments();
+//     res.json(result);
+// })
+
 //comment
 router.post('/do-comment', async function(req, res) {
-    if(req.session.user_id){
-        getUser(req.session.user_id, function(user){
-            dbo.collection("postIdeas").findOneAndUpdate({
-                "_id": ObjectId(req.body.postId)
-            },{
-                $push:{
-                    "comment" :{
-                        "_id": request.session.user._id
-                    }
-                },
-                $pull: {
-                    commenter: {
-                        "_id": request.session.user._id
-                    }
-                }
-            }, function(error,data){
-                //send notification to publisher
-                return result.json({
-                    "status": "success",
-                    "message": "PostIdea has been commented",
-                });
-            })
+    if(req.session.user && req.session.user._id) {
+        const client = await MongoClient.connect(url);
+        const dbo = client.db(dbName);
+        const content = htmlEntities(req.body.content);
+        const data = await dbHandler.addComment({
+            postId: req.body.postId,
+            author: req.session.user._id,
+            content: content,
+        })
+        const cmt = await dbHandler.getComments({_id: data.insertedId});
+        return res.status(200).json({
+            "status": "success",
+            "message": "PostIdea has been commented",
+            "comment": cmt[0]
+        });
+        
+    } else {
+        res.status(401).send({
+            message: 'Unauthorize'
         })
     }
 })

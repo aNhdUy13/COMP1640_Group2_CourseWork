@@ -96,6 +96,15 @@ async function viewAllDataInTable(collectionName) {
 
 }
 
+async function countDataInTable(collectionName) {
+    const dbo = await getDBO();
+
+    const result = await dbo.collection(collectionName).countDocuments({});
+
+    return result;
+
+}
+
 async function viewAccountPagination(collectionName, limit, roleChoice, skipData) {
     const dbo = await getDBO();
 
@@ -105,15 +114,15 @@ async function viewAccountPagination(collectionName, limit, roleChoice, skipData
     return result;
 }
 
-async function viewAllAccountPaginationCustom(collectionName, skipData) {
+async function viewAllAccountPaginationCustom(collectionName, skipData = 0, limitData = 2) {
     const dbo = await getDBO();
 
     const mSkipData = parseInt(skipData);
-
+    console.log(mSkipData);
     // sort({{_id : -1}}) => Sort descending by id
     // const result = await dbo.collection(collectionName).find().sort({ _id: -1 }).limit(5).skip(mSkipData).toArray();
 
-    const result = await dbo.collection(collectionName).find().limit(2).skip(mSkipData).toArray();
+    const result = await dbo.collection(collectionName).find().skip(mSkipData).limit(limitData).toArray();
 
 
     return result;
@@ -268,4 +277,5 @@ module.exports = {
     removeIdeaFile,
     viewLatestPostIdeas,
     mostPopular,
+    countDataInTable,
 }

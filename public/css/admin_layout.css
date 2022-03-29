@@ -207,10 +207,14 @@ div.showButtonPaging a{
     text-decoration: none;
 }
 div.showButtonPaging a button{
-    color: white;
-    background-color: #203b5b;
+    color: black;
+    background-color: white;
     text-decoration: none;
 
+}
+div.showButtonPaging a button.active {
+    color: white;
+    background-color: #203b5b;
 }
 div.showButtonPaging {
     width: 100%;

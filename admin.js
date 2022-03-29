@@ -976,132 +976,89 @@ router.get('/TESTpostIdeaManagement', async (req, res) => {
         Get Post Idea to display with default skip data (0)
     */
     // const result = await dbHandler.viewAllDataInTable("postIdeas");
-    const result = await dbHandler.viewAllAccountPaginationCustom("postIdeas", 0);
-
-    const toCount = await dbHandler.viewAllDataInTable("postIdeas")
-    const countData = toCount.length;
-    console.log("Number of Post Idea : " + countData);
-
-    // Variable to get the max key ( Value to skip )
-    // Variable to get the all the page number
-    var arrGetKeyOnly = [];
-    var arrGetNumPage = [];
-
-    // Create Dictionary to STORE key (Value to SKip)
-    // and STORE value (Page Number)
-    const arrPage = {};
-
-
-    calculatePageNumFORTEST(countData, arrPage, arrGetKeyOnly, arrGetNumPage);
-
-    // Calculate to get max key.
-    let max = arrGetKeyOnly[0];
-    for (i = 1; i <= arrGetKeyOnly.length; i++) {
-        if (arrGetKeyOnly[i] > max) {
-            max = arrGetKeyOnly[i];
-        }
-    }
-    // console.log("Max Key = " + typeof max + " " + max);
-
-
-        
+    const count = await dbHandler.countDataInTable("postIdeas")
+    const pages = await calculatePageNumFORTEST(count, req.query.page ?? 1);
     res.render('admin/postIdeaManagementTEST', {
-        viewAllDataInTable: result, viewNumPage: arrPage,
-        lastPage: max
+        viewAllDataInTable: pages.data,
+        currPage: pages.currPage,
+        totalPages: pages.totalPages,
+        left: pages.left,
+        right: pages.right,
     });
 
 
 })
 
 
-router.get('/TESTchoosePageIdea', async (req, res) => {
-    /* 
-        Get Idea to display with custom skip data
-    */
-    const skipData = req.query.skipData;
-    const currPage = req.query.pageNum;
+// router.get('/TESTchoosePageIdea', async (req, res) => {
+//     /* 
+//         Get Idea to display with custom skip data
+//     */
+//     const skipData = req.query.skipData;
+//     const currPage = req.query.pageNum;
 
-    const result = await dbHandler.viewAllAccountPaginationCustom("postIdeas", skipData);
+//     const result = await dbHandler.viewAllAccountPaginationCustom("postIdeas", skipData);
 
-    const toCount = await dbHandler.viewAllDataInTable("postIdeas")
-    const countData = toCount.length;
-    console.log(countData);
+//     const toCount = await dbHandler.viewAllDataInTable("postIdeas")
+//     const countData = toCount.length;
+//     console.log(countData);
 
-    // create variable to get the max key ( Value to skip )
-    var arrGetKeyOnly = [];
-    var arrGetNumPage = [];
+//     // create variable to get the max key ( Value to skip )
+//     var arrGetKeyOnly = [];
+//     var arrGetNumPage = [];
 
-    // Create Dictionary to STORE key (Value to SKip)
-    // and STORE value (Page Number)
-    const arrPage = {};
-
-
-
-    calculatePageNumFORTEST(countData, arrPage, arrGetKeyOnly, arrGetNumPage)
+//     // Create Dictionary to STORE key (Value to SKip)
+//     // and STORE value (Page Number)
+//     const arrPage = {};
 
 
-    // Calculate to get max key.
-    console.log("Key ( Array ) = " + arrGetKeyOnly);
-    let max = arrGetKeyOnly[0];
 
-    for (i = 1; i <= arrGetKeyOnly.length; i++) {
-        if (arrGetKeyOnly[i] > max) {
-            max = arrGetKeyOnly[i];
-        }
-    }
-    console.log("Max Key = " + typeof max + " " + max);
+//     calculatePageNumFORTEST(countData, arrPage, arrGetKeyOnly, arrGetNumPage)
 
-    res.render('admin/postIdeaManagementTEST', {
-        viewAllDataInTable: result, viewNumPage: arrPage,
-        lastPage: max, 
+
+//     // Calculate to get max key.
+//     console.log("Key ( Array ) = " + arrGetKeyOnly);
+//     let max = arrGetKeyOnly[0];
+
+//     for (i = 1; i <= arrGetKeyOnly.length; i++) {
+//         if (arrGetKeyOnly[i] > max) {
+//             max = arrGetKeyOnly[i];
+//         }
+//     }
+//     console.log("Max Key = " + typeof max + " " + max);
+
+//     res.render('admin/postIdeaManagementTEST', {
+//         viewAllDataInTable: result, viewNumPage: arrPage,
+//         lastPage: max, 
         
-    });
-})
+//     });
+// })
 
-function calculatePageNumFORTEST(countData, arrPage, arrGetKeyOnly, arrGetNumPage) {
-
-    var numCalculator = 0;
-    var finalPageNumber = 0;
-
-    if (countData % 2 == 0) {
-
-        numCalculator = countData / 2;
-
-        finalPageNumber = numCalculator;
-
-        console.log("Chan ( Page ) = " + finalPageNumber);
+async function calculatePageNumFORTEST(countData, currPage, numPerPage = 2, maxPage = 2) {
+    const totalPages = Math.ceil(countData / numPerPage);
+    if (currPage > totalPages || currPage < 1) currPage = 1;
+    const skip = (currPage - 1) * (numPerPage || 2);
+    const rows = await dbHandler.viewAllAccountPaginationCustom("postIdeas", skip);
+    const result = {
+        currPage: currPage,
+        totalPages: totalPages,
+        left: [],
+        right: [],
+        data: rows,
+    };
+    for (let i = 0; i < maxPage; i++) {
+        let numLeft = currPage - (maxPage - i);
+        let numRight = +currPage + (maxPage - i);
+        if (numLeft > 0) {
+            result.left.push(numLeft);
+        } 
+        if (numRight <= totalPages) {
+            result.right.push(numRight);
+        } 
     }
-    else {
-        numCalculator = countData / 2;
-
-        finalPageNumber = numCalculator + 1;
-
-        console.log("Le ( Page ) = " + finalPageNumber);
-
-    }
-
-    var k;
-    for (i = 1; i <= finalPageNumber; i++) {
-
-        k = (i - 1) * 2;
-
-        arrGetKeyOnly.push(k);
-        arrGetNumPage.push(i);
-        arrPage[k] = i;
-    }
-
-
-    // Display key of dictionary ( value to skip in mongoDB )
-    console.log(Object.keys(arrPage));
-
-    // Display value of dictionary ( number of page )
-    for (var value in arrPage) {
-
-        console.log(arrPage[value]);
-
-    }
-
-
+    result.right = result.right.sort((a, b) => a - b);
+    console.log(result);
+    return result;
 }
 
 /* ===================================== 

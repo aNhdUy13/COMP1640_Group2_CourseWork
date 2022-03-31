@@ -972,16 +972,17 @@ router.post('/doSubmitFileWithTime',async (req, res) =>{
 ===================================== */
 
 router.get('/TESTpostIdeaManagement', async (req, res) => {
-    const currPage = req.query.currPage;
+    const currPageHere = req.query.currPage;
 
     // Count number of postIdea in table
     const countData = await dbHandler.countDataInTable("postIdeas")
 
 
     // Create function to calculate
-    // currPage ?? 1 : if not get the currPage, it will return to page 1.
-    const pages = await calculatePageNumFORTEST(countData, currPage ?? 1);
+    // currPage ?? 1 : if NOT GET VALUE of currPage, it will return to page 1.
+    const pages = await calculatePageNumFORTEST(countData, currPageHere ?? 1);
     
+
     res.render('admin/postIdeaManagementTEST', {
         viewAllDataInTable: pages.data,
         currPage: pages.currPage,

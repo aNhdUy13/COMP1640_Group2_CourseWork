@@ -60,6 +60,7 @@
                             Leave a comment:
                         </div>
                     </div>
+                    <div>
                     <form action="/staff/do-comment" action="POST" class="comment-form">
                         <div class="form-group">
                             <input type="hidden" value="{{_id}}" name="postId">
@@ -67,6 +68,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Post comment</button>
                     </form>
+                    </div>
                 </div>
             </div>
             </div>   
@@ -80,29 +82,29 @@
     
 </div>
 
-<script>
-    function removeAttachment(btn) {
-        btn.disabled = true;
-        const data = {
-            idea: btn.parentElement.parentElement.getAttribute('idea'),
-            fileUrl: btn.parentElement.getAttribute('file-url'),
-            fileName: btn.parentElement.getAttribute('file-name'),
-        }
-        fetch('/staff/doRemoveFile', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(res => res.json()).then(res => {
-            btn.disabled = false;
-            if (res.success) {
-                btn.parentElement.remove();
-            }
-        }).catch(err => {
-            btn.disabled = false;
-        })
-    }
+                <script type="text/javascript">
+                        function removeAttachment(btn) {
+                            btn.disabled = true;
+                            const data = {
+                                idea: btn.parentElement.parentElement.getAttribute('idea'),
+                                fileUrl: btn.parentElement.getAttribute('file-url'),
+                                fileName: btn.parentElement.getAttribute('file-name'),
+                            }
+                            fetch('/staff/doRemoveFile', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(data)
+                            }).then(res => res.json()).then(res => {
+                                btn.disabled = false;
+                                if (res.success) {
+                                    btn.parentElement.remove();
+                                }
+                            }).catch(err => {
+                                btn.disabled = false;
+                            })
+                        }
 
                         window.addEventListener('load', () => {
                         const cmtForm = document.querySelectorAll('.comment-form');
@@ -136,7 +138,7 @@
                             })
                         })
                     })
-</script>
+                </script>
 
 <div style="display: block">
     <form action="/staff/doAddFile" method="POST" enctype="multipart/form-data">    

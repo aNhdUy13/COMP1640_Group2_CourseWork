@@ -148,6 +148,7 @@ async function getCategory(collectionName) {
 
 }
 
+
 async function viewLatestPostIdeas(){
     const dbo = await getDBO();
 
@@ -171,7 +172,6 @@ async function mostViewed(collectionName) {
     const dbo = await getDBO();
     const mysort = {views: -1}
     const result = await dbo.collection(collectionName).find().sort(mysort).toArray();
-
     return result;
 }
 
@@ -310,19 +310,18 @@ async function getComments(filter = {}, options = {}) {
     if (options.limit) pipeline.push({
         $limit: options.limit
     })
-    const dbo = getDBO();
+    const dbo = await getDBO();
     const result = await dbo.collection('comments').aggregate(pipeline).toArray();
-    return result;
-    
+    return result;  
 }
 
 async function addComment(body) {
-    const dbo = getDBO();
+    const dbo = await getDBO();
     const result = await dbo.collection("comments").insertOne({
         "postIdeaId": ObjectId(body.postId),
         "userId":  ObjectId(body.userId),
         "content": body.content,
-        "commentTime": Date.now()
+        "commentTime": Date.now(),
     })
     return result;
 }
@@ -353,5 +352,4 @@ module.exports = {
     countDataInTable,
     getComments,
     addComment,
-
 }

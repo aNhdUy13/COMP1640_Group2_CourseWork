@@ -50,6 +50,8 @@ router.post('/doAddIdea',async(req, res, next) => {
         const newDes = fields.txtNewDes;
         const category = fields.txtNameCategory;
         const username = req.session.username;
+        const startDate = fields.txtStartDate;
+        const endDate = fields.txtEndDate;
         const email = req.session.user.email;
         const uploadFiles = [];
         const likers = [];
@@ -77,6 +79,8 @@ router.post('/doAddIdea',async(req, res, next) => {
             topic: newTopic,
             description: newDes,
             category: category,
+            startDate: startDate,
+            endDate: endDate,
             email: email,
             users : username,
             files: uploadFiles,
@@ -143,12 +147,14 @@ router.post('/doRemoveFile', async function(req, res, next) {
 
 router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
+    const getDate = await dbHandler.getCategory("closureDates");
     if(!req.session.username)
     return res.render('login');
     const newValues = await dbHandler.getUser("users",req.session.user.email);
     console.log(newValues);
-    res.render('staff/allFileSubmit',{ viewCategory: result, getUser: newValues[0]});
+    res.render('staff/allFileSubmit',{ viewCategory: result, getDate: getDate, getUser: newValues[0]});
 })
+
 
 // get categories
 

@@ -65,7 +65,6 @@ router.post('/doAddIdea',async(req, res, next) => {
             } catch (error) {
                 console.log(error)
             };
-            
         }
         const ideas = {
             topic: newTopic,
@@ -81,10 +80,7 @@ router.post('/doAddIdea',async(req, res, next) => {
         }
         await dbHandler.addNewAccount("postIdeas", ideas);
         res.render('staff/allFileSubmit', { implementSuccess: "Post idea uploaded" })
-    })
-    
-
-        
+    })     
 })
 
 router.post('/doAddFile', async function(req, res, next) {

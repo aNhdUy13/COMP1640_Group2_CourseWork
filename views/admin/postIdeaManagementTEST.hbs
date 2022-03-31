@@ -31,10 +31,7 @@
                                     <th>Topic</th>
                                     <th>Description</th>
                                     <th>Categories</th>
-                                    {{!-- <th>User</th> --}}
                                     <th>Email</th>
-
-                                    {{!-- <th></th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -42,22 +39,8 @@
                                 <tr>
                                     <td>{{topic}}</td>
                                     <td>{{description}}</td>
-                                    {{!-- <td>{{startDate}}</td>
-                                    <td>{{endDate}}</td> --}}
                                     <td>{{category}}</td>
-                                    {{!-- <td>{{users}}</td> --}}
                                     <td>{{email}}</td>
-                                
-                                    {{!-- <td>
-                                        <button>
-                                            <a href="../admin/updatePostIdea?id={{_id}}">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png"
-                                                width="18" height="18" alt="">
-                                                Update
-                                            </a>
-                                        </button>
-                                    </td> --}}
-                                
                                 </tr>
                             {{/each }}
                     </tbody>
@@ -66,24 +49,39 @@
 
             <div class="showButtonPaging">
                     
-                    <a href="../admin/choosePageIdea?skipData=0" style="margin-left:10px">
+                    <a href="../admin/TESTpostIdeaManagement" style="margin-left:10px">
                         <button>
                             <<
                         </button>
                     </a>
             
 
-                    {{#each viewNumPage as |val key|}}
-                        <a href="../admin/choosePageIdea?skipData={{key}}">
+                    {{#each left}}
+                        <a href="/admin/TESTpostIdeaManagement?currPage={{this}}">
                             <button>
-                                {{val}}
+                                {{this}}
                             </button>
                         </a>
+                    {{/each}}
 
+
+                    <a href="/admin/TESTpostIdeaManagement?currPage={{currPage}}">
+                        <button class="active">
+                            {{currPage}}
+                        </button>
+                    </a>
+
+
+                    {{#each right}}
+                        <a href="/admin/TESTpostIdeaManagement?currPage={{this}}">
+                            <button>
+                                {{this}}
+                            </button>
+                        </a>
                     {{/each}}
 
                     
-                    <a href="../admin/choosePageIdea?skipData={{lastPage}}">
+                    <a href="/admin/TESTpostIdeaManagement?currPage={{totalPages}}">
                         <button>
                             >>
                         </button>

@@ -41,6 +41,11 @@ router.post('/doAddIdea',async(req, res, next) => {
     if (!req.session || !req.session.username || !req.session.user) return res.sendStatus(401);
     form.parse(req, async function (err, fields, files) {
         if (err) return res.sendStatus(500);
+        //curent date
+        var currDate = new Date();
+        var currDate2 = currDate.toISOString().slice(0, 10);
+        var splitCurrDate = currDate2.split("-");
+
         const newTopic = fields.txtNewTopic;
         const newDes = fields.txtNewDes;
         const category = fields.txtNameCategory;
@@ -51,6 +56,7 @@ router.post('/doAddIdea',async(req, res, next) => {
         const dislikers = [];
         const views = 0;
         const popularpoint =0;
+        const yearcurr = splitCurrDate[0];
         if (!Array.isArray(files.uploadFiles)) files.uploadFiles = [files.uploadFiles];
         for (let file of files.uploadFiles) {
             const oldPath = file.filepath;
@@ -76,11 +82,97 @@ router.post('/doAddIdea',async(req, res, next) => {
             likers: likers,
             dislikers: dislikers,
             views: views,
-            popularpoint: popularpoint
+            popularpoint: popularpoint,
+            year: yearcurr
         }
+    
+    // set time check
+    const result = await dbHandler.viewAllDataInTable("closureDates");
+
+    var countDateInDB = result.length;
+    console.log("Count : " + countDateInDB);
+
+    var currDate = new Date();
+    var currDate2 = currDate.toISOString().slice(0, 10);
+    var splitCurrDate = currDate2.split("-");
+    var currDay = splitCurrDate[2];
+    var currMonth = splitCurrDate[1];
+    var currYear = splitCurrDate[0]
+    var finalCurrDate = currMonth + "-" + currDay + "-" + currYear;
+
+    let finalEndDate, finalStartDate, finalStartDate2, finalEndDate2;
+
+    for (i = 0; i < countDateInDB; i++) {
+        const objectDate = JSON.stringify(result[i], null, 2);
+        console.log(objectDate)
+        const splitDate = objectDate.split(",");
+        const fullStartDate = splitDate[1];
+        const fullEndDate = splitDate[2];
+
+        // Implement Start Date
+        const splitStartDate = fullStartDate.split(":");
+        const startDate = splitStartDate[1];
+        const startDateSlice = startDate.slice(2, 12);
+        const splitStartDate2 = startDateSlice.split("-");
+        const dayStartDate = splitStartDate2[0];
+        const monthStartDate = splitStartDate2[1];
+        const yearStartDate = splitStartDate2[2];
+
+        // Implement End Date
+        const splitEndDate = fullEndDate.split(":");
+        const endDate = splitEndDate[1];
+        const endDateSlice = endDate.slice(2, 12);
+        const splitEndDate2 = endDateSlice.split("-");
+        const dayEndDate = splitEndDate2[0];
+        const monthEndDate = splitEndDate2[1];
+        const yearEndDate = splitEndDate2[2];
+
+        if (currYear == yearStartDate) {
+            console.log("Found !");
+            finalStartDate = monthStartDate + "-" + dayStartDate + "-" + yearStartDate;
+            finalEndDate = monthEndDate + "-" + dayEndDate + "-" + yearEndDate;
+
+            finalStartDate2 = dayStartDate + "-" + monthStartDate+ "-" + yearStartDate;
+            finalEndDate2 = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
+        }
+        else {
+            console.log("Not Found !");
+
+        }
+
+    }
+    // Date Format : Month-Day-Year
+    console.log("Start Date : " + finalStartDate);
+    console.log("End Date : " + finalEndDate);
+    console.log("Current Date : " + finalCurrDate);
+
+    var formatStartDate, formatEndDate, formatCurrDate;
+    formatStartDate = Date.parse(finalStartDate);
+    console.log(formatStartDate);
+
+    formatEndDate = Date.parse(finalEndDate);
+    console.log(formatEndDate);
+
+    formatCurrDate = Date.parse(finalCurrDate);
+    console.log(formatCurrDate);
+
+    var messageHere;
+    if ((formatCurrDate >= formatStartDate && formatCurrDate <= formatEndDate ) )
+    {
+        messageHere = "Staff CAN Submit File !"
+        console.log(messageHere);
+    }
+    else {
+        messageHere = "Staff CANNOT Submit File !"
+        console.log(messageHere);
+    }
         await dbHandler.addNewAccount("postIdeas", ideas);
-        res.render('staff/allFileSubmit', { implementSuccess: "Post idea uploaded" })
-    })     
+
+        res.render('staff/allFileSubmit', { startDate: finalStartDate2, endDate: finalEndDate2, message: messageHere,implementSuccess: "Post idea uploaded" })
+    })
+    
+
+        
 })
 
 router.post('/doAddFile', async function(req, res, next) {
@@ -108,6 +200,7 @@ router.post('/doAddFile', async function(req, res, next) {
         await dbHandler.addIdeaFile("postIdeas", idea, uploadFiles);
         res.render('staff/allFileSubmit', { implementSuccess: "File added" })
     })
+    
 })
 
 router.post('/doRemoveFile', async function(req, res, next) {
@@ -132,12 +225,14 @@ router.post('/doRemoveFile', async function(req, res, next) {
 
 router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
+    const getDate = await dbHandler.getCategory("closureDates");
     if(!req.session.username)
     return res.render('login');
     const newValues = await dbHandler.getUser("users",req.session.user.email);
     console.log(newValues);
-    res.render('staff/allFileSubmit',{ viewCategory: result, getUser: newValues[0]});
+    res.render('staff/allFileSubmit',{ viewCategory: result, getDate: getDate, getUser: newValues[0]});
 })
+
 
 // get categories
 
@@ -241,101 +336,6 @@ router.post("/do-like", async function (request, result) {
                     });
                 }
         })
-        
-
-
-        // dbo.collection("users").find({
-    //     "accessToken": accessToken
-    // }, function (error, user){
-    //     if (user = null) {
-    //         result.json({
-    //             "status": "error",
-    //             "message": "User has been logged out. Please log in again. "
-    //         });
-    //     }else {
-    //         dbo.collection("postIdeas").find({
-    //             "_id": ObjectId(_id)
-    //         }, function (err, post){
-    //             if (post == null) {
-    //                 result.json({
-    //                     "status": "error",
-    //                     "message": "Post does not exist."
-    //                 });
-    //             }else{
-    //                 var isLiked = false;
-    //                 for (var a = 0; a < post.likers.length; a++){
-    //                     var liker = post.likers[a];
-
-    //                     if (liker._id.toString() == user._id.toString()) {
-    //                         isLiked = true;
-    //                         break;
-    //                     }
-    //                 }
-    //             if(isLiked){
-    //                 dbo.collection("postIdeas").updateOne({
-    //                     "_id": ObjectId(_id)
-    //                 },{
-    //                     $pull: {
-    //                         "likers": {
-    //                             "_id": user._id,
-    //                         }
-    //                     }
-    //                 }, function(error, data){
-    //                     dbo.collection("users").updateOne({
-    //                         $and: [{
-    //                             "_id": post.user._id,
-    //                         },{
-    //                             "postIdeas._id": post._id
-    //                         }]
-    //                     },{
-    //                         $pull: {
-    //                             "postIdeas.$[].likers": {
-    //                                 "_id": user._id,
-    //                             }
-    //                         }
-    //                     });
-    //                     result.json({
-    //                         "status": "unliked",
-    //                         "message": "Post has been unliked."
-    //                     });
-    //                 });
-    //             } else{
-    //                 dbo.collection("postIdeas").updateOne({
-    //                     "_id": ObjectId(_id)
-    //                 },{
-    //                     $push:{
-    //                         "likers": {
-    //                             "_id" : user._id,
-    //                             "name": user.name,
-                                
-    //                         }
-    //                     }
-    //                 }, function(error, data) {
-    //                     dbo.collection("users").updateOne({
-    //                         $and: [{
-    //                             "_id" : post.user._id
-    //                         },{
-    //                             "posts._id" : post._id
-    //                         }]
-    //                     },{
-    //                         $push:{
-    //                             "postIdeas.$[].likers":{
-    //                                 "_id" : user._id,
-    //                                 "name": user.name,
-
-    //                             }
-    //                         }
-    //                     });
-    //                     result.json({
-    //                         "status": "success",
-    //                         "message": "Post has been liked."
-    //                     })
-    //                 })
-    //             }
-    //             }
-    //         })
-    //     }
-    // })
 
 })
 router.post("/do-dislike", async function (request, result) {
@@ -420,6 +420,42 @@ router.get('/viewIdea', async (req, res) => {
         }
     })
 })
+function htmlEntities (str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>');
+}
+
+// router.get('/get-comments', async (req, res) => {
+//     const result = await findComments();
+//     res.json(result);
+// })
+
+//comment
+router.post('/do-comment', async function(req, res) {
+    if(req.session.user && req.session.user._id) {
+        const client = await MongoClient.connect(url);
+        const dbo = client.db(dbName);
+        const content = htmlEntities(req.body.content);
+        const data = await dbHandler.addComment({
+            postId: req.body.postId,
+            author: req.session.user._id,
+            content: content,
+        })
+        const cmt = await dbHandler.getComments({_id: data.insertedId});
+        return res.status(200).json({
+            "status": "success",
+            "message": "PostIdea has been commented",
+            "comment": cmt[0]
+        });
+        
+    } else {
+        res.status(401).send({
+            message: 'Unauthorize'
+        })
+    }
+})
+
+
+
 router.post('/ChoseViewType', async (req, res) => {
     const selectedViewType = req.body.txtSelectedViewType;
 
@@ -442,6 +478,95 @@ router.post('/ChoseViewType', async (req, res) => {
     }
 
     res.render('staff/seeIdea', { viewAllIdea: result })
+})
+
+
+//
+router.post('/doSubmitFileWithTime',async (req, res) =>{
+    /*
+        Start to process when staff click to submib button
+        (Check the curr date in is in between start and end date)
+    */
+    const result = await dbHandler.viewAllDataInTable("closureDates");
+
+    var countDateInDB = result.length;
+    console.log("Count : " + countDateInDB);
+
+    var currDate = new Date();
+    var currDate2 = currDate.toISOString().slice(0, 10);
+    var splitCurrDate = currDate2.split("-");
+    var currDay = splitCurrDate[2];
+    var currMonth = splitCurrDate[1];
+    var currYear = splitCurrDate[0]
+    var finalCurrDate = currMonth + "-" + currDay + "-" + currYear;
+
+    let finalEndDate, finalStartDate, finalStartDate2, finalEndDate2;
+
+    for (i = 0; i < countDateInDB; i++) {
+        const objectDate = JSON.stringify(result[i], null, 2);
+        console.log(objectDate)
+        const splitDate = objectDate.split(",");
+        const fullStartDate = splitDate[1];
+        const fullEndDate = splitDate[2];
+
+        // Implement Start Date
+        const splitStartDate = fullStartDate.split(":");
+        const startDate = splitStartDate[1];
+        const startDateSlice = startDate.slice(2, 12);
+        const splitStartDate2 = startDateSlice.split("-");
+        const dayStartDate = splitStartDate2[0];
+        const monthStartDate = splitStartDate2[1];
+        const yearStartDate = splitStartDate2[2];
+
+        // Implement End Date
+        const splitEndDate = fullEndDate.split(":");
+        const endDate = splitEndDate[1];
+        const endDateSlice = endDate.slice(2, 12);
+        const splitEndDate2 = endDateSlice.split("-");
+        const dayEndDate = splitEndDate2[0];
+        const monthEndDate = splitEndDate2[1];
+        const yearEndDate = splitEndDate2[2];
+
+        if (currYear == yearStartDate) {
+            console.log("Found !");
+            finalStartDate = monthStartDate + "-" + dayStartDate + "-" + yearStartDate;
+            finalEndDate = monthEndDate + "-" + dayEndDate + "-" + yearEndDate;
+
+            finalStartDate2 = dayStartDate + "-" + monthStartDate+ "-" + yearStartDate;
+            finalEndDate2 = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
+        }
+        else {
+            console.log("Not Found !");
+
+        }
+
+    }
+    // Date Format : Month-Day-Year
+    console.log("Start Date : " + finalStartDate);
+    console.log("End Date : " + finalEndDate);
+    console.log("Current Date : " + finalCurrDate);
+
+    var formatStartDate, formatEndDate, formatCurrDate;
+    formatStartDate = Date.parse(finalStartDate);
+    console.log(formatStartDate);
+
+    formatEndDate = Date.parse(finalEndDate);
+    console.log(formatEndDate);
+
+    formatCurrDate = Date.parse(finalCurrDate);
+    console.log(formatCurrDate);
+
+    var messageHere;
+    if ((formatCurrDate >= formatStartDate && formatCurrDate <= formatEndDate ) )
+    {
+        messageHere = "Staff CAN Submit File !"
+        console.log(messageHere);
+    }
+    else {
+        messageHere = "Staff CANNOT Submit File !"
+        console.log(messageHere);
+    }
+    res.render('admin/allFileSubmit.hbs', { startDate: finalStartDate2, endDate: finalEndDate2, message: messageHere });
 })
 
 app.use('/uploads', express.static('uploads'));

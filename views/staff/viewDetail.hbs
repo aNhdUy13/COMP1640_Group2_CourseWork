@@ -55,6 +55,20 @@
                     <span>Category: {{viewDetail.category}}</span>
                     <br>
                     <span>Views: {{viewDetail.views}}</span>
+                    <div>
+                        <div class="card-body">
+                            Leave a comment:
+                        </div>
+                    </div>
+                    <div>
+                    <form action="/staff/do-comment" action="POST" class="comment-form">
+                        <div class="form-group">
+                            <input type="hidden" value="{{_id}}" name="postId">
+                            <textarea class="form-control" name="content"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Post comment</button>
+                    </form>
+                    </div>
                 </div>
             </div>
             </div>   
@@ -68,30 +82,63 @@
     
 </div>
 
-<script>
-    function removeAttachment(btn) {
-        btn.disabled = true;
-        const data = {
-            idea: btn.parentElement.parentElement.getAttribute('idea'),
-            fileUrl: btn.parentElement.getAttribute('file-url'),
-            fileName: btn.parentElement.getAttribute('file-name'),
-        }
-        fetch('/staff/doRemoveFile', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(res => res.json()).then(res => {
-            btn.disabled = false;
-            if (res.success) {
-                btn.parentElement.remove();
-            }
-        }).catch(err => {
-            btn.disabled = false;
-        })
-    }
-</script>
+                <script type="text/javascript">
+                        function removeAttachment(btn) {
+                            btn.disabled = true;
+                            const data = {
+                                idea: btn.parentElement.parentElement.getAttribute('idea'),
+                                fileUrl: btn.parentElement.getAttribute('file-url'),
+                                fileName: btn.parentElement.getAttribute('file-name'),
+                            }
+                            fetch('/staff/doRemoveFile', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(data)
+                            }).then(res => res.json()).then(res => {
+                                btn.disabled = false;
+                                if (res.success) {
+                                    btn.parentElement.remove();
+                                }
+                            }).catch(err => {
+                                btn.disabled = false;
+                            })
+                        }
+
+                        window.addEventListener('load', () => {
+                        const cmtForm = document.querySelectorAll('.comment-form');
+                        cmtForm.forEach(form => {
+                            form.addEventListener('submit', (event) => {
+                                event.preventDefault();
+                                const btn = form.querySelector('button[type="submit"]');
+                                btn.disabled = true;
+                                const formData = new FormData(form);
+                                const json = {};
+                                for (const [key, value] of formData.entries()) {
+                                    json[key] = value;
+                                }
+                                const ajax = new XMLHttpRequest();
+                                ajax.open("POST", "/staff/do-comment", true);
+                                ajax.setRequestHeader("Content-Type", "application/json");
+                                ajax.onreadystatechange = function(){
+                                    if (ajax.readyState == 4)
+                                    {
+                                        btn.disabled = false;
+                                        const response =JSON.parse(ajax.responseText);
+                                        if (ajax.status == 200 && response.status == "success") {
+                                            console.log(response);
+                                        }
+                                        else {
+                                            alert(response.message)
+                                        }
+                                    }
+                                };
+                                ajax.send(JSON.stringify(json));
+                            })
+                        })
+                    })
+                </script>
 
 <div style="display: block">
     <form action="/staff/doAddFile" method="POST" enctype="multipart/form-data">    

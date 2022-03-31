@@ -4,6 +4,7 @@ const dbName = "COMP1640_Web_DBnew_2";
 const fs = require('fs');
 // Import dependencies to hash passwordToCompare
 const bcrypt = require('bcrypt');
+const { ObjectId } = require('mongodb');
 
 
 async function getDBO() {
@@ -96,6 +97,15 @@ async function viewAllDataInTable(collectionName) {
 
 }
 
+async function countDataInTable(collectionName) {
+    const dbo = await getDBO();
+
+    const result = await dbo.collection(collectionName).countDocuments({});
+
+    return result;
+
+}
+
 async function viewAccountPagination(collectionName, limit, roleChoice, skipData) {
     const dbo = await getDBO();
 
@@ -105,15 +115,15 @@ async function viewAccountPagination(collectionName, limit, roleChoice, skipData
     return result;
 }
 
-async function viewAllAccountPaginationCustom(collectionName, skipData) {
+async function viewAllAccountPaginationCustom(collectionName, skipData = 0, limitData = 5) {
     const dbo = await getDBO();
 
     const mSkipData = parseInt(skipData);
-
+    console.log(mSkipData);
     // sort({{_id : -1}}) => Sort descending by id
     // const result = await dbo.collection(collectionName).find().sort({ _id: -1 }).limit(5).skip(mSkipData).toArray();
 
-    const result = await dbo.collection(collectionName).find().limit(5).skip(mSkipData).toArray();
+    const result = await dbo.collection(collectionName).find().skip(mSkipData).limit(limitData).toArray();
 
 
     return result;
@@ -138,6 +148,7 @@ async function getCategory(collectionName) {
 
 }
 
+
 async function viewLatestPostIdeas(){
     const dbo = await getDBO();
 
@@ -161,7 +172,6 @@ async function mostViewed(collectionName) {
     const dbo = await getDBO();
     const mysort = {views: -1}
     const result = await dbo.collection(collectionName).find().sort(mysort).toArray();
-
     return result;
 }
 
@@ -243,7 +253,78 @@ async function mostPopular(collectionName) {
 
 /* End Manager function*/
 
+/* Comment */
 
+async function getComments(filter = {}, options = {}) {
+    const pipeline = [
+        {
+            $match: {
+                ...filter //{_id: abc}
+            }
+        },
+        {
+            $lookup: {
+                from: 'users',
+                let: { userId: "$userId" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$_id", "$$userId"]
+                            },
+                        }
+                    }
+                ],
+                as: 'author',
+            }
+        },
+        {
+            $unwind: "$author"
+        },
+        {
+            $lookup: {
+                from: 'postIdeas',
+                let: { ideaId: "$postIdeaId" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$_id", "$$ideaId"]
+                            },
+                        }
+                    }
+                ],
+                as: 'postIdea',
+            }
+        },
+        {
+            $unwind: "$postIdea"
+        },
+        {
+            $skip: options.skip ?? 0
+        },
+        {
+            $sort: options.sort ?? { commentTime: -1 }
+        }
+    ];
+    if (options.limit) pipeline.push({
+        $limit: options.limit
+    })
+    const dbo = await getDBO();
+    const result = await dbo.collection('comments').aggregate(pipeline).toArray();
+    return result;  
+}
+
+async function addComment(body) {
+    const dbo = await getDBO();
+    const result = await dbo.collection("comments").insertOne({
+        "postIdeaId": ObjectId(body.postId),
+        "userId":  ObjectId(body.userId),
+        "content": body.content,
+        "commentTime": Date.now(),
+    })
+    return result;
+}
 
 module.exports = {
     addNewAccount,
@@ -268,4 +349,7 @@ module.exports = {
     removeIdeaFile,
     viewLatestPostIdeas,
     mostPopular,
+    countDataInTable,
+    getComments,
+    addComment,
 }

@@ -86,19 +86,6 @@
                     </div>
                 </div>
                 <div>
-                    {{!-- <div id="comment">
-                        <%
-                        video.comments = video.comments.reverse();
-                        video.comments.forEach(function(comment){
-                        %>    
-                        
-                        <div>
-                            <h5 class="mt-0"><%= comment.user.name %> </h5>
-                            <%= comment.comment %>
-                        </div>
-                        
-                    </div>
-                    <% }) %> --}}
                     <div>
                         <div class="card-body">
                             Leave a comment:
@@ -179,6 +166,7 @@
                         const postId = input.value;
                         ajax.send("postId="+ postId);
                     }
+
                     window.addEventListener('load', () => {
                         const cmtForm = document.querySelectorAll('.comment-form');
                         cmtForm.forEach(form => {

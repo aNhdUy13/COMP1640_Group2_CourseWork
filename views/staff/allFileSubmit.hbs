@@ -26,7 +26,7 @@
                             <td class="accountManagement_title">User : </td>
                             <td name = "txtUserName"> {{getUser.name}}</td>
                         </tr>
-                        <tr>
+                        {{!-- <tr>
                             <td class="accountManagement_title">Start Date : </td>
                             <td name = "txtStartDate">
                             <select name="txtStartDate">
@@ -47,10 +47,11 @@
                                     {{/each}}
                             </select>
                             </td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <td class="accountManagement_title">Topic : </td>
                             <td><input type="text" class="accountManagement" name="txtNewTopic"> </td> 
+                            
                         </tr>
                         <tr>
                             <td class="accountManagement_title">Description : </td>
@@ -77,23 +78,23 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="submit" value="Submit" class="insertButton" name="submit" onclick="check()">
+                            <td>
+                                <input type="submit" value="Submit" class="insertButton" name="submit" onclick="check()">
+                                <p>{{message}}</p>
                             </td>
                         </tr>
                     </form>
                 </table>
                 <script>
                     function check(){
-                        startDate = startDate.split("-");
+                       /* startDate = startDate.split("-");
                         var newDate1 = new Date( startDate[2], startDate[1] - 1, startDate[0]);
                         endDate = endDate.split("-");
-                        var newDate2 = new Date( endDate[2], endDate[1] - 1, endDate[0]);
+                        var newDate2 = new Date( endDate[2], endDate[1] - 1, endDate[0]); */
                         if(!this.form.checkbox.checked)
-                            {alert('You must agree to the terms first.')}
-                        else if(newDate1.getTime()< Date.now()<newDate2.getTime()){
-                            alert('Time is out')
-                        }    
+                            {alert('You must agree to the terms first.')  
                             return false;
+                            }
                     }
                 </script>
 

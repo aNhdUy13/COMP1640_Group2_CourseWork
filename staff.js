@@ -50,8 +50,6 @@ router.post('/doAddIdea',async(req, res, next) => {
         const newDes = fields.txtNewDes;
         const category = fields.txtNameCategory;
         const username = req.session.username;
-        const startDate = fields.txtStartDate;
-        const endDate = fields.txtEndDate;
         const email = req.session.user.email;
         const uploadFiles = [];
         const likers = [];
@@ -79,8 +77,6 @@ router.post('/doAddIdea',async(req, res, next) => {
             topic: newTopic,
             description: newDes,
             category: category,
-            startDate: startDate,
-            endDate: endDate,
             email: email,
             users : username,
             files: uploadFiles,
@@ -90,8 +86,89 @@ router.post('/doAddIdea',async(req, res, next) => {
             popularpoint: popularpoint,
             year: yearcurr
         }
+    
+    // set time check
+    const result = await dbHandler.viewAllDataInTable("closureDates");
+
+    var countDateInDB = result.length;
+    console.log("Count : " + countDateInDB);
+
+    var currDate = new Date();
+    var currDate2 = currDate.toISOString().slice(0, 10);
+    var splitCurrDate = currDate2.split("-");
+    var currDay = splitCurrDate[2];
+    var currMonth = splitCurrDate[1];
+    var currYear = splitCurrDate[0]
+    var finalCurrDate = currMonth + "-" + currDay + "-" + currYear;
+
+    let finalEndDate, finalStartDate, finalStartDate2, finalEndDate2;
+
+    for (i = 0; i < countDateInDB; i++) {
+        const objectDate = JSON.stringify(result[i], null, 2);
+        console.log(objectDate)
+        const splitDate = objectDate.split(",");
+        const fullStartDate = splitDate[1];
+        const fullEndDate = splitDate[2];
+
+        // Implement Start Date
+        const splitStartDate = fullStartDate.split(":");
+        const startDate = splitStartDate[1];
+        const startDateSlice = startDate.slice(2, 12);
+        const splitStartDate2 = startDateSlice.split("-");
+        const dayStartDate = splitStartDate2[0];
+        const monthStartDate = splitStartDate2[1];
+        const yearStartDate = splitStartDate2[2];
+
+        // Implement End Date
+        const splitEndDate = fullEndDate.split(":");
+        const endDate = splitEndDate[1];
+        const endDateSlice = endDate.slice(2, 12);
+        const splitEndDate2 = endDateSlice.split("-");
+        const dayEndDate = splitEndDate2[0];
+        const monthEndDate = splitEndDate2[1];
+        const yearEndDate = splitEndDate2[2];
+
+        if (currYear == yearStartDate) {
+            console.log("Found !");
+            finalStartDate = monthStartDate + "-" + dayStartDate + "-" + yearStartDate;
+            finalEndDate = monthEndDate + "-" + dayEndDate + "-" + yearEndDate;
+
+            finalStartDate2 = dayStartDate + "-" + monthStartDate+ "-" + yearStartDate;
+            finalEndDate2 = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
+        }
+        else {
+            console.log("Not Found !");
+
+        }
+
+    }
+    // Date Format : Month-Day-Year
+    console.log("Start Date : " + finalStartDate);
+    console.log("End Date : " + finalEndDate);
+    console.log("Current Date : " + finalCurrDate);
+
+    var formatStartDate, formatEndDate, formatCurrDate;
+    formatStartDate = Date.parse(finalStartDate);
+    console.log(formatStartDate);
+
+    formatEndDate = Date.parse(finalEndDate);
+    console.log(formatEndDate);
+
+    formatCurrDate = Date.parse(finalCurrDate);
+    console.log(formatCurrDate);
+
+    var messageHere;
+    if ((formatCurrDate >= formatStartDate && formatCurrDate <= formatEndDate ) )
+    {
+        messageHere = "Staff CAN Submit File !"
+        console.log(messageHere);
+    }
+    else {
+        messageHere = "Staff CANNOT Submit File !"
+        console.log(messageHere);
+    }
         await dbHandler.addNewAccount("postIdeas", ideas);
-        res.render('staff/allFileSubmit', { implementSuccess: "Post idea uploaded" })
+        res.render('staff/allFileSubmit', { startDate: finalStartDate2, endDate: finalEndDate2, message: messageHere,implementSuccess: "Post idea uploaded" })
     })
     
 
@@ -123,6 +200,7 @@ router.post('/doAddFile', async function(req, res, next) {
         await dbHandler.addIdeaFile("postIdeas", idea, uploadFiles);
         res.render('staff/allFileSubmit', { implementSuccess: "File added" })
     })
+    
 })
 
 router.post('/doRemoveFile', async function(req, res, next) {
@@ -377,6 +455,7 @@ router.post('/do-comment', async function(req, res) {
 })
 
 
+
 router.post('/ChoseViewType', async (req, res) => {
     const selectedViewType = req.body.txtSelectedViewType;
 
@@ -399,6 +478,95 @@ router.post('/ChoseViewType', async (req, res) => {
     }
 
     res.render('staff/seeIdea', { viewAllIdea: result })
+})
+
+
+//
+router.post('/doSubmitFileWithTime',async (req, res) =>{
+    /*
+        Start to process when staff click to submib button
+        (Check the curr date in is in between start and end date)
+    */
+    const result = await dbHandler.viewAllDataInTable("closureDates");
+
+    var countDateInDB = result.length;
+    console.log("Count : " + countDateInDB);
+
+    var currDate = new Date();
+    var currDate2 = currDate.toISOString().slice(0, 10);
+    var splitCurrDate = currDate2.split("-");
+    var currDay = splitCurrDate[2];
+    var currMonth = splitCurrDate[1];
+    var currYear = splitCurrDate[0]
+    var finalCurrDate = currMonth + "-" + currDay + "-" + currYear;
+
+    let finalEndDate, finalStartDate, finalStartDate2, finalEndDate2;
+
+    for (i = 0; i < countDateInDB; i++) {
+        const objectDate = JSON.stringify(result[i], null, 2);
+        console.log(objectDate)
+        const splitDate = objectDate.split(",");
+        const fullStartDate = splitDate[1];
+        const fullEndDate = splitDate[2];
+
+        // Implement Start Date
+        const splitStartDate = fullStartDate.split(":");
+        const startDate = splitStartDate[1];
+        const startDateSlice = startDate.slice(2, 12);
+        const splitStartDate2 = startDateSlice.split("-");
+        const dayStartDate = splitStartDate2[0];
+        const monthStartDate = splitStartDate2[1];
+        const yearStartDate = splitStartDate2[2];
+
+        // Implement End Date
+        const splitEndDate = fullEndDate.split(":");
+        const endDate = splitEndDate[1];
+        const endDateSlice = endDate.slice(2, 12);
+        const splitEndDate2 = endDateSlice.split("-");
+        const dayEndDate = splitEndDate2[0];
+        const monthEndDate = splitEndDate2[1];
+        const yearEndDate = splitEndDate2[2];
+
+        if (currYear == yearStartDate) {
+            console.log("Found !");
+            finalStartDate = monthStartDate + "-" + dayStartDate + "-" + yearStartDate;
+            finalEndDate = monthEndDate + "-" + dayEndDate + "-" + yearEndDate;
+
+            finalStartDate2 = dayStartDate + "-" + monthStartDate+ "-" + yearStartDate;
+            finalEndDate2 = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
+        }
+        else {
+            console.log("Not Found !");
+
+        }
+
+    }
+    // Date Format : Month-Day-Year
+    console.log("Start Date : " + finalStartDate);
+    console.log("End Date : " + finalEndDate);
+    console.log("Current Date : " + finalCurrDate);
+
+    var formatStartDate, formatEndDate, formatCurrDate;
+    formatStartDate = Date.parse(finalStartDate);
+    console.log(formatStartDate);
+
+    formatEndDate = Date.parse(finalEndDate);
+    console.log(formatEndDate);
+
+    formatCurrDate = Date.parse(finalCurrDate);
+    console.log(formatCurrDate);
+
+    var messageHere;
+    if ((formatCurrDate >= formatStartDate && formatCurrDate <= formatEndDate ) )
+    {
+        messageHere = "Staff CAN Submit File !"
+        console.log(messageHere);
+    }
+    else {
+        messageHere = "Staff CANNOT Submit File !"
+        console.log(messageHere);
+    }
+    res.render('admin/allFileSubmit.hbs', { startDate: finalStartDate2, endDate: finalEndDate2, message: messageHere });
 })
 
 app.use('/uploads', express.static('uploads'));

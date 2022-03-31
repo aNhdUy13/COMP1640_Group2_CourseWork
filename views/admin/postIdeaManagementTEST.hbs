@@ -57,22 +57,23 @@
             
 
                     {{#each left}}
-                        <a href="/admin/TESTpostIdeaManagement?page={{this}}">
+                        <a href="/admin/TESTpostIdeaManagement?currPage={{this}}">
                             <button>
                                 {{this}}
                             </button>
                         </a>
-
                     {{/each}}
 
-                    <a href="/admin/TESTpostIdeaManagement?page={{currPage}}">
+
+                    <a href="/admin/TESTpostIdeaManagement?currPage={{currPage}}">
                         <button class="active">
                             {{currPage}}
                         </button>
                     </a>
 
+
                     {{#each right}}
-                        <a href="/admin/TESTpostIdeaManagement?page={{this}}">
+                        <a href="/admin/TESTpostIdeaManagement?currPage={{this}}">
                             <button>
                                 {{this}}
                             </button>
@@ -80,7 +81,7 @@
                     {{/each}}
 
                     
-                    <a href="/admin/TESTpostIdeaManagement?page={{totalPages}}">
+                    <a href="/admin/TESTpostIdeaManagement?currPage={{totalPages}}">
                         <button>
                             >>
                         </button>

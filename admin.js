@@ -972,12 +972,16 @@ router.post('/doSubmitFileWithTime',async (req, res) =>{
 ===================================== */
 
 router.get('/TESTpostIdeaManagement', async (req, res) => {
-    /* 
-        Get Post Idea to display with default skip data (0)
-    */
-    // const result = await dbHandler.viewAllDataInTable("postIdeas");
-    const count = await dbHandler.countDataInTable("postIdeas")
-    const pages = await calculatePageNumFORTEST(count, req.query.page ?? 1);
+    const currPage = req.query.currPage;
+
+    // Count number of postIdea in table
+    const countData = await dbHandler.countDataInTable("postIdeas")
+
+
+    // Create function to calculate
+    // currPage ?? 1 : if not get the currPage, it will return to page 1.
+    const pages = await calculatePageNumFORTEST(countData, currPage ?? 1);
+    
     res.render('admin/postIdeaManagementTEST', {
         viewAllDataInTable: pages.data,
         currPage: pages.currPage,
@@ -989,21 +993,53 @@ router.get('/TESTpostIdeaManagement', async (req, res) => {
 
 })
 
-async function calculatePageNumFORTEST(countData, currPage, numPerPage = 2, maxPage = 2) {
-    const totalPages = Math.ceil(countData / numPerPage);
+async function calculatePageNumFORTEST(countData, currPage, limitItemPerPage = 5, maxPageEachSide = 2) 
+{
+    // ( Total item in table ) divide ( Limit Item Per Page )
+    // then Round number Up ( Math.ceil : là func dùng để chia rồi làm tròn lên )
+    // => Chia xong làm tròn để lấy tổng số trang.
+    const totalPages = Math.ceil(countData / limitItemPerPage);
+
+
+    // ( Nếu currPage > tổng số trang ) hoặc ( currPage < 1 )
+    // => currPage will return to page 1
     if (currPage > totalPages || currPage < 1) currPage = 1;
-    const skip = (currPage - 1) * (numPerPage || 2);
-    const rows = await dbHandler.viewAllAccountPaginationCustom("postIdeas", skip);
+
+    // Calculate Skip Date to display in mongoDB
+    // limitItemPerPage || 5 : LIMIT ITEM PER PAGE is 5 ( default ) , 
+    // in case of dont have limitItemPerPage,is will return to 5.
+    // Ex : Page = 1 => Skip Data = 0 (  (1 - 1)*(5)  )
+    //      Page = 2 => Skip Data = 5 (  (2 - 1)*(5)  )
+    //      Page = 3 => Skip Data = 10 (  (3 - 1)*(5)  )
+    const skipData = (currPage - 1) * (limitItemPerPage || 5);
+
+
+    // Get all data in "postIdea" table with Skip Data
+    const data = await dbHandler.viewAllAccountPaginationCustom("postIdeas", skipData);
+
+    // create object "result"
     const result = {
         currPage: currPage,
         totalPages: totalPages,
         left: [],
         right: [],
-        data: rows,
+        data: data,
     };
-    for (let i = 0; i < maxPage; i++) {
-        let numLeft = currPage - (maxPage - i);
-        let numRight = +currPage + (maxPage - i);
+
+
+    // Implement loop to display Page in each side of current page
+    // Pages in each side of current page is 2 ( default )
+    for (let i = 0; i < maxPageEachSide; i++) {
+        // Ex : 
+        // (-) if Current Page = 1 ,  
+        // + Pages in the left will TRẢ VỀ LẦN LƯỢT là -1 and 0  
+        //   ==> K lấy giá trị nào. ( K thỏa mãn numLeft > 0 )
+        // + Pages in the right will TRẢ VỀ LẦN LƯỢT là to 3 and 2
+        //   ==> Lấy tất cả giá trị. ( Thỏa mãn numRight <= totalPages)
+        // => Tại page = 1, thì bên trái sẽ KHÔNG có j, và bên phải có 2 page là 3 và 2.
+        let numLeft = parseInt(currPage) - (maxPageEachSide - i);
+        let numRight = parseInt(currPage)  + (maxPageEachSide - i);
+
         if (numLeft > 0) {
             result.left.push(numLeft);
         } 
@@ -1011,8 +1047,14 @@ async function calculatePageNumFORTEST(countData, currPage, numPerPage = 2, maxP
             result.right.push(numRight);
         } 
     }
+
+    // Như ở trên, phía bên phải trả về 2 page là 3 và 2 ( Xếp lộn xộn )
+    // Dùng hàm sort() này để sort lại array từ BÉ ĐẾN LỚN ( Ascending = Tăng dần) 
+    // => result.right sẽ TRẢ VỀ 2 pages là 2 và 3.
     result.right = result.right.sort((a, b) => a - b);
+
     console.log(result);
+
     return result;
 }
 

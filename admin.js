@@ -989,51 +989,6 @@ router.get('/TESTpostIdeaManagement', async (req, res) => {
 
 })
 
-
-// router.get('/TESTchoosePageIdea', async (req, res) => {
-//     /* 
-//         Get Idea to display with custom skip data
-//     */
-//     const skipData = req.query.skipData;
-//     const currPage = req.query.pageNum;
-
-//     const result = await dbHandler.viewAllAccountPaginationCustom("postIdeas", skipData);
-
-//     const toCount = await dbHandler.viewAllDataInTable("postIdeas")
-//     const countData = toCount.length;
-//     console.log(countData);
-
-//     // create variable to get the max key ( Value to skip )
-//     var arrGetKeyOnly = [];
-//     var arrGetNumPage = [];
-
-//     // Create Dictionary to STORE key (Value to SKip)
-//     // and STORE value (Page Number)
-//     const arrPage = {};
-
-
-
-//     calculatePageNumFORTEST(countData, arrPage, arrGetKeyOnly, arrGetNumPage)
-
-
-//     // Calculate to get max key.
-//     console.log("Key ( Array ) = " + arrGetKeyOnly);
-//     let max = arrGetKeyOnly[0];
-
-//     for (i = 1; i <= arrGetKeyOnly.length; i++) {
-//         if (arrGetKeyOnly[i] > max) {
-//             max = arrGetKeyOnly[i];
-//         }
-//     }
-//     console.log("Max Key = " + typeof max + " " + max);
-
-//     res.render('admin/postIdeaManagementTEST', {
-//         viewAllDataInTable: result, viewNumPage: arrPage,
-//         lastPage: max, 
-        
-//     });
-// })
-
 async function calculatePageNumFORTEST(countData, currPage, numPerPage = 2, maxPage = 2) {
     const totalPages = Math.ceil(countData / numPerPage);
     if (currPage > totalPages || currPage < 1) currPage = 1;

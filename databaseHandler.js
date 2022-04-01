@@ -250,6 +250,12 @@ async function mostPopular(collectionName) {
 
     return result;
 }
+async function countIdea(department){
+    const dbo = await getDBO();
+    const result = await dbo.collection("postIdeas").find({department:department}).toArray();
+    const countI = result.length;
+    return countI;
+}
 
 /* End Manager function*/
 
@@ -352,4 +358,5 @@ module.exports = {
     countDataInTable,
     getComments,
     addComment,
+    countIdea,
 }

@@ -37,34 +37,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each viewAllAccount}}
+                            {{#each viewAllDataInTable}}
                                 <tr>
                                     <td>{{name}}</td>
                                     <td>{{email}}</td>
                                     <td>{{age}}</td>
                                     <td>{{phoneNumber}}</td>
                                     <td>{{role}}</td>
-{{!-- 
-                                    <td>
-                                        <button>
-                                            <a href="../admin/deleteAccount?id={{_id}}" 
-                                            onclick="return confirm('Are You Sure to Delete ?')">
-                                                <img src="https://icon-library.com/images/red-recycle-bin-icon/red-recycle-bin-icon-18.jpg"
-                                                    width="18" height="18">
-                                                    Delete
-                                            </a>
-                                        </button>
-                                    </td>
-
-                                    <td>
-                                            <button>
-                                                <a href="../admin/updateAccount?id={{_id}}">
-                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png"
-                                                    width="18" height="18" alt="">
-                                                    Update
-                                                </a>
-                                        </button>
-                                    </td> --}}
                                 
                                 </tr>
                             {{/each }}
@@ -74,56 +53,43 @@
 
             <div class="showButtonPaging">
                 
-                    <a href="../admin/choosePageUser?skipData=0" style="margin-left:10px">
+                    <a href="../admin/availableUsers?skipData=0" style="margin-left:10px">
                         <button>
                             <<
                         </button>
                     </a>
             
 
-                    {{#each viewNumPage as |val key|}}
-                        <a href="../admin/choosePageUser?skipData={{key}}">
+                    {{#each left}}
+                        <a href="../admin/availableUsers?currPage={{this}}">
                             <button>
-                                {{val}}
+                                {{this}}
                             </button>
                         </a>
 
                     {{/each}}
 
                     
-                    <a href="../admin/choosePageUser?skipData={{lastPage}}">
+                    <a href="../admin/availableUsers?currPage={{currPage}}">
+                        <button class="active">
+                            {{currPage}}
+                        </button>
+                    </a> 
+                    
+                    {{#each right}}
+                        <a href="../admin/availableUsers?currPage={{this}}">
+                            <button>
+                                {{this}}
+                            </button>
+                        </a>
+
+                    {{/each}}
+
+                    <a href="../admin/availableUsers?currPage={{lastPage}}">
                         <button>
                             >>
                         </button>
                     </a> 
-{{!-- 
-                <div class="choosePageFirst">
-                    <a href="../admin/choosePageUser?skipData=0">
-                        <button>
-                            <<
-                        </button>
-                    </a>
-                </div>
-
-                <div class="choosePage">
-                    <div class="choosePage_inside">
-                        {{#each viewNumPage as |val key|}}
-                            <a href="../admin/choosePageUser?skipData={{key}}">
-                                <button>
-                                        {{val}}
-                                </button>
-                            </a>
-                        {{/each}}
-                    </div>
-                </div>
-
-                <div class="choosePageLast">
-                    <a href="../admin/choosePageUser?skipData={{lastPage}}">
-                        <button>
-                            >>
-                        </button>
-                    </a>
-                </div> --}}
             </div>
 
         </div>

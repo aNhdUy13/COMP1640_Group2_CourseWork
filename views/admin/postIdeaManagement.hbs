@@ -64,26 +64,41 @@
                 </table>
             </div>
 
-            <div class="showButtonPaging">
+                <div class="showButtonPaging">
                     
-                    <a href="../admin/choosePageIdea?skipData=0" style="margin-left:10px">
+                    <a href="../admin/postIdeaManagement" style="margin-left:10px">
                         <button>
                             <<
                         </button>
                     </a>
             
 
-                    {{#each viewNumPage as |val key|}}
-                        <a href="../admin/choosePageIdea?skipData={{key}}">
+                    {{#each left}}
+                        <a href="/admin/postIdeaManagement?currPage={{this}}">
                             <button>
-                                {{val}}
+                                {{this}}
                             </button>
                         </a>
+                    {{/each}}
 
+
+                    <a href="/admin/postIdeaManagement?currPage={{currPage}}">
+                        <button class="active">
+                            {{currPage}}
+                        </button>
+                    </a>
+
+
+                    {{#each right}}
+                        <a href="/admin/postIdeaManagement?currPage={{this}}">
+                            <button>
+                                {{this}}
+                            </button>
+                        </a>
                     {{/each}}
 
                     
-                    <a href="../admin/choosePageIdea?skipData={{lastPage}}">
+                    <a href="/admin/postIdeaManagement?currPage={{lastPage}}">
                         <button>
                             >>
                         </button>

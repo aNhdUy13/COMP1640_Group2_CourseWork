@@ -173,125 +173,23 @@ router.get('/postIdeaManagement', async (req, res) => {
     /* 
         Get Post Idea to display with default skip data (0)
     */
-    // const result = await dbHandler.viewAllDataInTable("postIdeas");
-    const result = await dbHandler.viewAllAccountPaginationCustom("postIdeas", 0);
+    const currPage = req.query.currPage;
 
-    const toCount = await dbHandler.viewAllDataInTable("postIdeas")
-    const countData = toCount.length;
-    console.log(countData);
+    const countData = await dbHandler.countDataInTable("postIdeas");
 
-    // create variable to get the max key ( Value to skip )
-    var arrGetKeyOnly = [];
+    const pages = await calculatePageNumTrue("postIdeas",countData, currPage ?? 1);
 
-    // Create Dictionary
-    const arrPage = {};
-
-    calculatePageNum(countData, arrPage, arrGetKeyOnly);
-
-
-    // Calculate to get max key.
-    console.log("Key ( Array ) = " + arrGetKeyOnly);
-    let max = arrGetKeyOnly[0];
-
-    for (i = 1; i <= arrGetKeyOnly.length; i++) {
-        if (arrGetKeyOnly[i] > max) {
-            max = arrGetKeyOnly[i];
-        }
-    }
-    console.log("Max Key = " + typeof max + " " + max);
-
-
-    res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage , 
-        startDate: finalStartDate, endDate: finalEndDate, lastPage: max });
+    res.render('admin/postIdeaManagement', { 
+        currPage: pages.currPage,
+        viewAllDataInTable: pages.viewAllData, 
+        lastPage: pages.totalPages,
+        left: pages.left,
+        right: pages.right,
+        startDate: finalStartDate, 
+        endDate: finalEndDate, 
+        });
 })
 
-router.get('/choosePageIdea', async (req, res) => {
-    /* 
-        Get start date & end date to display
-    */
-    const dateResult = await dbHandler.viewAllDataInTable("closureDates");
-    let finalEndDate, finalStartDate;
-    var countDateInDB = dateResult.length;
-    console.log("Count Closure Date : " + countDateInDB);
-
-    var currDate = new Date();
-    var currDate2 = currDate.toISOString().slice(0, 10);
-    var splitCurrDate = currDate2.split("-");
-    var currYear = splitCurrDate[0]
-
-    for (i = 0; i < countDateInDB; i++) {
-        const objectDate = JSON.stringify(dateResult[i], null, 2);
-        console.log(objectDate)
-        const splitDate = objectDate.split(",");
-        const fullStartDate = splitDate[1];
-        const fullEndDate = splitDate[2];
-
-        // Implement Start Date
-        const splitStartDate = fullStartDate.split(":");
-        const startDate = splitStartDate[1];
-        const startDateSlice = startDate.slice(2, 12);
-        const splitStartDate2 = startDateSlice.split("-");
-        const dayStartDate = splitStartDate2[0];
-        const monthStartDate = splitStartDate2[1];
-        const yearStartDate = splitStartDate2[2];
-
-        // Implement End Date
-        const splitEndDate = fullEndDate.split(":");
-        const endDate = splitEndDate[1];
-        const endDateSlice = endDate.slice(2, 12);
-        const splitEndDate2 = endDateSlice.split("-");
-        const dayEndDate = splitEndDate2[0];
-        const monthEndDate = splitEndDate2[1];
-        const yearEndDate = splitEndDate2[2];
-
-        if (currYear == yearStartDate) {
-            console.log("Found !");
-            finalStartDate = dayStartDate + "-" + monthStartDate + "-" + yearStartDate;
-            finalEndDate = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
-        }
-        else {
-            console.log("Not Found !");
-
-        }
-
-    }
-
-
-
-    /* 
-        Get Idea to display with custom skip data
-    */
-    const skipData = req.query.skipData;
-
-    const date = await dbHandler.viewAllDataInTable("closureDates");
-    const result = await dbHandler.viewAllAccountPaginationCustom("postIdeas", skipData);
-
-    const toCount = await dbHandler.viewAllDataInTable("postIdeas")
-    const countData = toCount.length;
-    console.log(countData);
-
-    // create variable to get the max key ( Value to skip )
-    var arrGetKeyOnly = [];
-
-    var arrPage = {};
-
-    calculatePageNum(countData, arrPage, arrGetKeyOnly)
-
-
-    // Calculate to get max key.
-    console.log("Key ( Array ) = " + arrGetKeyOnly);
-    let max = arrGetKeyOnly[0];
-
-    for (i = 1; i <= arrGetKeyOnly.length; i++) {
-        if (arrGetKeyOnly[i] > max) {
-            max = arrGetKeyOnly[i];
-        }
-    }
-    console.log("Max Key = " + typeof max + " " + max);
-
-    res.render('admin/postIdeaManagement', { viewAllDataInTable: result, viewNumPage: arrPage, 
-        startDate: finalStartDate, endDate: finalEndDate, lastPage: max });
-})
 
 
 router.get('/updatePostIdea', async (req, res) => {
@@ -323,73 +221,24 @@ router.post('/doUpdateIdea', async (req, res) => {
 /* ===================================== Related "Available User" Page ============================================= */
 
 router.get('/availableUsers', async (req, res) => {
-    // View all data in "users" table and skip 0 value
-    // "viewAllAccountPaginationCustom" has limit item to display ( 5 )
-    const result = await dbHandler.viewAllAccountPaginationCustom("users", 0);
+    
+    const currPage = req.query.currPage;
 
-    // Get all data in "users" table to count as well as calculate 
-    // the number of of page
-    const toCount = await dbHandler.viewAllDataInTable("users")
-    const countData = toCount.length;
-    console.log(countData);
+    const countData = await dbHandler.countDataInTable("users");
 
-    // create variable to get the max key ( Value to skip )
-    var arrGetKeyOnly = [];
-
-    // Create Dictionary to store KEY ( as value to skip in mongoDB)
-    // and VALUE ( as the number of page )
-    const arrPage = {};
+    const pages = await calculatePageNumTrue("users", countData, currPage ?? 1);
 
 
-    calculatePageNum(countData, arrPage, arrGetKeyOnly)
-
-
-    // Calculate to get max key.
-    console.log("Key ( Array ) = " + arrGetKeyOnly);
-    let max = arrGetKeyOnly[0];
-
-    for (i = 1; i <= arrGetKeyOnly.length; i++) {
-        if (arrGetKeyOnly[i] > max) {
-            max = arrGetKeyOnly[i];
-        }
-    }
-    console.log("Max Key = " + typeof max + " " + max);
-
-
-
-    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage, lastPage: max });
+    res.render('admin/availableUsers', { 
+        currPage: pages.currPage,
+        viewAllDataInTable: pages.viewAllData,
+        lastPage: pages.totalPages,
+        left: pages.left,
+        right: pages.right,
+    });
 
 })
 
-router.get('/choosePageUser', async (req, res) => {
-    const skipData = req.query.skipData;
-
-    const result = await dbHandler.viewAllAccountPaginationCustom("users", skipData);
-
-    const toCount = await dbHandler.viewAllDataInTable("users")
-    const countData = toCount.length;
-    console.log(countData);
-
-    // create variable to get the max key ( Value to skip )
-    var arrGetKeyOnly = [];
-
-    var arrPage = {};
-
-    calculatePageNum(countData, arrPage, arrGetKeyOnly)
-
-    // Calculate to get max key.
-    // console.log("Key ( Array ) = " + arrGetKeyOnly);
-    let max = arrGetKeyOnly[0];
-
-    for (i = 1; i <= arrGetKeyOnly.length; i++) {
-        if (arrGetKeyOnly[i] > max) {
-            max = arrGetKeyOnly[i];
-        }
-    }
-    // console.log("Max Key = " + typeof max + " " + max);
-
-    res.render('admin/availableUsers', { viewAllAccount: result, viewNumPage: arrPage, lastPage: max });
-})
 
 router.post('/searchAccount', async (req, res) => {
     const searchContent = req.body.txtNameEmailSearch;
@@ -402,76 +251,41 @@ router.post('/searchAccount', async (req, res) => {
 
 /* ================================================================================== */
 
+async function calculatePageNumTrue(collection, countData, currPage, limitItemPerPage = 5, maxPageEachSide = 2) {
 
-function calculatePageNum(countData, arrPage, arrGetKeyOnly) {
-    
+    const totalPages = Math.ceil(countData / limitItemPerPage);
 
-    var numCalculator = 0;
-    var finalPageNumber = 0;
-    
-    if (countData % 5 == 0) {
+    if (currPage > totalPages || currPage < 0) { currPage = 1; }
 
-        // ( 5 Item per page )
-        // Total item = 5 (/5) => finalPageNumber = 1 ( Page )
-        // Total item = 10 (/5) => finalPageNumber = 2 ( Pages )
-        // Total item = 15 (/5) => finalPageNumber = 3 ( Pages )
-        // Total item = 20 (/5) => finalPageNumber = 4 ( Pages )
-        numCalculator = countData / 5;
+    const skipData = (currPage - 1) * (5);
 
-        finalPageNumber = numCalculator;
+    const data = await dbHandler.viewAllAccountPaginationCustom(collection, skipData);
 
-        console.log("Chan ( Page ) = " + finalPageNumber);
-    }
-    else {
-        // ( 5 Item per page )
-        // Total item = 1 (/5) => finalPageNumber = 1.2 ( 1 Page )
-        // Total item = 4 (/5) => finalPageNumber = 1.8 ( 1 Page )
-        // Total item = 6 (/5) => finalPageNumber = 2.2 ( 2 Page )
-        // Total item = 9 (/5) => finalPageNumber = 2.8 ( 2 Page )
-        // Total item = 11 (/5) => finalPageNumber = 3.2 ( 3 Page )
-        // Total item = 14 (/5) => finalPageNumber = 3.8 ( 3 Page )
-
-        numCalculator = countData  / 5;
-
-        finalPageNumber = numCalculator + 1;
-
-        console.log("Le ( Page ) = " + finalPageNumber);
-
+    const results = {
+        currPage: currPage,
+        totalPages: totalPages,
+        viewAllData: data,
+        left: [],
+        right: [],
     }
 
-    var k;
-    for (i = 1; i <= finalPageNumber; i++) {
+    for (i = 0; i < maxPageEachSide; i++) {
+        const nLeft = parseInt(currPage) - (maxPageEachSide - i);
+        const nRight = parseInt(currPage) + (maxPageEachSide - i);
 
-        k = (i - 1) * 5;
-
-        arrGetKeyOnly.push(k);
-
-        arrPage[k] = i;
+        if (nLeft > 0) {
+            results.left.push(nLeft);
+        }
+        if (nRight <= totalPages) {
+            results.right.push(nRight);
+        }
     }
 
-    // var arrPage2 = new Object();
-    // arrPage2["0"] = 1;
-    // arrPage2["5"] = 2;
-    // arrPage2["10"] = 3;
-    // arrPage2["15"] = 4;
-    // arrPage2["16"] = 5;
-    // arrPage2["20"] = 6;
+    results.right = results.right.sort((a, b) => a - b);
 
-
-
-    // Display key of dictionary ( value to skip in mongoDB )
-    console.log(Object.keys(arrPage));
-
-    // Display value of dictionary ( number of page )
-    for (var value in arrPage) {
-
-        console.log(arrPage[value]);
-
-    }
-
+    return results;
 
 }
-
 
 
 

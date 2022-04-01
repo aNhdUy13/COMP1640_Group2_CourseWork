@@ -578,7 +578,7 @@ router.post('/doUpdateClosureDate', async (req, res) => {
 
 /* ===================================== Related "View Popular Ideas" Page ============================================= */
 router.get('/viewPopularIdeas', async (req, res) => {
-    result = await dbHandler.viewLatestPostIdeas();
+    result = await dbHandler.viewAllDataInTable("postIdeas");
 
     res.render('admin/viewPopularIdeas', { viewLatestIdeas: result})
 })

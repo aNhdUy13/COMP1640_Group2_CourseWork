@@ -115,7 +115,7 @@ async function viewAccountPagination(collectionName, limit, roleChoice, skipData
     return result;
 }
 
-async function viewAllAccountPaginationCustom(collectionName, skipData = 0, limitData = 5) {
+async function viewAllAccountPaginationCustom(collectionName, skipData, limitData = 5) {
     const dbo = await getDBO();
 
     const mSkipData = parseInt(skipData);

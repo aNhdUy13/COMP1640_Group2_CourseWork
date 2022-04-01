@@ -159,16 +159,20 @@ router.post('/doAddIdea',async(req, res, next) => {
     var messageHere;
     if ((formatCurrDate >= formatStartDate && formatCurrDate <= formatEndDate ) )
     {
-        messageHere = "Staff CAN Submit File !"
+        messageHere = "File Submitted Successfully !"
         console.log(messageHere);
+        await dbHandler.addNewAccount("postIdeas", ideas);
+
+        res.render('staff/allFileSubmit', { startDate: finalStartDate2, endDate: finalEndDate2, message: messageHere, implementSuccess: "Post idea uploaded" })
+
     }
     else {
         messageHere = "Staff CANNOT Submit File !"
         console.log(messageHere);
-    }
-        await dbHandler.addNewAccount("postIdeas", ideas);
+        res.render('staff/allFileSubmit', { startDate: finalStartDate2, endDate: finalEndDate2, message: messageHere, implementSuccess: "Post idea Not uploaded" })
 
-        res.render('staff/allFileSubmit', { startDate: finalStartDate2, endDate: finalEndDate2, message: messageHere,implementSuccess: "Post idea uploaded" })
+    }
+
     })
     
 

@@ -57,6 +57,7 @@ router.post('/doAddIdea',async(req, res, next) => {
         const views = 0;
         const popularpoint =0;
         const yearcurr = splitCurrDate[0];
+        const department = req.session.user.department;
         if (!Array.isArray(files.uploadFiles)) files.uploadFiles = [files.uploadFiles];
         for (let file of files.uploadFiles) {
             const oldPath = file.filepath;
@@ -83,7 +84,8 @@ router.post('/doAddIdea',async(req, res, next) => {
             dislikers: dislikers,
             views: views,
             popularpoint: popularpoint,
-            year: yearcurr
+            year: yearcurr,
+            department: department
         }
     
     // set time check

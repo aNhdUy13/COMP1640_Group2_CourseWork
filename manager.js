@@ -54,7 +54,16 @@ router.get('/staticDashboard',async (req, res) => {
     
     const countAcademic = await dbHandler.countIdea("Academic")
     const countSupport = await dbHandler.countIdea("Support")
-    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport});
+
+    const countStaffA = await dbHandler.countStaff("Academic")
+    const countStaffS = await dbHandler.countStaff("Support")
+    //curent year
+    var currDate = new Date();
+    var currDate2 = currDate.toISOString().slice(0, 10);
+    var splitCurrDate = currDate2.split("-");
+    const yearcurr = splitCurrDate[0];
+
+    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, countStaffA:countStaffA, countStaffS: countStaffS});
 })
 
 router.post('/ChooseYearStatic', async (req, res) => {
@@ -80,4 +89,7 @@ router.post('/ChooseYearStatic', async (req, res) => {
 
     res.render('admin/viewPopularIdeas', { viewLatestIdeas: result })
 })
+
+
+
 module.exports = router;

@@ -41,7 +41,7 @@ router.post('/doAddIdea',async(req, res, next) => {
     if (!req.session || !req.session.username || !req.session.user) return res.sendStatus(401);
     form.parse(req, async function (err, fields, files) {
         if (err) return res.sendStatus(500);
-        //curent date
+        //curent year
         var currDate = new Date();
         var currDate2 = currDate.toISOString().slice(0, 10);
         var splitCurrDate = currDate2.split("-");

@@ -257,6 +257,25 @@ async function countIdea(department){
     return countI;
 }
 
+async function countStaff(department){
+    const dbo = await getDBO();
+    const result = await dbo.collection("postIdeas").find({department:department}).toArray();
+    
+    const emailStaff = result.map((item) =>{
+        return item.email
+    } )
+
+    var finalresult = []
+    for (var i = 0; i < emailStaff.length; i++) {
+      if (finalresult.indexOf(emailStaff[i]) === -1) {
+        finalresult.push(emailStaff[i])
+      }
+    }
+
+    const countstaff = finalresult.length;
+    return countstaff;
+}
+
 /* End Manager function*/
 
 /* Comment */
@@ -359,4 +378,5 @@ module.exports = {
     getComments,
     addComment,
     countIdea,
+    countStaff,
 }

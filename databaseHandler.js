@@ -276,6 +276,22 @@ async function countStaff(department){
     return countstaff;
 }
 
+async function findYear(department){
+    const dbo = await getDBO();
+    const result = await dbo.collection("postIdeas").find().toArray();
+    
+    const yearStaff = result.map((item) =>{
+        return item.year
+    } )
+
+    var finalresult = []
+    for (var i = 0; i < yearStaff.length; i++) {
+      if (finalresult.indexOf(yearStaff[i]) === -1) {
+        finalresult.push(yearStaff[i])
+      }
+    }
+    return finalresult;
+}
 /* End Manager function*/
 
 /* Comment */
@@ -379,4 +395,5 @@ module.exports = {
     addComment,
     countIdea,
     countStaff,
+    findYear,
 }

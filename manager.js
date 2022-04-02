@@ -63,7 +63,8 @@ router.get('/staticDashboard',async (req, res) => {
     var splitCurrDate = currDate2.split("-");
     const yearcurr = splitCurrDate[0];
 
-    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, countStaffA:countStaffA, countStaffS: countStaffS});
+    const yearList = await dbHandler.findYear()
+    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList});
 })
 
 router.post('/ChooseYearStatic', async (req, res) => {

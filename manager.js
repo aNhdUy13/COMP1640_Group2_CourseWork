@@ -26,6 +26,13 @@ router.get('/addCategory',async (req, res) => {
     res.render('manager/addCategory', {viewAllCategory: result});
 })
 
+router.get('/staticDashboard',async (req, res) => {
+    
+    const countAcademic = await dbHandler.countIdea("Academic")
+    const countSupport = await dbHandler.countIdea("Support")
+    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport});
+})
+
 router.post('/doAddCategory',async(req, res) => {
     const newCategory = req.body.txtNewCate;
 

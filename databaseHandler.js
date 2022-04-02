@@ -250,16 +250,16 @@ async function mostPopular(collectionName) {
 
     return result;
 }
-async function countIdea(department){
+async function countIdea(department,year){
     const dbo = await getDBO();
-    const result = await dbo.collection("postIdeas").find({department:department}).toArray();
+    const result = await dbo.collection("postIdeas").find({department:department,year:year}).toArray();
     const countI = result.length;
     return countI;
 }
 
-async function countStaff(department){
+async function countStaff(department,year){
     const dbo = await getDBO();
-    const result = await dbo.collection("postIdeas").find({department:department}).toArray();
+    const result = await dbo.collection("postIdeas").find({department:department,year:year}).toArray();
     
     const emailStaff = result.map((item) =>{
         return item.email
@@ -279,7 +279,6 @@ async function countStaff(department){
 async function findYear(department){
     const dbo = await getDBO();
     const result = await dbo.collection("postIdeas").find().toArray();
-    
     const yearStaff = result.map((item) =>{
         return item.year
     } )
@@ -290,6 +289,10 @@ async function findYear(department){
         finalresult.push(yearStaff[i])
       }
     }
+
+    finalresult = finalresult.sort((a,b)=>a-b);
+
+    console.log(finalresult);
     return finalresult;
 }
 /* End Manager function*/

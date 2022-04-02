@@ -5,6 +5,7 @@ const dbHandler = require('./databaseHandler');
 
 // Import dependencies to hash passwordToCompare
 const bcrypt = require('bcrypt');
+const { Console } = require('console');
 
 // session middle ware
 router.use(session({
@@ -51,44 +52,34 @@ router.get('/deleteCategory',async function (req, res) {
 // Sattic Dashboard ------------------------------------------------------------
 
 router.get('/staticDashboard',async (req, res) => {
-    
-    const countAcademic = await dbHandler.countIdea("Academic")
-    const countSupport = await dbHandler.countIdea("Support")
-
-    const countStaffA = await dbHandler.countStaff("Academic")
-    const countStaffS = await dbHandler.countStaff("Support")
     //curent year
     var currDate = new Date();
     var currDate2 = currDate.toISOString().slice(0, 10);
     var splitCurrDate = currDate2.split("-");
     const yearcurr = splitCurrDate[0];
 
-    const yearList = await dbHandler.findYear()
+
+    const countAcademic = await dbHandler.countIdea("Academic",yearcurr)
+    const countSupport = await dbHandler.countIdea("Support",yearcurr)
+
+    const countStaffA = await dbHandler.countStaff("Academic")
+    const countStaffS = await dbHandler.countStaff("Support")
+
+    const yearList = await dbHandler.findYear() 
     res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList});
 })
 
 router.post('/ChooseYearStatic', async (req, res) => {
-    const selectedViewType = req.body.txtSelectedViewType;
+    const selectedYear = req.body.txtSelectedYear;
 
-    let result;
-    if (selectedViewType == "2019") {
-        result = await dbHandler.viewLatestPostIdeas();
-    }
-    else if (selectedViewType == "2020")
-    {
-        result = await dbHandler.mostPopular("postIdeas");
-    }
-    else if (selectedViewType == "2021") {
-        result = await dbHandler.mostPopular("postIdeas");
-    }
-    else if (selectedViewType == "2022") {
-        result = await dbHandler.mostViewed("postIdeas");
-    }
-    else{
-        result = await dbHandler.viewLatestPostIdeas();
-    }
+    const countAcademic = await dbHandler.countIdea("Academic",selectedYear)
+    const countSupport = await dbHandler.countIdea("Support",selectedYear)
 
-    res.render('admin/viewPopularIdeas', { viewLatestIdeas: result })
+    const countStaffA = await dbHandler.countStaff("Academic",selectedYear)
+    const countStaffS = await dbHandler.countStaff("Support",selectedYear)
+
+    const yearList = await dbHandler.findYear() 
+    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList});
 })
 
 

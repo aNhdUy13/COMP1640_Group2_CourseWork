@@ -20,22 +20,6 @@
                         <form  action="../manager/ChooseYearStatic" method="post">
                             <select name="txtSelectedViewType" onchange="this.form.submit()">
                                 <option value="">Select</option>
-
-                                <option value="LatestIdeas">2019</option>
-
-                                <option value="LatestComments">2020</option>
-
-                                <option value="MostLikeAndDislike">2021</option>
-
-                                <option value="MostViewed">2022</option>
-
-                            </select>
-                        </form>
-                </div>
-                <div class="dropbox_show">
-                        <form  action="../manager/ChooseYearStatic" method="post">
-                            <select name="txtSelectedViewType" onchange="this.form.submit()">
-                                <option value="">Select</option>
                                 {{#each yearList}}
                                 <option value={{this}}>{{this}}</option>
                                 {{/each}}

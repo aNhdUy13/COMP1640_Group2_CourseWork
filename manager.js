@@ -19,18 +19,11 @@ router.get('/', (req, res) => {
     return res.render('login')
     res.render('manager/managerHome');
 })
-
+// manager Category ------------------------------------------------
 router.get('/addCategory',async (req, res) => {
     
     const result = await dbHandler.viewAllCategory("categories")
     res.render('manager/addCategory', {viewAllCategory: result});
-})
-
-router.get('/staticDashboard',async (req, res) => {
-    
-    const countAcademic = await dbHandler.countIdea("Academic")
-    const countSupport = await dbHandler.countIdea("Support")
-    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport});
 })
 
 router.post('/doAddCategory',async(req, res) => {
@@ -52,5 +45,39 @@ router.get('/deleteCategory',async function (req, res) {
     await dbHandler.deleteFunction("categories", categoryId);
     res.redirect('addCategory')
 
+})
+
+
+// Sattic Dashboard ------------------------------------------------------------
+
+router.get('/staticDashboard',async (req, res) => {
+    
+    const countAcademic = await dbHandler.countIdea("Academic")
+    const countSupport = await dbHandler.countIdea("Support")
+    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport});
+})
+
+router.post('/ChooseYearStatic', async (req, res) => {
+    const selectedViewType = req.body.txtSelectedViewType;
+
+    let result;
+    if (selectedViewType == "2019") {
+        result = await dbHandler.viewLatestPostIdeas();
+    }
+    else if (selectedViewType == "2020")
+    {
+        result = await dbHandler.mostPopular("postIdeas");
+    }
+    else if (selectedViewType == "2021") {
+        result = await dbHandler.mostPopular("postIdeas");
+    }
+    else if (selectedViewType == "2022") {
+        result = await dbHandler.mostViewed("postIdeas");
+    }
+    else{
+        result = await dbHandler.viewLatestPostIdeas();
+    }
+
+    res.render('admin/viewPopularIdeas', { viewLatestIdeas: result })
 })
 module.exports = router;

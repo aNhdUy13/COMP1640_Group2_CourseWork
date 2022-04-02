@@ -62,11 +62,12 @@ router.get('/staticDashboard',async (req, res) => {
     const countAcademic = await dbHandler.countIdea("Academic",yearcurr)
     const countSupport = await dbHandler.countIdea("Support",yearcurr)
 
-    const countStaffA = await dbHandler.countStaff("Academic")
-    const countStaffS = await dbHandler.countStaff("Support")
+    const countStaffA = await dbHandler.countStaff("Academic",yearcurr)
+    const countStaffS = await dbHandler.countStaff("Support",yearcurr)
 
     const yearList = await dbHandler.findYear() 
-    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList});
+    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, 
+        countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList, thisYear:yearcurr});
 })
 
 router.post('/ChooseYearStatic', async (req, res) => {
@@ -79,7 +80,8 @@ router.post('/ChooseYearStatic', async (req, res) => {
     const countStaffS = await dbHandler.countStaff("Support",selectedYear)
 
     const yearList = await dbHandler.findYear() 
-    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList});
+    res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, 
+        countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList, thisYear:selectedYear});
 })
 
 

@@ -80,6 +80,7 @@ router.post('/ChooseYearStatic', async (req, res) => {
     const countStaffS = await dbHandler.countStaff("Support",selectedYear)
 
     const yearList = await dbHandler.findYear() 
+
     res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, 
         countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList, thisYear:selectedYear});
 })

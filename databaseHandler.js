@@ -295,6 +295,39 @@ async function findYear(department){
     console.log(finalresult);
     return finalresult;
 }
+
+async function updatePopularPoint(){
+    const dbo = await getDBO();
+    const result = await dbo.collection("postIdeas").find().toArray();
+    
+    const idIdea = result.map((item) =>{
+        return item._id
+    } )
+
+    const likeIdea = result.map((item) =>{
+        return item.likers
+    } )
+
+    const dislikeIdea = result.map((item) =>{
+        return item.dislikers
+    } )
+    let a
+    let ist = 0 
+
+    let newValues 
+
+    for (var i = 0; i < idIdea.length; i++) {
+        a=likeIdea[i].length - dislikeIdea[i].length
+        const condition = { "_id": idIdea[i] };
+        newValues = {
+            $set: {
+                popularpoint: a
+            }
+        };
+        await dbo.collection("postIdeas").updateOne(condition, newValues);
+    }
+}
+
 /* End Manager function*/
 
 /* Comment */
@@ -399,4 +432,5 @@ module.exports = {
     countIdea,
     countStaff,
     findYear,
+    updatePopularPoint,
 }

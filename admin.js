@@ -245,7 +245,7 @@ router.post('/searchAccount', async (req, res) => {
 
     const result = await dbHandler.searchAccount("users", searchContent);
 
-    res.render('admin/availableUsers', { viewAllAccount: result });
+    res.render('admin/availableUsers', { viewAllDataInTable: result });
 
 })
 

@@ -245,7 +245,7 @@ router.post('/searchAccount', async (req, res) => {
 
     const result = await dbHandler.searchAccount("users", searchContent);
 
-    res.render('admin/availableUsers', { viewAllDataInTable: result });
+    res.render('admin/availableUsers', { viewAllAccount: result });
 
 })
 
@@ -409,6 +409,7 @@ router.post('/ChoseViewTypePopularIdeas', async (req, res) => {
 
     }
     else if (selectedViewType == "MostLikeAndDislike") {
+        await dbHandler.updatePopularPoint()
         result = await dbHandler.mostPopular("postIdeas");
     }
     else if (selectedViewType == "MostViewed") {

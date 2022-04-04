@@ -299,7 +299,7 @@ router.get('/closureDate', async (req, res) => {
 
 
 router.post('/doSetDate', async (req, res) => {
-    
+    const name = req.body.txtName;
     const newStartDate = req.body.txtStartDate;
     const newEndDate = req.body.txtEndDate;
 
@@ -319,6 +319,7 @@ router.post('/doSetDate', async (req, res) => {
     const FinalEndDate = endDay + "-" + endMonth + "-" + endYear;
 
         const setDateValue = {
+            name: name,
             startDate: FinalStartDate,
             endDate: FinalEndDate
         };

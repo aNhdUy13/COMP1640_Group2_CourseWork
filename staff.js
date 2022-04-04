@@ -4,6 +4,7 @@ const router = express.Router();
 const dbHandler = require('./databaseHandler');
 const { ObjectId } = require('mongodb');
 const { request } = require('https');
+const nodemailer =  require('nodemailer'); 
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://nguyenduyanh131201:duyanh12345678@cluster0-shard-00-00.letwt.mongodb.net:27017,cluster0-shard-00-01.letwt.mongodb.net:27017,cluster0-shard-00-02.letwt.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-kl4ffn-shard-0&authSource=admin&retryWrites=true&w=majority";
 const dbName = "COMP1640_Web_DBnew_2";
@@ -78,7 +79,7 @@ router.post('/doAddIdea',async(req, res, next) => {
             description: newDes,
             category: category,
             email: email,
-            users : username,
+            username : username,
             files: uploadFiles,
             likers: likers,
             dislikers: dislikers,
@@ -448,20 +449,40 @@ router.post('/do-comment', async function(req, res) {
             content: content,
         })
         const cmt = await dbHandler.getComments({_id: data.insertedId});
+        var transporter =  nodemailer.createTransport({ // config mail server
+            service: 'Gmail',
+            auth: {
+                user: 'group2hellomn@gmail.com',
+                pass: 'hellomn123'
+            }
+        });
+        var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
+            from: 'group2hellomn@gmail.com',
+            to: req.body.email,
+            subject: 'A new comment about your idea',
+            text: 'You got a new comment about your idea',
+            html: '<p>You have got a new comment about your ideas from:</b><ul><li>Username: ' + req.session.user.name + '</li><li>Email: ' + req.session.user.email + '</li><li>Department: ' + req.session.user.department + '</li></ul>'
+        }
+        transporter.sendMail(mainOptions, function(err, info){
+            if (err) {
+                console.log(err);
+                res.redirect('/');
+            } else {
+                console.log('Message sent: ' +  info.response);
+                res.redirect('/');
+            }
+        });
         return res.status(200).json({
             "status": "success",
             "message": "PostIdea has been commented",
             "comment": cmt[0]
         });
-        
     } else {
         res.status(401).send({
             message: 'Unauthorize'
         })
     }
 })
-
-
 
 router.post('/ChoseViewType', async (req, res) => {
     const selectedViewType = req.body.txtSelectedViewType;
@@ -475,7 +496,8 @@ router.post('/ChoseViewType', async (req, res) => {
 
     }
     else if (selectedViewType == "MostLikeAndDislike") {
-
+        await dbHandler.updatePopularPoint()
+        result = await dbHandler.mostPopular("postIdeas");
     }
     else if (selectedViewType == "MostViewed") {
         result = await dbHandler.mostViewed("postIdeas");

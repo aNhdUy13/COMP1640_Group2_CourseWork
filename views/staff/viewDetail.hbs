@@ -8,7 +8,26 @@
     <title>Idea Page</title>
     <link rel="stylesheet" href="/css/seeIdea.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <style>
+        .comment-form {
+            margin: auto;
+            width: 70%;
+            position: relative;
+        }
+        .comment-form button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+        .comment-form textarea {
+            width: 100%;
+            border-radius: 10px;
+            padding: 5px 70px 5px 10px;
+            resize: none;
+            min-height: 50px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 
 
@@ -47,6 +66,8 @@
                                 
                                 {{!-- {{#ifCond permissions.canRemoveAttachment true}} --}}
                                 <button onclick="removeAttachment(this)">Remove</button>&nbsp;
+
+                                <button onclick="viewFile()">View File</button>&nbsp;
                                 {{!-- {{/ifCond}} --}}
                                 {{this.fileName}}
                             </li>
@@ -56,11 +77,11 @@
                     <br>
                     <span>Views: {{viewDetail.views}}</span>
                     <div>
-                        <div class="card-body">
+                        {{!-- <div class="card-body">
                             Leave a comment:
-                        </div>
+                        </div> --}}
                     </div>
-                    <div>
+                    {{!-- <div>
                     <form action="/staff/do-comment" action="POST" class="comment-form">
                         <div class="form-group">
                             <input type="hidden" value="{{_id}}" name="postId">
@@ -68,12 +89,37 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Post comment</button>
                     </form>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
-            </div>   
+            </div>  
+            <div style="display: block">
+                <form action="/staff/doAddFile" method="POST" enctype="multipart/form-data">    
+                    <input type="hidden" name="idea" value="{{viewDetail._id}}">
+                    <label for="uploadFiles">Add more files:</label>
+                    <input type="file" name="uploadFiles" multiple>
+                    <input type="submit" value="Submit">
+                </form>
+            </div> 
         </div>
         <br>
+        <div class="box">
+            <br>Comments:
+            <ul id="comments">
+                {{#each viewDetail.comments}} 
+                    <li>{{this.author.name}}: {{this.content}}</li>
+                {{/each}}
+            </ul>
+        </div>
+        <br>
+        <div >
+            <form action="" method="POST" class="comment-form">
+                <input type="hidden" name="postId" value="{{viewDetail._id}}">
+                <textarea name="content"></textarea>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+        
     </div>
 
     <!-- (End) Content -->
@@ -105,6 +151,10 @@
                                 btn.disabled = false;
                             })
                         }
+                        
+                        function viewFile(){
+                            
+                        }
 
                         window.addEventListener('load', () => {
                         const cmtForm = document.querySelectorAll('.comment-form');
@@ -112,12 +162,14 @@
                             form.addEventListener('submit', (event) => {
                                 event.preventDefault();
                                 const btn = form.querySelector('button[type="submit"]');
-                                btn.disabled = true;
+                                const textarea = form.querySelector('textarea[name="content"]');
                                 const formData = new FormData(form);
                                 const json = {};
                                 for (const [key, value] of formData.entries()) {
                                     json[key] = value;
                                 }
+                                if (json.content.trim().length < 1) return;
+                                btn.disabled = true;
                                 const ajax = new XMLHttpRequest();
                                 ajax.open("POST", "/staff/do-comment", true);
                                 ajax.setRequestHeader("Content-Type", "application/json");
@@ -127,7 +179,11 @@
                                         btn.disabled = false;
                                         const response =JSON.parse(ajax.responseText);
                                         if (ajax.status == 200 && response.status == "success") {
-                                            console.log(response);
+                                            textarea.value = "";
+                                            const cmtDiv = document.getElementById('comments');
+                                            const cmt = document.createElement('li');
+                                            cmt.innerText = `${response.comment.author.name}: ${response.comment.content}`
+                                            cmtDiv.appendChild(cmt);
                                         }
                                         else {
                                             alert(response.message)
@@ -139,15 +195,4 @@
                         })
                     })
                 </script>
-
-<div style="display: block">
-    <form action="/staff/doAddFile" method="POST" enctype="multipart/form-data">    
-        <input type="hidden" name="idea" value="{{viewDetail._id}}">
-        <label for="uploadFiles">Select files:</label>
-        <input type="file" name="uploadFiles" multiple>
-        <input type="submit" value="Submit">
-    </form>
-</div>
-
-
 </html>

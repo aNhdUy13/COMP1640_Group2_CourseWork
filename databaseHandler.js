@@ -192,6 +192,17 @@ async function viewDetail(collectionName, userId)
     return detailIdea;
 }
 
+async function viewComment(collectionName, postIdeaId)
+{
+    const dbo = await getDBO();
+    var ObjectId = require('mongodb').ObjectId;
+    // Lấy Id gửi về
+    const condition = { "_id": ObjectId(postIdeaId) };
+    await dbo.collection(collectionName).updateOne(condition, {$inc: { 'views': 1}});
+    const detailComment = await dbo.collection(collectionName).findOne(condition);
+    return detailComment;
+}
+
 async function checkExists(collectionName, ideaId) {
     const dbo = await getDBO();
     const ObjectId = require('mongodb').ObjectId;
@@ -336,18 +347,18 @@ async function getComments(filter = {}, options = {}) {
     const pipeline = [
         {
             $match: {
-                ...filter //{_id: abc}
+                ...filter //{postIdeaId: new ObjectID('623c1905bd948b0f8a04fbb1')}
             }
         },
         {
             $lookup: {
                 from: 'users',
-                let: { userId: "$userId" },
+                let: { user: "$userId" },
                 pipeline: [
                     {
                         $match: {
                             $expr: {
-                                $eq: ["$_id", "$$userId"]
+                                $eq: ["$_id", "$$user"]
                             },
                         }
                     }
@@ -403,6 +414,107 @@ async function addComment(body) {
     return result;
 }
 
+async function getIdeas(filter = {}, options = {}) {
+    const dbo = await getDBO();
+    const pipeline = [
+        {
+            $match: {
+                ...filter
+            }
+        },
+        {
+            $lookup: {
+                from: "comments",
+                let: { ideaId: "$_id" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$postIdeaId", "$$ideaId"]
+                            },
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "userId",
+                            foreignField: "_id",
+                            //let: { userId: "$userId" },
+                            // pipeline: [
+                            //     {
+                            //         $match: {
+                            //             $expr: {
+                            //                 $eq: ["$_id", "$$userId"]
+                            //             },
+                            //         }
+                            //     },
+                            // ],
+                            
+                            as: "author"
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$author",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $sort: {commentTime: -1}
+                    }
+                    
+                ],
+                as: "comments"
+            }
+        },
+        {
+            $unwind: {
+                path: "$comments",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "comments.author.password": 0
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                topic: {$first: "$topic"},
+                description: {$first: "$description"},
+                category: {$first: "$category"},
+                email: {$first: "$email"},
+                username: {$first: "$username"},
+                files: {$first: "$files"},
+                views: {$first: "$views"},
+                likers: {$first: "$likers"},
+                dislikers: {$first: "$dislikers"},
+                year: {$first: "$year"},
+                department: {$first: "$department"},
+                createdAt: {$first: "$createdAt"},
+                comments: {
+                    $addToSet: "$comments"
+                }
+            }
+        },
+        {
+            $skip: options.skip ?? 0
+        },
+        {
+            $sort: options.sort ?? { createdAt: -1 }
+        }
+    ]
+    if (options.limit) pipeline.push({
+        $limit: options.limit
+    })
+    const result = await dbo.collection('postIdeas').aggregate(pipeline).toArray();
+    for (let doc of result) {
+        doc.comments.sort((a, b) => {return a.commentTime - b.commentTime});
+    }
+    return result;
+}
+
 module.exports = {
     addNewAccount,
     checkUser,
@@ -433,4 +545,6 @@ module.exports = {
     countStaff,
     findYear,
     updatePopularPoint,
+    viewComment,
+    getIdeas,
 }

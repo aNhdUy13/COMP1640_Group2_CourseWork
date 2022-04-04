@@ -68,6 +68,19 @@
                                 </select>
                             </td> 
                         </tr>
+
+                        <tr>
+                            <td class="accountManagement_title">ClosureDate: </td>
+                            <td>
+                                <select name="txtNameCloseDate">
+                                    <option>Select Closeure</option>
+                                    {{#each getDate}}
+                                        <option value="{{name}}">{{name}} : {{startDate}} to {{endDate}}</option>
+                                    {{/each}}
+                                </select>
+                            </td> 
+                        </tr>
+                        
                         <tr>
                             <td><label class="accountManagement_title" for="myFile">Select a file:</label></td>
                             <td><input type="file" id="myFile" name="uploadFiles" multiple></td>

@@ -4,6 +4,7 @@ const router = express.Router();
 const dbHandler = require('./databaseHandler');
 const { ObjectId } = require('mongodb');
 const { request } = require('https');
+const nodemailer =  require('nodemailer'); 
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://nguyenduyanh131201:duyanh12345678@cluster0-shard-00-00.letwt.mongodb.net:27017,cluster0-shard-00-01.letwt.mongodb.net:27017,cluster0-shard-00-02.letwt.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-kl4ffn-shard-0&authSource=admin&retryWrites=true&w=majority";
 const dbName = "COMP1640_Web_DBnew_2";
@@ -459,6 +460,33 @@ router.post('/do-comment', async function(req, res) {
         })
     }
 })
+router.post('/do-comment', function(req, res, next) {
+    var transporter =  nodemailer.createTransport({ // config mail server
+        service: 'Gmail',
+        auth: {
+            // user: 'group2hellomn@gmail.com',
+            // pass: 'hellomn123'
+            user: 'nguyenvantai0717@gmail.com',
+            pass: 'nguyenhoang190506'
+        }
+    });
+    var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
+        from: 'Thanh Batmon',
+        to: 'tomail@gmail.com',
+        subject: 'Test Nodemailer',
+        text: 'You recieved message from ' + req.body.email,
+        html: '<p>You have got a new message</b><ul><li>Username:' + req.body.name + '</li><li>Email:' + req.body.email + '</li><li>Username:' + req.body.message + '</li></ul>'
+    }
+    transporter.sendMail(mainOptions, function(err, info){
+        if (err) {
+            console.log(err);
+            res.redirect('/');
+        } else {
+            console.log('Message sent: ' +  info.response);
+            res.redirect('/');
+        }
+    });
+})
 
 
 
@@ -474,7 +502,8 @@ router.post('/ChoseViewType', async (req, res) => {
 
     }
     else if (selectedViewType == "MostLikeAndDislike") {
-
+        await dbHandler.updatePopularPoint()
+        result = await dbHandler.mostPopular("postIdeas");
     }
     else if (selectedViewType == "MostViewed") {
         result = await dbHandler.mostViewed("postIdeas");

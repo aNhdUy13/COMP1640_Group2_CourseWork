@@ -79,7 +79,7 @@ router.post('/doAddIdea',async(req, res, next) => {
             description: newDes,
             category: category,
             email: email,
-            users : username,
+            username : username,
             files: uploadFiles,
             likers: likers,
             dislikers: dislikers,
@@ -457,10 +457,10 @@ router.post('/do-comment', async function(req, res) {
         });
         var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
             from: 'group2hellomn@gmail.com',
-            to: 'monmon07172001@gmail.com',
+            to: req.body.email,
             subject: 'A new comment about your idea',
             text: 'You got a new comment about your idea',
-            //html: '<p>You have got a new comment</b><ul><li>Username:' + req.body.name + '</li><li>Email:' + req.body.email + '</li><li>Username:' + req.body.message + '</li></ul>'
+            html: '<p>You have got a new comment about your ideas from:</b><ul><li>Username: ' + req.session.user.name + '</li><li>Email: ' + req.session.user.email + '</li><li>Department: ' + req.session.user.department + '</li></ul>'
         }
         transporter.sendMail(mainOptions, function(err, info){
             if (err) {
@@ -482,35 +482,6 @@ router.post('/do-comment', async function(req, res) {
         })
     }
 })
-// router.post('/do-comment', function(req, res, next) {
-    // var transporter =  nodemailer.createTransport({ // config mail server
-    //     service: 'Gmail',
-    //     auth: {
-    //         // user: 'group2hellomn@gmail.com',
-    //         // pass: 'hellomn123'
-    //         user: 'nguyenvantai0717@gmail.com',
-    //         pass: 'nguyenhoang190506'
-    //     }
-    // });
-    // var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
-    //     from: 'nguyenvantai0717@gmail.com',
-    //     to: 'monmon07172001@gmail.com',
-    //     subject: 'A new comment about your idea',
-    //     text: 'You got a new comment about your idea',
-    //     //html: '<p>You have got a new comment</b><ul><li>Username:' + req.body.name + '</li><li>Email:' + req.body.email + '</li><li>Username:' + req.body.message + '</li></ul>'
-    // }
-    // transporter.sendMail(mainOptions, function(err, info){
-    //     if (err) {
-    //         console.log(err);
-    //         res.redirect('/');
-    //     } else {
-    //         console.log('Message sent: ' +  info.response);
-    //         res.redirect('/');
-    //     }
-    // });
-// })
-
-
 
 router.post('/ChoseViewType', async (req, res) => {
     const selectedViewType = req.body.txtSelectedViewType;

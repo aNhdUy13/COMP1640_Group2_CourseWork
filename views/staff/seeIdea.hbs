@@ -45,7 +45,7 @@
                     <div class="span">
                         <div class="name1">
                             <div class="name2">
-                                <span class="font space">{{users}}</span>
+                                <span class="font space">{{username}}</span>
                             </div>
                         </div>
                         <span class="email">{{email}}</span>                        
@@ -94,6 +94,7 @@
                     <form action="/staff/do-comment" action="POST" class="comment-form">
                         <div class="form-group">
                             <input type="hidden" value="{{_id}}" name="postId">
+                            <input type="hidden" value="{{email}}" name="email">
                             <textarea class="form-control" name="content"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Post comment</button>

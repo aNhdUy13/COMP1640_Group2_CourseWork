@@ -23,6 +23,14 @@
                     <table>
                         <form  action="../admin/doSetDate" method="post">
                             <tr>
+                                <td>Name : </td>
+                                <td>
+                                    <input type="text" name="txtName"> 
+                                </td> 
+                                <td style="color: brown;">{{errorMessage}}</td>
+                            </tr>
+
+                            <tr>
                                 <td>Start Date : </td>
                                 <td>
                                     <input type="date" name="txtStartDate"> 
@@ -55,6 +63,7 @@
                 <table border="1" cellspacing ="0 " cellpadding="15">
                         <thead>
                             <tr>
+                                    <th>Name</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Update</th>
@@ -63,6 +72,7 @@
                         <tbody>
                             {{#each viewAllClosureDate}}
                                 <tr>
+                                    <td>{{name}}</td>
                                     <td>{{startDate}}</td>
                                     <td>{{endDate}}</td>
                                     <td>

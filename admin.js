@@ -33,9 +33,14 @@ router.post('/doAddAccount',async(req, res) => {
     const selectedRole = req.body.txtRoleSelected;
     const selectedDepartment = req.body.txtDepartmentSelected;
 
+    var regex = /\d+/; // Check Contains Number 
     if (newName.trim().length < 3)
     {
         res.render('admin/accountManagement', { errorName: "Error : Name cannot < 3 !"});
+    }
+    else if (regex.test(newName))
+    {
+        res.render('admin/accountManagement', { errorName: "Name cannot contain Number !" });
     }
     else if (newEmail.trim().length < 0 || newEmail.indexOf('@') == -1)
     {

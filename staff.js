@@ -448,45 +448,69 @@ router.post('/do-comment', async function(req, res) {
             content: content,
         })
         const cmt = await dbHandler.getComments({_id: data.insertedId});
+        var transporter =  nodemailer.createTransport({ // config mail server
+            service: 'Gmail',
+            auth: {
+                // user: 'group2hellomn@gmail.com',
+                // pass: 'hellomn123'
+                user: 'nguyenvantai0717@gmail.com',
+                pass: 'nguyenhoang190506'
+            }
+        });
+        var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
+            from: 'nguyenvantai0717@gmail.com',
+            to: 'monmon07172001@gmail.com',
+            subject: 'A new comment about your idea',
+            text: 'You got a new comment about your idea',
+            //html: '<p>You have got a new comment</b><ul><li>Username:' + req.body.name + '</li><li>Email:' + req.body.email + '</li><li>Username:' + req.body.message + '</li></ul>'
+        }
+        transporter.sendMail(mainOptions, function(err, info){
+            if (err) {
+                console.log(err);
+                res.redirect('/');
+            } else {
+                console.log('Message sent: ' +  info.response);
+                res.redirect('/');
+            }
+        });
         return res.status(200).json({
             "status": "success",
             "message": "PostIdea has been commented",
             "comment": cmt[0]
         });
-        
     } else {
         res.status(401).send({
             message: 'Unauthorize'
         })
     }
 })
-router.post('/do-comment', function(req, res, next) {
-    var transporter =  nodemailer.createTransport({ // config mail server
-        service: 'Gmail',
-        auth: {
-            // user: 'group2hellomn@gmail.com',
-            // pass: 'hellomn123'
-            user: 'nguyenvantai0717@gmail.com',
-            pass: 'nguyenhoang190506'
-        }
-    });
-    var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
-        from: 'Thanh Batmon',
-        to: 'tomail@gmail.com',
-        subject: 'Test Nodemailer',
-        text: 'You recieved message from ' + req.body.email,
-        html: '<p>You have got a new message</b><ul><li>Username:' + req.body.name + '</li><li>Email:' + req.body.email + '</li><li>Username:' + req.body.message + '</li></ul>'
-    }
-    transporter.sendMail(mainOptions, function(err, info){
-        if (err) {
-            console.log(err);
-            res.redirect('/');
-        } else {
-            console.log('Message sent: ' +  info.response);
-            res.redirect('/');
-        }
-    });
-})
+// router.post('/do-comment', function(req, res, next) {
+    // var transporter =  nodemailer.createTransport({ // config mail server
+    //     service: 'Gmail',
+    //     auth: {
+    //         // user: 'group2hellomn@gmail.com',
+    //         // pass: 'hellomn123'
+    //         user: 'nguyenvantai0717@gmail.com',
+    //         pass: 'nguyenhoang190506'
+    //     }
+    // });
+    // var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
+    //     from: 'nguyenvantai0717@gmail.com',
+    //     to: 'monmon07172001@gmail.com',
+    //     subject: 'A new comment about your idea',
+    //     text: 'You got a new comment about your idea',
+    //     //html: '<p>You have got a new comment</b><ul><li>Username:' + req.body.name + '</li><li>Email:' + req.body.email + '</li><li>Username:' + req.body.message + '</li></ul>'
+    // }
+    // transporter.sendMail(mainOptions, function(err, info){
+    //     if (err) {
+    //         console.log(err);
+    //         res.redirect('/');
+    //     } else {
+    //         console.log('Message sent: ' +  info.response);
+    //         res.redirect('/');
+    //     }
+    // });
+// })
 
 
 

@@ -451,14 +451,12 @@ router.post('/do-comment', async function(req, res) {
         var transporter =  nodemailer.createTransport({ // config mail server
             service: 'Gmail',
             auth: {
-                // user: 'group2hellomn@gmail.com',
-                // pass: 'hellomn123'
-                user: 'nguyenvantai0717@gmail.com',
-                pass: 'nguyenhoang190506'
+                user: 'group2hellomn@gmail.com',
+                pass: 'hellomn123'
             }
         });
         var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
-            from: 'nguyenvantai0717@gmail.com',
+            from: 'group2hellomn@gmail.com',
             to: 'monmon07172001@gmail.com',
             subject: 'A new comment about your idea',
             text: 'You got a new comment about your idea',

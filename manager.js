@@ -27,6 +27,23 @@ router.get('/addCategory',async (req, res) => {
     res.render('manager/addCategory', {viewAllCategory: result});
 })
 
+router.get('/downloadCategory',async (req, res) => {
+    
+    const firstCate = await dbHandler.searchFirstCate()
+    const nameCate = await dbHandler.searchCateName()
+ 
+    const result = await dbHandler.viewFirstCategory("postIdeas",firstCate)
+    res.render('manager/downloadCategory', {viewCategory:result,categoryList:nameCate});
+})
+
+router.post('/ChooseCategoryList', async (req, res) => {
+    const selectedCate = req.body.txtSelectedCategory;
+    
+    const nameCate = await dbHandler.searchCateName()
+    const result = await dbHandler.viewFirstCategory("postIdeas",selectedCate)
+    res.render('manager/downloadCategory', {viewCategory:result,categoryList:nameCate});
+})
+
 router.post('/doAddCategory',async(req, res) => {
     const newCategory = req.body.txtNewCate;
 

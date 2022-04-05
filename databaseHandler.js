@@ -253,7 +253,30 @@ async function viewAllCategory(collectionName) {
     const result = await dbo.collection(collectionName).find().toArray();
     return result;
 }
+async function viewFirstCategory(collectionName,categoryN) {
+    const dbo = await getDBO();
+    const result = await dbo.collection(collectionName).find({category:categoryN}).toArray();
+    return result;
+}
 
+async function searchFirstCate() {
+    const dbo = await getDBO();
+    const result = await dbo.collection("categories").find().toArray();
+    const nameCate = result.map((item) =>{
+        return item.name
+    } )
+
+    return nameCate[0];
+}
+async function searchCateName() {
+    const dbo = await getDBO();
+    const result = await dbo.collection("categories").find().toArray();
+    const nameCate = result.map((item) =>{
+        return item.name
+    } )
+
+    return nameCate;
+}
 async function mostPopular(collectionName) {
     const dbo = await getDBO();
     const sort111 = {popularpoint: -1}
@@ -547,4 +570,7 @@ module.exports = {
     updatePopularPoint,
     viewComment,
     getIdeas,
+    searchFirstCate,
+    searchCateName,
+    viewFirstCategory,
 }

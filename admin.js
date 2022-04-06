@@ -126,53 +126,53 @@ router.get('/postIdeaManagement', async (req, res) => {
     /* 
         Get start date & end date to display
     */
-    const dateResult = await dbHandler.viewAllDataInTable("closureDates");
-    let finalEndDate, finalStartDate;
-    var countDateInDB = dateResult.length;
-    console.log("Count Closure Date : " + countDateInDB);
+    // const dateResult = await dbHandler.viewAllDataInTable("closureDates");
+    // let finalEndDate, finalStartDate;
+    // var countDateInDB = dateResult.length;
+    // console.log("Count Closure Date : " + countDateInDB);
 
-    var currDate = new Date();
-    var currDate2 = currDate.toISOString().slice(0, 10);
-    var splitCurrDate = currDate2.split("-");
+    // var currDate = new Date();
+    // var currDate2 = currDate.toISOString().slice(0, 10);
+    // var splitCurrDate = currDate2.split("-");
     
-    var currYear = splitCurrDate[0]
+    // var currYear = splitCurrDate[0]
 
-    for (i = 0; i < countDateInDB; i++) {
-        const objectDate = JSON.stringify(dateResult[i], null, 2);
-        console.log(objectDate)
-        const splitDate = objectDate.split(",");
-        const fullStartDate = splitDate[1];
-        const fullEndDate = splitDate[2];
+    // for (i = 0; i < countDateInDB; i++) {
+    //     const objectDate = JSON.stringify(dateResult[i], null, 2);
+    //     console.log(objectDate)
+    //     const splitDate = objectDate.split(",");
+    //     const fullStartDate = splitDate[1];
+    //     const fullEndDate = splitDate[2];
 
-        // Implement Start Date
-        const splitStartDate = fullStartDate.split(":");
-        const startDate = splitStartDate[1];
-        const startDateSlice = startDate.slice(2, 12);
-        const splitStartDate2 = startDateSlice.split("-");
-        const dayStartDate = splitStartDate2[0];
-        const monthStartDate = splitStartDate2[1];
-        const yearStartDate = splitStartDate2[2];
+    //     // Implement Start Date
+    //     const splitStartDate = fullStartDate.split(":");
+    //     const startDate = splitStartDate[1];
+    //     const startDateSlice = startDate.slice(2, 12);
+    //     const splitStartDate2 = startDateSlice.split("-");
+    //     const dayStartDate = splitStartDate2[0];
+    //     const monthStartDate = splitStartDate2[1];
+    //     const yearStartDate = splitStartDate2[2];
 
-        // Implement End Date
-        const splitEndDate = fullEndDate.split(":");
-        const endDate = splitEndDate[1];
-        const endDateSlice = endDate.slice(2, 12);
-        const splitEndDate2 = endDateSlice.split("-");
-        const dayEndDate = splitEndDate2[0];
-        const monthEndDate = splitEndDate2[1];
-        const yearEndDate = splitEndDate2[2];
+    //     // Implement End Date
+    //     const splitEndDate = fullEndDate.split(":");
+    //     const endDate = splitEndDate[1];
+    //     const endDateSlice = endDate.slice(2, 12);
+    //     const splitEndDate2 = endDateSlice.split("-");
+    //     const dayEndDate = splitEndDate2[0];
+    //     const monthEndDate = splitEndDate2[1];
+    //     const yearEndDate = splitEndDate2[2];
 
-        if (currYear == yearStartDate) {
-            console.log("Found !");
-            finalStartDate = dayStartDate + "-" + monthStartDate + "-" + yearStartDate;
-            finalEndDate = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
-        }
-        else {
-            console.log("Not Found !");
+    //     if (currYear == yearStartDate) {
+    //         console.log("Found !");
+    //         finalStartDate = dayStartDate + "-" + monthStartDate + "-" + yearStartDate;
+    //         finalEndDate = dayEndDate + "-" + monthEndDate + "-" + yearEndDate;
+    //     }
+    //     else {
+    //         console.log("Not Found !");
 
-        }
+    //     }
 
-    }
+    // }
 
 
     /* 
@@ -190,8 +190,8 @@ router.get('/postIdeaManagement', async (req, res) => {
         lastPage: pages.totalPages,
         left: pages.left,
         right: pages.right,
-        startDate: finalStartDate, 
-        endDate: finalEndDate, 
+        // startDate: finalStartDate, 
+        // endDate: finalEndDate, 
         });
 })
 

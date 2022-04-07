@@ -3,6 +3,7 @@ const router = express.Router();
 const session = require('express-session');
 const dbHandler = require('./databaseHandler');
 
+const zip = require('express-easy-zip');
 // Import dependencies to hash passwordToCompare
 const bcrypt = require('bcrypt');
 const { Console } = require('console');
@@ -20,6 +21,27 @@ router.get('/', (req, res) => {
     return res.render('login')
     res.render('manager/managerHome');
 })
+// Zip file and download ---------------------------------------------
+router.use(zip());
+  router.post('/doDownloadZip',async(req, res) => {
+    
+    const selectedCate = req.body.txtName;
+    const listFileName = await dbHandler.searchFilename(selectedCate)
+    let dirPath 
+    let pathName
+    const a = [
+        //{ path: path.join(__dirname, './file'), name: 'any/path/to/file' }, //can be a file
+    ]
+    listFileName.forEach(item => {
+        dirPath = __dirname + "/./public/uploads/"+item
+        pathName = {path:dirPath,name:item}
+        a.push(pathName)
+    });
+    res.zip({
+         files: a,
+         filename: selectedCate +'.zip'
+     });
+})
 // manager Category ------------------------------------------------
 router.get('/addCategory',async (req, res) => {
     
@@ -33,7 +55,7 @@ router.get('/downloadCategory',async (req, res) => {
     const nameCate = await dbHandler.searchCateName()
  
     const result = await dbHandler.viewFirstCategory("postIdeas",firstCate)
-    res.render('manager/downloadCategory', {viewCategory:result,categoryList:nameCate});
+    res.render('manager/downloadCategory', {viewCategory:result,categoryList:nameCate, selectedCateg:firstCate});
 })
 
 router.post('/ChooseCategoryList', async (req, res) => {
@@ -41,7 +63,7 @@ router.post('/ChooseCategoryList', async (req, res) => {
     
     const nameCate = await dbHandler.searchCateName()
     const result = await dbHandler.viewFirstCategory("postIdeas",selectedCate)
-    res.render('manager/downloadCategory', {viewCategory:result,categoryList:nameCate});
+    res.render('manager/downloadCategory', {viewCategory:result,categoryList:nameCate, selectedCateg:selectedCate});
 })
 
 router.post('/doAddCategory',async(req, res) => {

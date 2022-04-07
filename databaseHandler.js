@@ -253,6 +253,24 @@ async function viewAllCategory(collectionName) {
     const result = await dbo.collection(collectionName).find().toArray();
     return result;
 }
+async function searchFilename(categoryN) {
+    const dbo = await getDBO();
+    const result = await dbo.collection("postIdeas").find({category:categoryN}).toArray();
+    // get URL from Mongo
+    let resultArray =[] 
+    result.forEach(item => {
+        item.files.forEach(items=>{
+            resultArray.push(items.url);
+        })      
+    });
+    // Get file name from URL
+    const fileName = resultArray.map((itemss) =>{
+        return itemss.slice(9);
+    } )
+
+    console.log(fileName);
+    return fileName;
+}
 async function viewFirstCategory(collectionName,categoryN) {
     const dbo = await getDBO();
     const result = await dbo.collection(collectionName).find({category:categoryN}).toArray();
@@ -573,4 +591,5 @@ module.exports = {
     searchFirstCate,
     searchCateName,
     viewFirstCategory,
+    searchFilename,
 }

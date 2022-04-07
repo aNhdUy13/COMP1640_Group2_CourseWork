@@ -115,6 +115,7 @@
         <div >
             <form action="" method="POST" class="comment-form">
                 <input type="hidden" name="postId" value="{{viewDetail._id}}">
+                <input type="hidden" value="{{viewDetail.email}}" name="email">
                 <textarea name="content"></textarea>
                 <button type="submit">Send</button>
             </form>

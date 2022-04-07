@@ -23,11 +23,18 @@
                     <table>
                         <form  action="../admin/doSetDate" method="post">
                             <tr>
-                                <td>Name : </td>
+                                {{!-- <td>Name : </td>
                                 <td>
                                     <input type="text" name="txtName"> 
                                 </td> 
-                                <td style="color: brown;">{{errorMessage}}</td>
+                                <td style="color: brown;">{{errorMessage}}</td> --}}
+                                <div class="dropbox">
+                                        <select name="txtCategorySelected">
+                                            {{#each categories}}
+                                            <option value="{{this}}">{{this}}</option>
+                                            {{/each }}
+                                        </select>
+                                </div>
                             </tr>
 
                             <tr>

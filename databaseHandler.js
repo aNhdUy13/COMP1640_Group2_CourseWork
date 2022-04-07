@@ -181,16 +181,16 @@ async function getUser(collectionName,email) {
     const result = await dbo.collection(collectionName).find({ email: email }).toArray();
     return result;
 }
-async function viewDetail(collectionName, userId)
-{
-    const dbo = await getDBO();
-    var ObjectId = require('mongodb').ObjectId;
-    // Lấy Id gửi về
-    const condition = { "_id": ObjectId(userId) };
-    await dbo.collection(collectionName).updateOne(condition, {$inc: { 'views': 1}});
-    const detailIdea = await dbo.collection(collectionName).findOne(condition);
-    return detailIdea;
-}
+// async function viewDetail(collectionName, userId)
+// {
+//     const dbo = await getDBO();
+//     var ObjectId = require('mongodb').ObjectId;
+//     // Lấy Id gửi về
+//     const condition = { "_id": ObjectId(userId) };
+//     await dbo.collection(collectionName).updateOne(condition, {$inc: { 'views': 1}});
+//     const detailIdea = await dbo.collection(collectionName).findOne(condition);
+//     return detailIdea;
+// }
 
 async function viewComment(collectionName, postIdeaId)
 {
@@ -455,7 +455,7 @@ async function addComment(body) {
     return result;
 }
 
-async function getIdeas(filter = {}, options = {}) {
+async function getIdeas(filter = {}, options = {}, userId) {
     const dbo = await getDBO();
     const pipeline = [
         {
@@ -572,7 +572,6 @@ module.exports = {
     viewAllAccountPaginationCustom,
     viewAllCategory,
     searchAccount,
-    viewDetail,
     mostViewed,
     checkExists,
     addIdeaFile,

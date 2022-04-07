@@ -415,7 +415,11 @@ router.post("/do-dislike", async function (request, result) {
         })
 })
 router.get('/viewIdea', async (req, res) => {
+    const client = await MongoClient.connect(url);
+    const dbo = client.db(dbName);
     const postIdeaId = ObjectId(req.query.id);
+    const condition = { "_id": postIdeaId };
+    await dbo.collection('postIdeas').updateOne(condition, {$inc: { 'views': 1}});
     const filter = {
         _id: postIdeaId
     }
@@ -490,10 +494,6 @@ router.post('/ChoseViewType', async (req, res) => {
     let result;
     if (selectedViewType == "LatestIdeas") {
         result = await dbHandler.viewLatestPostIdeas();
-    }
-    else if (selectedViewType == "LatestComments")
-    {
-
     }
     else if (selectedViewType == "MostLikeAndDislike") {
         await dbHandler.updatePopularPoint()

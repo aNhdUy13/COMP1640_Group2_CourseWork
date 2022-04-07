@@ -10,6 +10,7 @@ var url = "mongodb://nguyenduyanh131201:duyanh12345678@cluster0-shard-00-00.letw
 const dbName = "COMP1640_Web_DBnew_2";
 const formidable = require('formidable');
 const fs = require('fs');
+const { monitorEventLoopDelay } = require('perf_hooks');
 
 const options = {
     multiples: true,
@@ -50,6 +51,8 @@ router.post('/doAddIdea',async(req, res, next) => {
         const newTopic = fields.txtNewTopic;
         const newDes = fields.txtNewDes;
         const category = fields.txtNameCategory;
+        const nameClosureDate = fields.txtNameCloseDate;
+        console.log('Test:',nameClosureDate);
         const username = req.session.username;
         const email = req.session.user.email;
         const uploadFiles = [];
@@ -91,7 +94,6 @@ router.post('/doAddIdea',async(req, res, next) => {
     
     // set time check
     const result = await dbHandler.viewAllDataInTable("closureDates");
-
     var countDateInDB = result.length;
     console.log("Count : " + countDateInDB);
 
@@ -109,8 +111,11 @@ router.post('/doAddIdea',async(req, res, next) => {
         const objectDate = JSON.stringify(result[i], null, 2);
         console.log(objectDate)
         const splitDate = objectDate.split(",");
-        const fullStartDate = splitDate[1];
-        const fullEndDate = splitDate[2];
+        const fullStartDate = splitDate[2];
+        const fullEndDate = splitDate[3];
+        const nameDBClosureDate = splitDate[1].slice(12,-1);
+        console.log('name DB:', nameDBClosureDate);
+        console.log('hello:', splitDate[1])
 
         // Implement Start Date
         const splitStartDate = fullStartDate.split(":");
@@ -130,8 +135,8 @@ router.post('/doAddIdea',async(req, res, next) => {
         const monthEndDate = splitEndDate2[1];
         const yearEndDate = splitEndDate2[2];
 
-        if (currYear == yearStartDate) {
-            console.log("Found !");
+        if (nameClosureDate == nameDBClosureDate) {
+            console.log("Found Here !");
             finalStartDate = monthStartDate + "-" + dayStartDate + "-" + yearStartDate;
             finalEndDate = monthEndDate + "-" + dayEndDate + "-" + yearEndDate;
 
@@ -140,9 +145,7 @@ router.post('/doAddIdea',async(req, res, next) => {
         }
         else {
             console.log("Not Found !");
-
         }
-
     }
     // Date Format : Month-Day-Year
     console.log("Start Date : " + finalStartDate);
@@ -166,20 +169,17 @@ router.post('/doAddIdea',async(req, res, next) => {
         console.log(messageHere);
         await dbHandler.addNewAccount("postIdeas", ideas);
 
-        res.render('staff/allFileSubmit', { startDate: finalStartDate2, endDate: finalEndDate2, message: messageHere, implementSuccess: "Post idea uploaded" })
+        res.render('staff/allFileSubmit', { startDate: finalStartDate2, endDate: finalEndDate2, 
+            message: messageHere, implementSuccess: "Post idea uploaded" })
 
     }
     else {
         messageHere = "Staff CANNOT Submit File !"
         console.log(messageHere);
-        res.render('staff/allFileSubmit', { startDate: finalStartDate2, endDate: finalEndDate2, message: messageHere, implementSuccess: "Post idea Not uploaded" })
-
+        res.render('staff/allFileSubmit', { startDate: finalStartDate2, endDate: finalEndDate2, 
+            message: messageHere, implementSuccess: "Post idea Not uploaded" })
     }
-
     })
-    
-
-        
 })
 
 router.post('/doAddFile', async function(req, res, next) {

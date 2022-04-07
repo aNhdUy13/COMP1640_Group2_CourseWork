@@ -73,7 +73,7 @@
                             <td class="accountManagement_title">ClosureDate: </td>
                             <td>
                                 <select name="txtNameCloseDate">
-                                    <option>Select Closeure</option>
+                                    <option>Select Closure</option>
                                     {{#each getDate}}
                                         <option value="{{name}}">{{name}} : {{startDate}} to {{endDate}}</option>
                                     {{/each}}
@@ -93,22 +93,25 @@
                             <td></td>
                             <td>
                                 <input type="submit" value="Submit" class="insertButton" name="submit" onclick="check()">
-                                <p>{{message}}</p>
+                                {{!-- <p>{{message}}</p> --}}
                             </td>
                         </tr>
                     </form>
                 </table>
                 <script>
-                    function check(){
-                       /* startDate = startDate.split("-");
+                    /*function check(){
+                        startDate = startDate.split("-");
                         var newDate1 = new Date( startDate[2], startDate[1] - 1, startDate[0]);
                         endDate = endDate.split("-");
-                        var newDate2 = new Date( endDate[2], endDate[1] - 1, endDate[0]); */
-                        if(!this.form.checkbox.checked)
+                        var newDate2 = new Date( endDate[2], endDate[1] - 1, endDate[0]); 
+                        if(newDate1 < Date.now() && newDate2> Date.now()){
+                            {{message}};
+                        } return false;
+                        /*if(!this.form.checkbox.checked)
                             {alert('You must agree to the terms first.')  
                             return false;
                             }
-                    }
+                    }*/
                 </script>
 
 

@@ -455,7 +455,7 @@ async function addComment(body) {
     return result;
 }
 
-async function getIdeas(filter = {}, options = {}, userId) {
+async function getIdeas(filter = {}, options = {}) {
     const dbo = await getDBO();
     const pipeline = [
         {

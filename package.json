@@ -12,6 +12,7 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "express": "^4.17.3",
+    "express-easy-zip": "^1.1.5",
     "express-session": "^1.17.2",
     "formidable": "^2.0.1",
     "hbs": "^4.2.0",

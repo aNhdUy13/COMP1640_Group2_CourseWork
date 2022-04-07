@@ -95,13 +95,13 @@ function exportTableToCSV(filename) {
                 </table>
 
 <!-- button to call the user-defined function to download CSV file data -->  
-<button onclick="exportTableToCSV('person.csv')"> Download Data Idea </button>  
+<button onclick="exportTableToCSV('data.csv')"> Download Data Idea </button> 
+<form  action="../manager/doDownloadZip" method="post">
+
+                            <input type="text" value="{{selectedCateg}}"  name="txtName"> 
+                        <input type="submit" value="Zip and Download all file in this Category" >
+                    </form>
             </div>
-
-
-
-
-            
         </div>
 
         <!-- (End) Content -->

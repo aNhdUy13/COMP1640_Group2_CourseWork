@@ -26,8 +26,6 @@
 
                                 <option value="LatestIdeas">Latest Ideas</option>
 
-                                <option value="LatestComments">Latest Comments</option>
-
                                 <option value="MostLikeAndDislike">Most Like & Dislike Ideas</option>
 
                                 <option value="MostViewed">Most Viewed Idea</option>
@@ -101,6 +99,8 @@
                     </form> --}}
                 </div> 
 
+
+
             </div>
             
         </div>
@@ -168,7 +168,7 @@
                         ajax.send("postId="+ postId);
                     }
 
-                    window.addEventListener('load', () => {
+                    {{!-- window.addEventListener('load', () => {
                         const cmtForm = document.querySelectorAll('.comment-form');
                         cmtForm.forEach(form => {
                             form.addEventListener('submit', (event) => {
@@ -199,7 +199,7 @@
                                 ajax.send(JSON.stringify(json));
                             })
                         })
-                    })
+                    }) --}}
                 </script>
         </div>
 

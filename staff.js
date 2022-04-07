@@ -50,9 +50,9 @@ router.post('/doAddIdea',async(req, res, next) => {
 
         const newTopic = fields.txtNewTopic;
         const newDes = fields.txtNewDes;
-        const category = fields.txtNameCategory;
-        const nameClosureDate = fields.txtNameCloseDate;
-        console.log('Test:',nameClosureDate);
+        // const category = fields.txtNameCategory;
+        const nameClosureDateCategories = fields.txtNameCloseDate;
+        console.log('Test:', nameClosureDateCategories);
         const username = req.session.username;
         const email = req.session.user.email;
         const uploadFiles = [];
@@ -77,20 +77,7 @@ router.post('/doAddIdea',async(req, res, next) => {
                 console.log(error)
             };
         }
-        const ideas = {
-            topic: newTopic,
-            description: newDes,
-            category: category,
-            email: email,
-            username : username,
-            files: uploadFiles,
-            likers: likers,
-            dislikers: dislikers,
-            views: views,
-            popularpoint: popularpoint,
-            year: yearcurr,
-            department: department
-        }
+
     
     // set time check
     const result = await dbHandler.viewAllDataInTable("closureDates");
@@ -105,7 +92,7 @@ router.post('/doAddIdea',async(req, res, next) => {
     var currYear = splitCurrDate[0]
     var finalCurrDate = currMonth + "-" + currDay + "-" + currYear;
 
-    let finalEndDate, finalStartDate, finalStartDate2, finalEndDate2;
+    let finalEndDate, finalStartDate, finalStartDate2, finalEndDate2, finalNameClosureDateCategory;
 
     for (i = 0; i < countDateInDB; i++) {
         const objectDate = JSON.stringify(result[i], null, 2);
@@ -115,7 +102,6 @@ router.post('/doAddIdea',async(req, res, next) => {
         const fullEndDate = splitDate[3];
         const nameDBClosureDate = splitDate[1].slice(12,-1);
         console.log('name DB:', nameDBClosureDate);
-        console.log('hello:', splitDate[1])
 
         // Implement Start Date
         const splitStartDate = fullStartDate.split(":");
@@ -135,7 +121,8 @@ router.post('/doAddIdea',async(req, res, next) => {
         const monthEndDate = splitEndDate2[1];
         const yearEndDate = splitEndDate2[2];
 
-        if (nameClosureDate == nameDBClosureDate) {
+        if (nameClosureDateCategories == nameDBClosureDate) {
+            finalNameClosureDateCategory = nameDBClosureDate;
             console.log("Found Here !");
             finalStartDate = monthStartDate + "-" + dayStartDate + "-" + yearStartDate;
             finalEndDate = monthEndDate + "-" + dayEndDate + "-" + yearEndDate;
@@ -147,6 +134,22 @@ router.post('/doAddIdea',async(req, res, next) => {
             console.log("Not Found !");
         }
     }
+
+    const ideas = {
+        topic: newTopic,
+        description: newDes,
+        category: finalNameClosureDateCategory,
+        email: email,
+        username : username,
+        files: uploadFiles,
+        likers: likers,
+        dislikers: dislikers,
+        views: views,
+        popularpoint: popularpoint,
+        year: yearcurr,
+        department: department
+    }
+
     // Date Format : Month-Day-Year
     console.log("Start Date : " + finalStartDate);
     console.log("End Date : " + finalEndDate);

@@ -299,12 +299,25 @@ router.get('/closureDate', async (req, res) => {
 
     const result = await dbHandler.viewAllDataInTable("closureDates");
 
-    res.render('admin/closureDate', {viewAllClosureDate: result});
+    const categories = await dbHandler.viewAllDataInTable("categories");
+    const count = categories.length;
+
+    const getCategories = [];
+
+    for (let i = 0; i < count; i++) {
+        const objectDate = JSON.stringify(categories[i], null, 0);
+        const getCategoriesName = objectDate.slice(42,-2);
+        console.log(getCategoriesName);
+        getCategories.push(getCategoriesName)
+    }
+
+
+    res.render('admin/closureDate', { viewAllClosureDate: result, categories: getCategories});
 })
 
 
 router.post('/doSetDate', async (req, res) => {
-    const name = req.body.txtName;
+    const name = req.body.txtCategorySelected;
     const newStartDate = req.body.txtStartDate;
     const newEndDate = req.body.txtEndDate;
 
@@ -323,16 +336,15 @@ router.post('/doSetDate', async (req, res) => {
     const endDay = splitEndD[2];
     const FinalEndDate = endDay + "-" + endMonth + "-" + endYear;
 
-        const setDateValue = {
-            name: name,
-            startDate: FinalStartDate,
-            endDate: FinalEndDate
-        };
+    const setDateValue = {
+        name: name,
+        startDate: FinalStartDate,
+        endDate: FinalEndDate
+    };
 
-        await dbHandler.addNewAccount("closureDates", setDateValue);
+    await dbHandler.addNewAccount("closureDates", setDateValue);
 
-        res.redirect('closureDate');
-
+    res.redirect('closureDate');
 })
 
 

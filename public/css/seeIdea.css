@@ -95,6 +95,9 @@ div.dropbox_show {
     margin-left: 1%;
 
 }
+div.inside-content span {
+    line-height: 1.85;
+}
 
 div.dropbox_show select{
     background-color: #203b5b;

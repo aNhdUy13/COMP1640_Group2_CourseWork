@@ -58,9 +58,9 @@
                     <span>Topic is {{viewDetail.topic}}</span>
                     <br>
                     <span>Description: {{viewDetail.description}}</span>
-                    <br>Files:
-                    {{permissions.canRemoveAttachment}}
-                    <ul idea="{{viewDetail._id}}">
+                    <br>
+                    <span>Files: {{permissions.canRemoveAttachment}}</span>
+                    <ul idea="{{viewDetail._id}}" style="list-style: none">
                         {{#each viewDetail.files}} 
                             <li file-url="{{this.url}}" file-name="{{this.fileName}}">
                                 
@@ -75,7 +75,7 @@
                     </ul>
                     <span>Category: {{viewDetail.category}}</span>
                     <br>
-                    <span>Views: {{viewDetail.views}}</span>
+                    <span><i class="fa-solid fa-eye"></i> &nbsp; {{viewDetail.views}}</span>
                     <div>
                         {{!-- <div class="card-body">
                             Leave a comment:
@@ -107,7 +107,7 @@
             <br>Comments:
             <ul id="comments">
                 {{#each viewDetail.comments}} 
-                    <li>{{this.author.name}}: {{this.content}}</li>
+                    <li style="list-style: none; line-height: 1.8">{{this.author.name}}: {{this.content}}</li>
                 {{/each}}
             </ul>
         </div>

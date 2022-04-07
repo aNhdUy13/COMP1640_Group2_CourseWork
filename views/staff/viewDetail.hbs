@@ -59,7 +59,8 @@
                     <br>
                     <span>Description: {{viewDetail.description}}</span>
                     <br>
-                    <span>Files: {{permissions.canRemoveAttachment}}</span>
+                    <span>Files: </span>
+                    <p hidden>{{permissions.canRemoveAttachment}}</p>
                     <ul idea="{{viewDetail._id}}" style="list-style: none">
                         {{#each viewDetail.files}} 
                             <li file-url="{{this.url}}" file-name="{{this.fileName}}">

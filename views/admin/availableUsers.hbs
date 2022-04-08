@@ -51,47 +51,48 @@
                 </table>
             </div>
 
-            <div class="showButtonPaging">
+            {{#if isPagination}}
+                <div class="showButtonPaging">
+                    
+                        <a href="../admin/availableUsers?skipData=0" style="margin-left:10px">
+                            <button>
+                                <<
+                            </button>
+                        </a>
                 
-                    <a href="../admin/availableUsers?skipData=0" style="margin-left:10px">
-                        <button>
-                            <<
-                        </button>
-                    </a>
-            
 
-                    {{#each left}}
-                        <a href="../admin/availableUsers?currPage={{this}}">
-                            <button>
-                                {{this}}
+                        {{#each left}}
+                            <a href="../admin/availableUsers?currPage={{this}}">
+                                <button>
+                                    {{this}}
+                                </button>
+                            </a>
+
+                        {{/each}}
+
+                        
+                        <a href="../admin/availableUsers?currPage={{currPage}}">
+                            <button class="active">
+                                {{currPage}}
                             </button>
-                        </a>
+                        </a> 
+                        
+                        {{#each right}}
+                            <a href="../admin/availableUsers?currPage={{this}}">
+                                <button>
+                                    {{this}}
+                                </button>
+                            </a>
 
-                    {{/each}}
+                        {{/each}}
 
-                    
-                    <a href="../admin/availableUsers?currPage={{currPage}}">
-                        <button class="active">
-                            {{currPage}}
-                        </button>
-                    </a> 
-                    
-                    {{#each right}}
-                        <a href="../admin/availableUsers?currPage={{this}}">
+                        <a href="../admin/availableUsers?currPage={{lastPage}}">
                             <button>
-                                {{this}}
+                                >>
                             </button>
-                        </a>
-
-                    {{/each}}
-
-                    <a href="../admin/availableUsers?currPage={{lastPage}}">
-                        <button>
-                            >>
-                        </button>
-                    </a> 
-            </div>
-
+                        </a> 
+                </div>
+            {{/if}}
         </div>
 
         <!-- (End) Content -->

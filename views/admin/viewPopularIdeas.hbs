@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View popular Idea</title>
-    {{!-- <link rel="stylesheet" href="/css/normal_layout.css" type="text/css">
-    <link rel="stylesheet" href="/css/admin_layout.css" type="text/css"> --}}
-
-    <link rel="stylesheet" href="/css/seeIdeaDuyAnhCustom.css" type="text/css">
+    <title>Idea Page</title>
+    <link rel="stylesheet" href="/css/seeIdea.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
-<body>
-    <div class="container">
-        {{> headerAdmin}}
 
-        <!-- Content -->
-        <div class="main_Content">
+
+<div class="container">
+    {{> headerAdmin }}
+
+    <!-- Content -->
+    <div class="main_Content">
+
             <div class="topViewPopular">
                 <div class="dropbox_show">
                         <form  action="../admin/ChoseViewTypePopularIdeas" method="post">
@@ -26,7 +26,7 @@
 
                                 <option value="LatestIdeas">Latest Ideas</option>
 
-                                <option value="MostLikeAndDislike">Most Popular Idea</option>
+                                <option value="MostLikeAndDislike">Most Like & Dislike Ideas</option>
 
                                 <option value="MostViewed">Most Viewed Idea</option>
 
@@ -34,53 +34,166 @@
                         </form>
                 </div>
             </div>
-            
-
-            <div class="bottomViewPopular">
-                {{#each viewLatestIdeas}}
-                    <div class="box">
-                        <div class="inside">
-                            <div class="padding align">
-                                <img class="size border" src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png" alt="">
-                                <div class="span">
-                                    <div class="name1">
-                                        <div class="name2">
-                                            <span class="font space">{{users}}</span>
-                                        </div>
+        <div class="bottomViewIdeas">
+            {{#each viewLatestIdeas}}
+                <div class="box">
+                    <div class="inside">
+                        <div class="padding align">
+                            <img class="size border" src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png" alt="">
+                            <div class="span">
+                                <div class="name1">
+                                    <div class="name2">
+                                        <span class="font space">{{username}}</span>
                                     </div>
-                                    <span class="email">{{email}}</span>                        
                                 </div>
-                            </div>
-                        <div class="content">
-                            <div class="inside-content">
-                                <span>Topic is {{topic}}</span>
-                                <br>
-                                <span>Description: {{description}}</span>
-                                <br>
-                                <span>File: {{file}}</span>
-                                <br>
-                                <span>Category: {{category}}</span>
-                                <br>
-                                <span><span>Viewers: {{views}}</span></span>
-                                <br>
-                                <span><a href="../staff/viewIdea?id={{_id}}">View more</a></span>
-                                <br>
+                                <span class="email">{{email}}</span>                        
                             </div>
                         </div>
+                    <div class="content">
+                        <div class="inside-content">
+                            <span>Topic is {{topic}}</span>
+                            <br>
+                            <span>Description: {{description}}</span>
+                            <br>
+                            <span>Category: {{category}}</span>
+                            <br>
+                            <span><a href="/admin/viewIdea?id={{_id}}">View more</a></span>
+                            <br>
+                            <span><i class="fa-solid fa-eye"></i> &nbsp; {{views}}</span>
+                            <br>
+                            <input type="hidden" name="postId" value="{{_id}}">
                         </div>
-                        
                     </div>
-                    <br>
-                {{/each}}
-            </div>
-            
+                        <hr>
+                        <div class="wrapper">
+                            <div class="like">
+                                <button type="button" class="btn btn-default" onclick="like(this)">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                    <span class="likes">
+                                        {{likers.length}}
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dislike">
+                                <button type="button" class="btn btn-default" onclick="dislike(this)">
+                                    <i class="fa-solid fa-thumbs-down"  ></i>
+                                    <span class="dislikes">
+                                        {{dislikers.length}}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    
+                </div>
+                <br>
+            {{/each}}
+            <script type="text/javascript">
+                    function like(btn) {
+                        btn.disabled = true;
+                        const dislikeBtn = btn.parentElement.parentElement.querySelector('div.dislike button');
+                        dislikeBtn.disabled = true;
+                        var ajax = new XMLHttpRequest();
+                        ajax.open("POST", "/staff/do-like", true);
+                        ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                        ajax.onreadystatechange = function(){
+                            if (ajax.readyState == 4)
+                            {
+                                btn.disabled = false;
+                                dislikeBtn.disabled = false;
+                                var response =JSON.parse(ajax.responseText);
+                                if (ajax.status == 200 && response.status == "success") {
+                                    const like = btn.parentElement.parentElement.parentElement.querySelector(".likes");
+                                    const dislike = btn.parentElement.parentElement.parentElement.querySelector(".dislikes");
+                                    like.innerText = response.count.like ?? 0;
+                                    dislike.innerText = response.count.dislike ?? 0;
+
+                                } else {
+                                    alert(response.message)
+                                }                                    
+                                
+                            }
+                        };
+                        const input = btn.parentElement.parentElement.parentElement.querySelector("input[name='postId']");
+                        const postId = input.value;
+                        ajax.send("postId="+ postId);
+                    }
+                    function dislike(btn) {
+                        btn.disabled = true;
+                        const likeBtn = btn.parentElement.parentElement.querySelector('div.like button');
+                        likeBtn.disabled = true;
+                        var ajax = new XMLHttpRequest();
+                        ajax.open("POST", "/staff/do-dislike", true);
+                        ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                        ajax.onreadystatechange = function(){
+                            if (ajax.readyState == 4)
+                            {
+                                btn.disabled = false;
+                                likeBtn.disabled = false;
+                                var response =JSON.parse(ajax.responseText);
+                                if (ajax.status == 200 && response.status == "success") {
+                                    const like = btn.parentElement.parentElement.parentElement.querySelector(".likes");
+                                    const dislike = btn.parentElement.parentElement.parentElement.querySelector(".dislikes");
+                                    like.innerText = response.count.like ?? 0;
+                                    dislike.innerText = response.count.dislike ?? 0;
+                                }
+                                else {
+                                    alert(response.message)
+                                }
+                            
+                            }
+                        };
+                        const input = btn.parentElement.parentElement.parentElement.querySelector("input[name='postId']");
+                        const postId = input.value;
+                        ajax.send("postId="+ postId);
+                    }
+
+                    {{!-- window.addEventListener('load', () => {
+                        const cmtForm = document.querySelectorAll('.comment-form');
+                        cmtForm.forEach(form => {
+                            form.addEventListener('submit', (event) => {
+                                event.preventDefault();
+                                const btn = form.querySelector('button[type="submit"]');
+                                btn.disabled = true;
+                                const formData = new FormData(form);
+                                const json = {};
+                                for (const [key, value] of formData.entries()) {
+                                    json[key] = value;
+                                }
+                                const ajax = new XMLHttpRequest();
+                                ajax.open("POST", "/staff/do-comment", true);
+                                ajax.setRequestHeader("Content-Type", "application/json");
+                                ajax.onreadystatechange = function(){
+                                    if (ajax.readyState == 4)
+                                    {
+                                        btn.disabled = false;
+                                        const response =JSON.parse(ajax.responseText);
+                                        if (ajax.status == 200 && response.status == "success") {
+                                            console.log(response);
+                                        }
+                                        else {
+                                            alert(response.message)
+                                        }
+                                    }
+                                };
+                                ajax.send(JSON.stringify(json));
+                            })
+                        })
+                    }) --}}
+            </script>
         </div>
 
-        <!-- (End) Content -->
-
-        {{> footer}}
     </div>
 
+    <!-- (End) Content -->
 
-</body>
+    {{> footer}}
+    
+</div>
+
+
 </html>

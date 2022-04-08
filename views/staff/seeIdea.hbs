@@ -35,62 +35,62 @@
                 </div>
             </div>
         <div class="bottomViewIdeas">
-        {{#each viewAllIdea}}
-        <div class="box">
-            <div class="inside">
-                <div class="padding align">
-                    <img class="size border" src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png" alt="">
-                    <div class="span">
-                        <div class="name1">
-                            <div class="name2">
-                                <span class="font space">{{username}}</span>
+            {{#each viewAllIdea}}
+                <div class="box">
+                    <div class="inside">
+                        <div class="padding align">
+                            <img class="size border" src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png" alt="">
+                            <div class="span">
+                                <div class="name1">
+                                    <div class="name2">
+                                        <span class="font space">{{username}}</span>
+                                    </div>
+                                </div>
+                                <span class="email">{{email}}</span>                        
                             </div>
                         </div>
-                        <span class="email">{{email}}</span>                        
+                    <div class="content">
+                        <div class="inside-content">
+                            <span>Topic is {{topic}}</span>
+                            <br>
+                            <span>Description: {{description}}</span>
+                            <br>
+                            <span>Category: {{category}}</span>
+                            <br>
+                            <span><a href="/staff/viewIdea?id={{_id}}">View more</a></span>
+                            <br>
+                            <span><i class="fa-solid fa-eye"></i> &nbsp; {{views}}</span>
+                            <br>
+                            <input type="hidden" name="postId" value="{{_id}}">
+                        </div>
                     </div>
-                </div>
-            <div class="content">
-                <div class="inside-content">
-                    <span>Topic is {{topic}}</span>
-                    <br>
-                    <span>Description: {{description}}</span>
-                    <br>
-                    <span>Category: {{category}}</span>
-                    <br>
-                    <span><a href="/staff/viewIdea?id={{_id}}">View more</a></span>
-                    <br>
-                    <span><i class="fa-solid fa-eye"></i> &nbsp; {{views}}</span>
-                    <br>
-                    <input type="hidden" name="postId" value="{{_id}}">
-                </div>
-            </div>
-                <hr>
-                <div class="wrapper">
-                    <div class="like">
-                        <button type="button" class="btn btn-default" onclick="like(this)">
-                            <i class="fa-solid fa-thumbs-up"></i>
-                            <span class="likes">
-                                {{likers.length}}
-                            </span>
-                        </button>
-                    </div>
-                    <div class="dislike">
-                        <button type="button" class="btn btn-default" onclick="dislike(this)">
-                            <i class="fa-solid fa-thumbs-down"  ></i>
-                            <span class="dislikes">
-                                {{dislikers.length}}
-                            </span>
-                        </button>
-                    </div>
-                </div>
+                        <hr>
+                        <div class="wrapper">
+                            <div class="like">
+                                <button type="button" class="btn btn-default" onclick="like(this)">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                    <span class="likes">
+                                        {{likers.length}}
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dislike">
+                                <button type="button" class="btn btn-default" onclick="dislike(this)">
+                                    <i class="fa-solid fa-thumbs-down"  ></i>
+                                    <span class="dislikes">
+                                        {{dislikers.length}}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
 
 
-            </div>
-            
-        </div>
-        <br>
-        {{/each}}
-        <script type="text/javascript">
+                    </div>
+                    
+                </div>
+                <br>
+            {{/each}}
+            <script type="text/javascript">
                     function like(btn) {
                         btn.disabled = true;
                         const dislikeBtn = btn.parentElement.parentElement.querySelector('div.dislike button');
@@ -184,7 +184,7 @@
                             })
                         })
                     }) --}}
-                </script>
+            </script>
         </div>
 
     </div>

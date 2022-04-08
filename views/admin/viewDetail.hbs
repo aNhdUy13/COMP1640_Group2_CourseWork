@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idea Page</title>
+    <link rel="stylesheet" href="/css/seeIdea.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .comment-form {
+            margin: auto;
+            width: 70%;
+            position: relative;
+        }
+        .comment-form button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+        .comment-form textarea {
+            width: 100%;
+            border-radius: 10px;
+            padding: 5px 70px 5px 10px;
+            resize: none;
+            min-height: 50px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+
+<div class="container">
+    {{> headerAdmin }}
+
+    <!-- Content -->
+    <div class="main_Content">
+
+        <div class="intro_image_content">
+            <img src="">
+        </div>
+        <div class="box">
+            <div class="inside">
+                <div class="padding align">
+                    <img class="size border" src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png" alt="">
+                    <div class="span">
+                        <div class="name1">
+                            <div class="name2">
+                                <span class="font space">{{viewDetail.users}}</span>
+                            </div>
+                        </div>
+                        <span class="email">{{viewDetail.email}}</span>                        
+                    </div>
+                </div>
+            <div class="content">
+                <div class="inside-content">
+                    <span>Topic is {{viewDetail.topic}}</span>
+                    <br>
+                    <span>Description: {{viewDetail.description}}</span>
+                    <br>
+                    <span>Files: </span>
+                    <p hidden>{{permissions.canRemoveAttachment}}</p>
+                    <ul idea="{{viewDetail._id}}" style="list-style: none">
+                        {{#each viewDetail.files}} 
+                            <li file-url="{{this.url}}" file-name="{{this.fileName}}">
+                                {{!-- {{#ifCond permissions.canRemoveAttachment true}} --}}
+                                <button onclick="removeAttachment(this)">Remove</button>&nbsp;
+                                {{!-- {{/ifCond}} --}}
+                                {{this.fileName}}
+                            </li>
+                        {{/each}}
+                    </ul>
+                    <span>Category: {{viewDetail.category}}</span>
+                    <br>
+                    <span><i class="fa-solid fa-eye"></i> &nbsp; {{viewDetail.views}}</span>
+                    <div>
+                        {{!-- <div class="card-body">
+                            Leave a comment:
+                        </div> --}}
+                    </div>
+                    {{!-- <div>
+                    <form action="/staff/do-comment" action="POST" class="comment-form">
+                        <div class="form-group">
+                            <input type="hidden" value="{{_id}}" name="postId">
+                            <textarea class="form-control" name="content"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Post comment</button>
+                    </form>
+                    </div> --}}
+                </div>
+                            <div style="display: block">
+                <form action="/staff/doAddFile" method="POST" enctype="multipart/form-data">    
+                    <input type="hidden" name="idea" value="{{viewDetail._id}}">
+                    <label for="uploadFiles">Add more files:</label>
+                    <input type="file" name="uploadFiles" multiple>
+                    <input type="submit" value="Submit">
+                </form>
+            </div> 
+            </div>
+            </div> 
+        </div>
+        <br>
+        <div class="box">
+            <br>Comments:
+            <ul id="comments">
+                {{#each viewDetail.comments}} 
+                    <li style="list-style: none; line-height: 1.8">{{this.author.name}}: {{this.content}}</li>
+                {{/each}}
+            </ul>
+        </div>
+        <br>
+        <div >
+            <form action="" method="POST" class="comment-form">
+                <input type="hidden" name="postId" value="{{viewDetail._id}}">
+                <input type="hidden" value="{{viewDetail.email}}" name="email">
+                <textarea name="content"></textarea>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+        
+    </div>
+
+    <!-- (End) Content -->
+
+    {{> footer}}
+    
+</div>
+
+                <script type="text/javascript">
+                        function removeAttachment(btn) {
+                            btn.disabled = true;
+                            const data = {
+                                idea: btn.parentElement.parentElement.getAttribute('idea'),
+                                fileUrl: btn.parentElement.getAttribute('file-url'),
+                                fileName: btn.parentElement.getAttribute('file-name'),
+                            }
+                            fetch('/staff/doRemoveFile', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(data)
+                            }).then(res => res.json()).then(res => {
+                                btn.disabled = false;
+                                if (res.success) {
+                                    btn.parentElement.remove();
+                                }
+                            }).catch(err => {
+                                btn.disabled = false;
+                            })
+                        }
+                        
+
+                        window.addEventListener('load', () => {
+                        const cmtForm = document.querySelectorAll('.comment-form');
+                        cmtForm.forEach(form => {
+                            form.addEventListener('submit', (event) => {
+                                event.preventDefault();
+                                const btn = form.querySelector('button[type="submit"]');
+                                const textarea = form.querySelector('textarea[name="content"]');
+                                const formData = new FormData(form);
+                                const json = {};
+                                for (const [key, value] of formData.entries()) {
+                                    json[key] = value;
+                                }
+                                if (json.content.trim().length < 1) return;
+                                btn.disabled = true;
+                                const ajax = new XMLHttpRequest();
+                                ajax.open("POST", "/staff/do-comment", true);
+                                ajax.setRequestHeader("Content-Type", "application/json");
+                                ajax.onreadystatechange = function(){
+                                    if (ajax.readyState == 4)
+                                    {
+                                        btn.disabled = false;
+                                        const response =JSON.parse(ajax.responseText);
+                                        if (ajax.status == 200 && response.status == "success") {
+                                            textarea.value = "";
+                                            const cmtDiv = document.getElementById('comments');
+                                            const cmt = document.createElement('li');
+                                            cmt.innerText = `${response.comment.author.name}: ${response.comment.content}`
+                                            cmtDiv.appendChild(cmt);
+                                        }
+                                        else {
+                                            alert(response.message)
+                                        }
+                                    }
+                                };
+                                ajax.send(JSON.stringify(json));
+                            })
+                        })
+                    })
+                </script>
+</html>

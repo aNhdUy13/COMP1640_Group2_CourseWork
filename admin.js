@@ -1,3 +1,14 @@
+/* *
+    Phan Manh Lam ( View Idea Detail )
+*/
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://nguyenduyanh131201:duyanh12345678@cluster0-shard-00-00.letwt.mongodb.net:27017,cluster0-shard-00-01.letwt.mongodb.net:27017,cluster0-shard-00-02.letwt.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-kl4ffn-shard-0&authSource=admin&retryWrites=true&w=majority";
+const dbName = "COMP1640_Web_DBnew_2";
+const { ObjectId } = require('mongodb');
+
+/* *
+    ( End ) Phan Manh Lam ( View Idea Detail )
+*/
 const express = require('express');
 const router = express.Router();
 const session = require('express-session');
@@ -186,6 +197,7 @@ router.get('/availableUsers', async (req, res) => {
         lastPage: pages.totalPages,
         left: pages.left,
         right: pages.right,
+        isPagination: true,
     });
 
 })
@@ -196,7 +208,8 @@ router.post('/searchAccount', async (req, res) => {
 
     const result = await dbHandler.searchAccount("users", searchContent);
 
-    res.render('admin/availableUsers', { viewAllAccount: result });
+    res.render('admin/availableUsers', {
+        viewAllDataInTable: result, isPagination: false  });
 
 })
 
@@ -381,6 +394,41 @@ router.post('/ChoseViewTypePopularIdeas', async (req, res) => {
 
     res.render('admin/viewPopularIdeas', { viewLatestIdeas: result })
 })
+
+
+/* *
+    View Idea Detail ( Manh Lam )
+*/ 
+
+    router.get('/viewIdea', async (req, res) => {
+        const client = await MongoClient.connect(url);
+        const dbo = client.db(dbName);
+        const postIdeaId = ObjectId(req.query.id);
+        const condition = { "_id": postIdeaId };
+        await dbo.collection('postIdeas').updateOne(condition, { $inc: { 'views': 1 } });
+        const filter = {
+            _id: postIdeaId
+        }
+        const detailIdea = await dbHandler.getIdeas(filter);
+        res.render('admin/viewDetail', {
+            viewDetail: detailIdea[0],
+            permissions: {
+                canRemoveAttachment: req.session.username && (detailIdea.username === req.session.username || req.session.user.role === "Admin" || req.session.user.role === "Staff")
+            }
+        })
+    })
+    function htmlEntities(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>');
+    }
+
+    // router.get('/get-comments', async (req, res) => {
+    //     const result = await findComments();
+    //     res.json(result);
+    // })
+
+/* *
+    ( End ) View Idea Detail ( Manh Lam )
+*/ 
 /* ================================================================================== */
 
 

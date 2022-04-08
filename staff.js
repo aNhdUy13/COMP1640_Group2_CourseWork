@@ -54,9 +54,9 @@ router.post('/doAddIdea',async(req, res, next) => {
 
         const newTopic = fields.txtNewTopic;
         const newDes = fields.txtNewDes;
+        const selectedPostType = fields.txtNamePostType;
         // const category = fields.txtNameCategory;
         const nameClosureDateCategories = fields.txtNameCloseDate;
-        console.log('Test:', nameClosureDateCategories);
         const username = req.session.username;
         const email = req.session.user.email;
         const uploadFiles = [];
@@ -138,21 +138,39 @@ router.post('/doAddIdea',async(req, res, next) => {
             console.log("Not Found !");
         }
     }
-
-    const ideas = {
+    if(selectedPostType == "Anonymous"){
+        var ideas = {
+            topic: newTopic,
+            description: newDes,
+            category: finalNameClosureDateCategory,
+            email: "Anonymous",
+            username : "Anonymous",
+            files: uploadFiles,
+            postType: selectedPostType,
+            likers: likers,
+            dislikers: dislikers,
+            views: views,
+            popularpoint: popularpoint,
+            year: yearcurr,
+            department: department
+        }
+    } else {
+        var ideas = {
         topic: newTopic,
         description: newDes,
         category: finalNameClosureDateCategory,
         email: email,
         username : username,
         files: uploadFiles,
+        postType: selectedPostType,
         likers: likers,
         dislikers: dislikers,
         views: views,
         popularpoint: popularpoint,
         year: yearcurr,
         department: department
-    }
+    }}
+
 
     // Date Format : Month-Day-Year
     console.log("Start Date : " + finalStartDate);
@@ -168,6 +186,7 @@ router.post('/doAddIdea',async(req, res, next) => {
 
     formatCurrDate = Date.parse(finalCurrDate);
     console.log(formatCurrDate);
+
 
     var messageHere;
     if ((formatCurrDate >= formatStartDate && formatCurrDate <= formatEndDate ) )

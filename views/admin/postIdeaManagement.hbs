@@ -26,7 +26,9 @@
                                     <th>Topic</th>
                                     <th>Description</th>
                                     <th>Categories</th>
-                                    {{!-- <th>User</th> --}}
+                                    <th>Views</th>
+                                    <th>Liker</th>
+                                    <th>Disliker</th>
                                     <th>Email</th>
 
                                     {{!-- <th></th> --}}
@@ -37,12 +39,13 @@
                                 <tr>
                                     <td>{{topic}}</td>
                                     <td>{{description}}</td>
-                                    {{!-- <td>{{startDate}}</td>
-                                    <td>{{endDate}}</td> --}}
                                     <td>{{category}}</td>
-                                    {{!-- <td>{{users}}</td> --}}
+                                    <td>{{views}}</td>
+                                    <td>{{likers.length}}</td>
+                                    <td>{{dislikers.length}}</td>
+
                                     <td>{{email}}</td>
-                                
+
                                     {{!-- <td>
                                         <button>
                                             <a href="../admin/updatePostIdea?id={{_id}}">

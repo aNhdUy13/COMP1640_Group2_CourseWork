@@ -76,6 +76,7 @@ router.post('/doAddAccount',async(req, res) => {
             res.render('admin/accountManagement', { errorPhoneNumber: "Error : Input and only Number  ! " })
         }
         else {
+            console.log("Start add new account !");
             // Hash Password
             const hashPassword = await bcrypt.hash(newPassword, 10);
 
@@ -124,17 +125,46 @@ router.post('/doUpdateAccount', async (req, res) => {
     const ageUpdated = req.body.txtUpdateAge;
     const phoneNumberUpdated = req.body.txtUpdatePhoneNumber;
 
-    const newValues = {
-        $set: {
-            name: nameUpdated,
-            age: ageUpdated,
-            phoneNumber: phoneNumberUpdated
-        }
-    };
+    var accountToEdit = await dbHandler.updateFunction("users", userId);
 
-    await dbHandler.doUpdateFunction("users", userId, newValues);
+    var errMessage;
+    var regex = /\d+/; // Check Contains Number 
 
-    res.redirect('accountManagement')
+    if (nameUpdated == "" || ageUpdated == "" || phoneNumberUpdated == "")
+    {
+        errMessage = "Fulfill All Data !"
+        res.render('admin/updateAccount', { accountDetail: accountToEdit, errorMessage: errMessage })
+    } 
+    else if (nameUpdated.trim().length < 3) {
+        errMessage = "Length of name must > 3 !"
+        res.render('admin/updateAccount', { accountDetail: accountToEdit, errorMessage: errMessage })
+    }
+    else if (regex.test(nameUpdated)) {
+        errMessage = "Name cannot contain Number !"
+        res.render('admin/updateAccount', { accountDetail: accountToEdit, errorMessage: errMessage })
+    }
+    else if (ageUpdated.trim().length == 0 || ageUpdated < 0 || ageUpdated > 200) {
+        errMessage = "Input Age and it cannot < 0 or > 200 !"
+        res.render('admin/updateAccount', { accountDetail: accountToEdit, errorMessage: errMessage })
+    }
+    else if (phoneNumberUpdated.trim().length == 0 || isNaN(phoneNumberUpdated) == true) {
+        errMessage = "Input and only Number  !"
+        res.render('admin/updateAccount', { accountDetail: accountToEdit, errorMessage: errMessage })
+    }
+    else{
+        const newValues = {
+            $set: {
+                name: nameUpdated,
+                age: ageUpdated,
+                phoneNumber: phoneNumberUpdated
+            }
+        };
+
+        await dbHandler.doUpdateFunction("users", userId, newValues);
+
+        res.redirect('accountManagement')
+
+    }
 
 })
 

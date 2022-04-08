@@ -195,7 +195,7 @@ router.post('/doAddIdea',async(req, res, next) => {
     });
     var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
         from: 'group2hellomn@gmail.com',
-        to: 'manhmainad@gmail.com',
+        to: 'nduyanh100@gmail.com',
         subject: 'A new postIdea',
         text: 'You got a new postIdea',
         html: '<p>You have got a new postIdea:</b><ul><li>Username: ' + req.session.user.name + '</li><li>Email: ' + req.session.user.email + '</li><li>Department: ' + req.session.user.department + '</li></ul>'

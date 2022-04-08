@@ -102,7 +102,10 @@
                         <tr>
                             <td></td>
                             <td>
-                                <input type="submit" value="Submit" class="insertButton" name="submit" onclick="check()">
+                                <input type="submit" value="Submit" class="insertButton" name="submit" onclick="if(!this.form.checkbox.checked)
+                            {alert('You must agree to the terms first.')  
+                            return false;
+                            }">
                                 <input type="hidden" value="{{viewDetail.email}}" name="email">
                                 {{!-- <p>{{message}}</p> --}}
                             </td>
@@ -110,19 +113,6 @@
                     </form>
                 </table>
                 <script>
-                    /*function check(){
-                        startDate = startDate.split("-");
-                        var newDate1 = new Date( startDate[2], startDate[1] - 1, startDate[0]);
-                        endDate = endDate.split("-");
-                        var newDate2 = new Date( endDate[2], endDate[1] - 1, endDate[0]); 
-                        if(newDate1 < Date.now() && newDate2> Date.now()){
-                            {{message}};
-                        } return false;
-                        /*if(!this.form.checkbox.checked)
-                            {alert('You must agree to the terms first.')  
-                            return false;
-                            }
-                    }*/
                 </script>
 
 

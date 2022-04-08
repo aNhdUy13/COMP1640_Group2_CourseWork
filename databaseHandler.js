@@ -47,6 +47,22 @@ async function addNewAccount(collectionName, data) {
     await dbo.collection(collectionName).insertOne(data);
 }
 
+async function checkExistAccount(userEmail) {
+    const dbo = await getDBO();
+
+    const result = await dbo.collection("users").findOne({ email: userEmail });
+
+    var message;
+    if (result) {
+        message = "Email already in exists !";
+    } else {
+        message = "Good Email";
+    }
+    return message;
+
+}
+
+
 async function viewAllAccount(collectionName, roleChoice) {
     const dbo = await getDBO();
     const result = await dbo.collection(collectionName).find({ role: roleChoice }).toArray();
@@ -591,4 +607,5 @@ module.exports = {
     searchCateName,
     viewFirstCategory,
     searchFilename,
+    checkExistAccount
 }

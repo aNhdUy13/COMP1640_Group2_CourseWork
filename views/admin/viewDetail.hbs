@@ -65,7 +65,7 @@
                         {{#each viewDetail.files}} 
                             <li file-url="{{this.url}}" file-name="{{this.fileName}}">
                                 {{!-- {{#ifCond permissions.canRemoveAttachment true}} --}}
-                                <button onclick="removeAttachment(this)">Remove</button>&nbsp;
+                                {{!-- <button onclick="removeAttachment(this)">Remove</button>&nbsp; --}}
                                 {{!-- {{/ifCond}} --}}
                                 {{this.fileName}}
                             </li>
@@ -90,12 +90,12 @@
                     </div> --}}
                 </div>
                             <div style="display: block">
-                <form action="/staff/doAddFile" method="POST" enctype="multipart/form-data">    
+                {{!-- <form action="/staff/doAddFile" method="POST" enctype="multipart/form-data">    
                     <input type="hidden" name="idea" value="{{viewDetail._id}}">
                     <label for="uploadFiles">Add more files:</label>
                     <input type="file" name="uploadFiles" multiple>
                     <input type="submit" value="Submit">
-                </form>
+                </form> --}}
             </div> 
             </div>
             </div> 
@@ -111,12 +111,12 @@
         </div>
         <br>
         <div >
-            <form action="" method="POST" class="comment-form">
+            {{!-- <form action="" method="POST" class="comment-form">
                 <input type="hidden" name="postId" value="{{viewDetail._id}}">
                 <input type="hidden" value="{{viewDetail.email}}" name="email">
                 <textarea name="content"></textarea>
                 <button type="submit">Send</button>
-            </form>
+            </form> --}}
         </div>
         
     </div>

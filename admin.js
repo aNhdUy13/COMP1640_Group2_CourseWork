@@ -44,55 +44,62 @@ router.post('/doAddAccount',async(req, res) => {
     const selectedRole = req.body.txtRoleSelected;
     const selectedDepartment = req.body.txtDepartmentSelected;
 
-    var regex = /\d+/; // Check Contains Number 
-    if (newName.trim().length < 3)
-    {
-        res.render('admin/accountManagement', { errorName: "Error : Name cannot < 3 !"});
-    }
-    else if (regex.test(newName))
-    {
-        res.render('admin/accountManagement', { errorName: "Name cannot contain Number !" });
-    }
-    else if (newEmail.trim().length < 0 || newEmail.indexOf('@') == -1)
-    {
-        res.render('admin/accountManagement', { errorEmail: "Error : Fill the email & correct format !" })
-    } else if (newPassword.trim().length == 0)
-    {
-        res.render('admin/accountManagement', { errorPassword: "Error : Password Cannot be Null ! " })
-    } 
-    else if (newAge.trim().length == 0 || newAge < 0 || newAge > 200)
-    {
-        res.render('admin/accountManagement', { errorAge: "Error : Input Age and it cannot < 0 or > 200 ! " })
-    }
-    else if (newPhoneNumber.trim().length == 0 || isNaN(newPhoneNumber) == true)
-    {
-        res.render('admin/accountManagement', { errorPhoneNumber: "Error : Input and only Number  ! " })
-    }
-    else {
-        // Hash Password
-        const hashPassword = await bcrypt.hash(newPassword, 10);
+    const isAccountExist = await dbHandler.checkExistAccount(newEmail);
 
-        const accountData = {
-            name: newName, email: newEmail, password: hashPassword, age: newAge,
-            phoneNumber: newPhoneNumber, role: selectedRole, department: selectedDepartment
-        }
-
-
-        // Compare the PASSWORD with HASH PASSWORD & Display in the system
-        const compare = await bcrypt.compare(newPassword, hashPassword);
-        console.log("New Pass :" + newPassword);
-        console.log("Has Pass :" + hashPassword);
-        console.log(compare);
-
-        await dbHandler.addNewAccount("users", accountData);
-
+    if (isAccountExist == "Email already in exists !")
+    {
+        console.log("Email Exist !");
         const result = await dbHandler.viewAllAccount("users", selectedRole)
 
 
-        res.render('admin/accountManagement', { viewAllAccount: result , implementSuccess: "New Account Added Successfully !" })
+        res.render('admin/accountManagement', { viewAllAccount: result, implementSuccess: "Email Already Exist !" })
+
     }
+    else{
+        console.log("Email Not Exist !");
+        var regex = /\d+/; // Check Contains Number 
+        if (newName.trim().length < 3) {
+            res.render('admin/accountManagement', { errorName: "Error : Name cannot < 3 !" });
+        }
+        else if (regex.test(newName)) {
+            res.render('admin/accountManagement', { errorName: "Name cannot contain Number !" });
+        }
+        else if (newEmail.trim().length < 0 || newEmail.indexOf('@') == -1) {
+            res.render('admin/accountManagement', { errorEmail: "Error : Fill the email & correct format !" })
+        } else if (newPassword.trim().length == 0) {
+            res.render('admin/accountManagement', { errorPassword: "Error : Password Cannot be Null ! " })
+        }
+        else if (newAge.trim().length == 0 || newAge < 0 || newAge > 200) {
+            res.render('admin/accountManagement', { errorAge: "Error : Input Age and it cannot < 0 or > 200 ! " })
+        }
+        else if (newPhoneNumber.trim().length == 0 || isNaN(newPhoneNumber) == true) {
+            res.render('admin/accountManagement', { errorPhoneNumber: "Error : Input and only Number  ! " })
+        }
+        else {
+            // Hash Password
+            const hashPassword = await bcrypt.hash(newPassword, 10);
+
+            const accountData = {
+                name: newName, email: newEmail, password: hashPassword, age: newAge,
+                phoneNumber: newPhoneNumber, role: selectedRole, department: selectedDepartment
+            }
 
 
+            // Compare the PASSWORD with HASH PASSWORD & Display in the system
+            const compare = await bcrypt.compare(newPassword, hashPassword);
+            console.log("New Pass :" + newPassword);
+            console.log("Has Pass :" + hashPassword);
+            console.log(compare);
+
+            await dbHandler.addNewAccount("users", accountData);
+
+            const result = await dbHandler.viewAllAccount("users", selectedRole)
+
+
+            res.render('admin/accountManagement', { viewAllAccount: result, implementSuccess: "New Account Added Successfully !" })
+        
+        }
+    }
 })
 
 router.get('/deleteAccount',async function (req, res) {

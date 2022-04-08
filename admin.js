@@ -302,8 +302,10 @@ router.get('/closureDate', async (req, res) => {
 
     for (let i = 0; i < count; i++) {
         const objectDate = JSON.stringify(categories[i], null, 0);
+        console.log("Before Slice : ", objectDate);
+
         const getCategoriesName = objectDate.slice(42,-2);
-        console.log(getCategoriesName);
+        console.log("After Slice : ", getCategoriesName);
         getCategories.push(getCategoriesName)
     }
 
@@ -317,30 +319,59 @@ router.post('/doSetDate', async (req, res) => {
     const newStartDate = req.body.txtStartDate;
     const newEndDate = req.body.txtEndDate;
 
-    // console.log(newStartDate);
-    // console.log(newEndDate);
+    console.log("New Start Date : " , newStartDate);
+    console.log("New End Date : ", newEndDate);
 
-    const splitStartD = newStartDate.split('-');
-    const startYear = splitStartD[0];
-    const startMonth = splitStartD[1];
-    const startDay = splitStartD[2];
-    const FinalStartDate = startDay + "-" + startMonth + "-" + startYear;
+    const result = await dbHandler.viewAllDataInTable("closureDates");
+    const categories = await dbHandler.viewAllDataInTable("categories");
+    const count = categories.length;
+    const getCategories = [];
+    for (let i = 0; i < count; i++) {
+        const objectDate = JSON.stringify(categories[i], null, 0);
+        console.log("Before Slice : ", objectDate);
+        const getCategoriesName = objectDate.slice(42, -2);
+        console.log("After Slice : ", getCategoriesName);
+        getCategories.push(getCategoriesName)
+    }
 
-    const splitEndD = newEndDate.split('-');
-    const endYear = splitEndD[0];
-    const endMonth = splitEndD[1];
-    const endDay = splitEndD[2];
-    const FinalEndDate = endDay + "-" + endMonth + "-" + endYear;
+    const startDateCheck = Date.parse(newStartDate);
+    const endDateCheck = Date.parse(newEndDate);
 
-    const setDateValue = {
-        name: name,
-        startDate: FinalStartDate,
-        endDate: FinalEndDate
-    };
+    if(newStartDate == "" || newEndDate == "")
+    {
+        res.render('admin/closureDate', { viewAllClosureDate: result, categories: getCategories, 
+            errMessage: "Select Start Date & End Date !" });
+    }
+    else if (startDateCheck > endDateCheck)
+    {
+        res.render('admin/closureDate', {
+            viewAllClosureDate: result, categories: getCategories,
+            errMessage: "Start Date cannot > End Date !"
+        });
+    }
+    else{
+            const splitStartD = newStartDate.split('-');
+            const startYear = splitStartD[0];
+            const startMonth = splitStartD[1];
+            const startDay = splitStartD[2];
+            const FinalStartDate = startDay + "-" + startMonth + "-" + startYear;
 
-    await dbHandler.addNewAccount("closureDates", setDateValue);
+            const splitEndD = newEndDate.split('-');
+            const endYear = splitEndD[0];
+            const endMonth = splitEndD[1];
+            const endDay = splitEndD[2];
+            const FinalEndDate = endDay + "-" + endMonth + "-" + endYear;
 
-    res.redirect('closureDate');
+            const setDateValue = {
+                name: name,
+                startDate: FinalStartDate,
+                endDate: FinalEndDate
+            };
+
+            await dbHandler.addNewAccount("closureDates", setDateValue);
+
+            res.redirect('closureDate');
+    }
 })
 
 

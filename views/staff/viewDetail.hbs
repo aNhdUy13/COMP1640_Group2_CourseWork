@@ -64,11 +64,8 @@
                     <ul idea="{{viewDetail._id}}" style="list-style: none">
                         {{#each viewDetail.files}} 
                             <li file-url="{{this.url}}" file-name="{{this.fileName}}">
-                                
                                 {{!-- {{#ifCond permissions.canRemoveAttachment true}} --}}
                                 <button onclick="removeAttachment(this)">Remove</button>&nbsp;
-
-                                <button onclick="viewFile()">View File</button>&nbsp;
                                 {{!-- {{/ifCond}} --}}
                                 {{this.fileName}}
                             </li>
@@ -154,9 +151,6 @@
                             })
                         }
                         
-                        function viewFile(){
-                            
-                        }
 
                         window.addEventListener('load', () => {
                         const cmtForm = document.querySelectorAll('.comment-form');

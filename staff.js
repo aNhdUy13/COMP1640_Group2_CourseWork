@@ -39,6 +39,10 @@ router.post('/upload',function(req,res){
     });
 });
 
+// router.post('/viewFile',function(req,res){
+//     res.render()
+// });
+
 router.post('/doAddIdea',async(req, res, next) => {
     if (!req.session || !req.session.username || !req.session.user) return res.sendStatus(401);
     form.parse(req, async function (err, fields, files) {
@@ -74,7 +78,7 @@ router.post('/doAddIdea',async(req, res, next) => {
                     url: url
                 });
             } catch (error) {
-                console.log(error)
+                console.log(error);
             };
         }
 
@@ -182,6 +186,29 @@ router.post('/doAddIdea',async(req, res, next) => {
         res.render('staff/allFileSubmit', { startDate: finalStartDate2, endDate: finalEndDate2, 
             message: messageHere, implementSuccess: "Post idea Not uploaded" })
     }
+    var transporter =  nodemailer.createTransport({ // config mail server
+        service: 'Gmail',
+        auth: {
+            user: 'group2hellomn@gmail.com',
+            pass: 'hellomn123'
+        }
+    });
+    var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
+        from: 'group2hellomn@gmail.com',
+        to: 'manhmainad@gmail.com',
+        subject: 'A new postIdea',
+        text: 'You got a new postIdea',
+        html: '<p>You have got a new postIdea:</b><ul><li>Username: ' + req.session.user.name + '</li><li>Email: ' + req.session.user.email + '</li><li>Department: ' + req.session.user.department + '</li></ul>'
+    }
+    transporter.sendMail(mainOptions, function(err, info){
+        if (err) {
+            console.log(err);
+            res.redirect('/');
+        } else {
+            console.log('Message sent: ' +  info.response);
+            res.redirect('/');
+        }
+    });
     })
 })
 

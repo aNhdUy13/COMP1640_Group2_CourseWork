@@ -47,22 +47,6 @@ async function addNewAccount(collectionName, data) {
     await dbo.collection(collectionName).insertOne(data);
 }
 
-async function checkExistAccount(userEmail) {
-    const dbo = await getDBO();
-
-    const result = await dbo.collection("users").findOne({ email: userEmail });
-
-    var message;
-    if (result) {
-        message = "Email already in exists !";
-    } else {
-        message = "Good Email";
-    }
-    return message;
-
-}
-
-
 async function viewAllAccount(collectionName, roleChoice) {
     const dbo = await getDBO();
     const result = await dbo.collection(collectionName).find({ role: roleChoice }).toArray();
@@ -197,16 +181,16 @@ async function getUser(collectionName,email) {
     const result = await dbo.collection(collectionName).find({ email: email }).toArray();
     return result;
 }
-// async function viewDetail(collectionName, userId)
-// {
-//     const dbo = await getDBO();
-//     var ObjectId = require('mongodb').ObjectId;
-//     // Lấy Id gửi về
-//     const condition = { "_id": ObjectId(userId) };
-//     await dbo.collection(collectionName).updateOne(condition, {$inc: { 'views': 1}});
-//     const detailIdea = await dbo.collection(collectionName).findOne(condition);
-//     return detailIdea;
-// }
+async function viewDetail(collectionName, userId)
+{
+    const dbo = await getDBO();
+    var ObjectId = require('mongodb').ObjectId;
+    // Lấy Id gửi về
+    const condition = { "_id": ObjectId(userId) };
+    await dbo.collection(collectionName).updateOne(condition, {$inc: { 'views': 1}});
+    const detailIdea = await dbo.collection(collectionName).findOne(condition);
+    return detailIdea;
+}
 
 async function viewComment(collectionName, postIdeaId)
 {
@@ -268,24 +252,6 @@ async function viewAllCategory(collectionName) {
     const dbo = await getDBO();
     const result = await dbo.collection(collectionName).find().toArray();
     return result;
-}
-async function searchFilename(categoryN) {
-    const dbo = await getDBO();
-    const result = await dbo.collection("postIdeas").find({category:categoryN}).toArray();
-    // get URL from Mongo
-    let resultArray =[] 
-    result.forEach(item => {
-        item.files.forEach(items=>{
-            resultArray.push(items.url);
-        })      
-    });
-    // Get file name from URL
-    const fileName = resultArray.map((itemss) =>{
-        return itemss.slice(9);
-    } )
-
-    console.log(fileName);
-    return fileName;
 }
 async function viewFirstCategory(collectionName,categoryN) {
     const dbo = await getDBO();
@@ -479,6 +445,7 @@ async function getIdeas(filter = {}, options = {}) {
                 ...filter
             }
         },
+        
         {
             $lookup: {
                 from: "comments",
@@ -567,7 +534,7 @@ async function getIdeas(filter = {}, options = {}) {
     })
     const result = await dbo.collection('postIdeas').aggregate(pipeline).toArray();
     for (let doc of result) {
-        doc.comments.sort((a, b) => {return a.commentTime - b.commentTime});
+        doc.comments.sort((a, b) => {return b.commentTime - a.commentTime});
     }
     return result;
 }
@@ -588,6 +555,7 @@ module.exports = {
     viewAllAccountPaginationCustom,
     viewAllCategory,
     searchAccount,
+    viewDetail,
     mostViewed,
     checkExists,
     addIdeaFile,
@@ -606,6 +574,4 @@ module.exports = {
     searchFirstCate,
     searchCateName,
     viewFirstCategory,
-    searchFilename,
-    checkExistAccount
 }

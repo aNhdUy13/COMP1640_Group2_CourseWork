@@ -39,7 +39,20 @@ async function emailFinding(emailIn) {
 }
 /* End Login function  */
 
+async function checkExistAccount(userEmail) {
+    const dbo = await getDBO();
 
+    const result = await dbo.collection("users").findOne({ email: userEmail });
+
+    var message;
+    if (result) {
+        message = "Email already in exists !";
+    } else {
+        message = "Good Email";
+    }
+    return message;
+
+}
 
 /* =================== Admin Role =================== */
 async function addNewAccount(collectionName, data) {
@@ -258,7 +271,24 @@ async function viewFirstCategory(collectionName,categoryN) {
     const result = await dbo.collection(collectionName).find({category:categoryN}).toArray();
     return result;
 }
+async function searchFilename(categoryN) {
+    const dbo = await getDBO();
+    const result = await dbo.collection("postIdeas").find({ category: categoryN }).toArray();
+    // get URL from Mongo
+    let resultArray = []
+    result.forEach(item => {
+        item.files.forEach(items => {
+            resultArray.push(items.url);
+        })
+    });
+    // Get file name from URL
+    const fileName = resultArray.map((itemss) => {
+        return itemss.slice(9);
+    })
 
+    console.log(fileName);
+    return fileName;
+}
 async function searchFirstCate() {
     const dbo = await getDBO();
     const result = await dbo.collection("categories").find().toArray();
@@ -574,4 +604,6 @@ module.exports = {
     searchFirstCate,
     searchCateName,
     viewFirstCategory,
+    checkExistAccount,
+    searchFilename
 }

@@ -207,6 +207,15 @@ div.like{
 div.dislike{
     margin: 10px;
 }
+
+div.box_comment{
+    width: 70%;
+    height: 150px;
+    margin-left: 15%;
+    overflow-y: auto;
+    border: 1px solid black;
+    padding: 5px;
+}
 /*=============================== Footer ===============================*/
 div.footer {
     width: 100%;

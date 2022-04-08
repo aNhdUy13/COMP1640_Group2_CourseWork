@@ -390,15 +390,21 @@ router.post('/doUpdateClosureDate', async (req, res) => {
     const updateEndDate = req.body.txtUpdateEndDate;
 
 
-    var err = "Start Date & End Date Cannot Be bull";
+    var err;
     var getDateData = await dbHandler.updateFunction("closureDates", dateId);
+    const startDateCheck = Date.parse(updateStartDate);
+    const endDateCheck = Date.parse(updateEndDate);
 
-    if (updateStartDate == "")
+    if (updateStartDate == "" || updateEndDate == "")
     {
+        err = "Start Date & End Date Cannot Be bull";
         res.render('admin/updateClosureDate', { dateDetail: getDateData, errorMessage: err })
-    } else if (updateEndDate == "")
+    } 
+    else if (startDateCheck > endDateCheck)
     {
-        res.render('admin/updateClosureDate', { dateDetail: getDateData, errorMessage: err })    }
+        err = "Start Date cannot >  End Date !";
+        res.render('admin/updateClosureDate', { dateDetail: getDateData, errorMessage: err })
+    }
     else {
         console.log("Let's update")
 

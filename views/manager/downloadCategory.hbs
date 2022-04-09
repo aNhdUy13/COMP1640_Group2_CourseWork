@@ -68,35 +68,37 @@ function exportTableToCSV(filename) {
                 </script>
 
 
-
-                <table border="1" cellspacing ="0 " cellpadding="15">
-                        <thead>
-                            <tr>
-                                    <th>Category</th>
-                                    <th>Email</th>
-                                    <th>Popular Point</th>
-                                    <th>Views</th>
-                                    <th>year</th>
-                                    <th>Department</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each viewCategory}}
+                <div class="categoriesTable">
+                    <table border="1" cellspacing ="0 " cellpadding="15">
+                            <thead>
                                 <tr>
-                                    <td>{{category}}</td>
-                                    <td>{{email}}</td>
-                                    <td>{{popularpoint}}</td>
-                                    <td>{{views}}</td>
-                                    <td>{{year}}</td>
-                                    <td>{{department}}</td>
+                                        <th>Category</th>
+                                        <th>Email</th>
+                                        <th>Popular Point</th>
+                                        <th>Views</th>
+                                        <th>year</th>
+                                        <th>Department</th>
                                 </tr>
-                            {{/each }}
-                        </tbody>
-                </table>
+                            </thead>
+                            <tbody>
+                                {{#each viewCategory}}
+                                    <tr>
+                                        <td>{{category}}</td>
+                                        <td>{{email}}</td>
+                                        <td>{{popularpoint}}</td>
+                                        <td>{{views}}</td>
+                                        <td>{{year}}</td>
+                                        <td>{{department}}</td>
+                                    </tr>
+                                {{/each }}
+                            </tbody>
+                    </table>
+                </div>
 
-<!-- button to call the user-defined function to download CSV file data -->  
-<button onclick="exportTableToCSV('data.csv')"> Download Data Idea </button> 
-<form  action="../manager/doDownloadZip" method="post">
+
+                    <!-- button to call the user-defined function to download CSV file data -->  
+                    <button onclick="exportTableToCSV('data.csv')"> Download Data Idea </button> 
+                    <form  action="../manager/doDownloadZip" method="post">
 
                             <input type="text" value="{{selectedCateg}}"  name="txtName"> 
                         <input type="submit" value="Zip and Download all file in this Category" >
@@ -106,9 +108,14 @@ function exportTableToCSV(filename) {
 
         <!-- (End) Content -->
 
-        {{> footer}}
-    </div>
+    
+    
+    
+        </div>
 
+        {{> footer}}
+
+    </div>
 
 </body>
 </html>

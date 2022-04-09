@@ -190,31 +190,30 @@ router.get('/postIdeaManagement', async (req, res) => {
 })
 
 
+// router.get('/updatePostIdea', async (req, res) => {
+//     const ideaID = req.query.id;
 
-router.get('/updatePostIdea', async (req, res) => {
-    const ideaID = req.query.id;
-
-    var ideaEdit = await dbHandler.updateFunction("postIdeas", ideaID);
-    res.render('admin/updatePostIdea', { ideaDetail: ideaEdit })
-})
+//     var ideaEdit = await dbHandler.updateFunction("postIdeas", ideaID);
+//     res.render('admin/updatePostIdea', { ideaDetail: ideaEdit })
+// })
 
 
-router.post('/doUpdateIdea', async (req, res) => {
-    const ideaID = req.body.id;
-    const startDateUpdated = req.body.txtUpdateStartDate;
-    const endDateUpdated = req.body.txtUpdateEndDate;
+// router.post('/doUpdateIdea', async (req, res) => {
+//     const ideaID = req.body.id;
+//     const startDateUpdated = req.body.txtUpdateStartDate;
+//     const endDateUpdated = req.body.txtUpdateEndDate;
 
-    const newValues = {
-        $set: {
-            startDate: startDateUpdated,
-            endDate: endDateUpdated
-        }
-    };
+//     const newValues = {
+//         $set: {
+//             startDate: startDateUpdated,
+//             endDate: endDateUpdated
+//         }
+//     };
 
-    await dbHandler.doUpdateFunction("postIdeas", ideaID, newValues);
+//     await dbHandler.doUpdateFunction("postIdeas", ideaID, newValues);
 
-    res.redirect('postIdeaManagement')
-})
+//     res.redirect('postIdeaManagement')
+// })
 
 
 /* ===================================== Related "Available User" Page ============================================= */

@@ -119,14 +119,6 @@ async function countDataInTable(collectionName) {
 
 }
 
-async function viewAccountPagination(collectionName, limit, roleChoice, skipData) {
-    const dbo = await getDBO();
-
-
-    const result = await dbo.collection(collectionName).find({ role: roleChoice }).limit(limit).skip(skipData).toArray();
-
-    return result;
-}
 
 async function viewAllAccountPaginationCustom(collectionName, skipData, limitData = 5) {
     const dbo = await getDBO();
@@ -168,6 +160,15 @@ async function viewLatestPostIdeas(){
 
     // sort({{_id : -1}}) => Sort descending by id
     const result = await dbo.collection("postIdeas").find().sort({ _id: -1 }).toArray();
+
+    return result;
+}
+
+async function viewAccountPagination(collectionName, limit, roleChoice, skipData) {
+    const dbo = await getDBO();
+
+
+    const result = await dbo.collection(collectionName).find({ role: roleChoice }).limit(limit).skip(skipData).toArray();
 
     return result;
 }

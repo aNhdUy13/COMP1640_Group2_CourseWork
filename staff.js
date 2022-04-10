@@ -212,9 +212,10 @@ router.post('/doAddIdea',async(req, res, next) => {
             pass: 'hellomn123'
         }
     });
+    // const emailCoor = await dbHandler.findEmailCoor("users");
     var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
         from: 'group2hellomn@gmail.com',
-        to: 'nduyanh100@gmail.com',
+        to:  'manhmainad@gmail.com',
         subject: 'A new postIdea',
         text: 'You got a new postIdea',
         html: '<p>You have got a new postIdea:</b><ul><li>Username: ' + req.session.user.name + '</li><li>Email: ' + req.session.user.email + '</li><li>Department: ' + req.session.user.department + '</li></ul>'
@@ -495,10 +496,10 @@ router.post('/do-comment', async function(req, res) {
         const client = await MongoClient.connect(url);
         const dbo = client.db(dbName);
         const content = htmlEntities(req.body.content);
-        console.log(req.body);
         const data = await dbHandler.addComment({
             postId: req.body.postId,
             userId: req.session.user._id,
+            anonymous: req.body.anonymous,
             content: content,
         })
         const cmt = await dbHandler.getComments({_id: data.insertedId});
@@ -509,6 +510,7 @@ router.post('/do-comment', async function(req, res) {
                 pass: 'hellomn123'
             }
         });
+        
         var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
             from: 'group2hellomn@gmail.com',
             to: req.body.email,

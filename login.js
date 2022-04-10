@@ -4,8 +4,8 @@ const session = require('express-session');
 const dbHandler = require('./databaseHandler');
 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.letwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const dbName = "COMP1640_Web_DBnew_2";
+var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.odeyq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const dbName = "COMP1640_web_db3";
 
 
 // Import dependencies to hash passwordToCompare

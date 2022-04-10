@@ -28,24 +28,211 @@
                 </div>
             </div>
 
-            <div class="bottomViewPopular">
-                <span>Count Academy: {{countA}}</span>
-                <br>
-                <span>Count Support: {{countS}}</span>
-                <br>
-                <span>Count Staff Academic: {{countStaffA}}</span>
-                <br>
-                <span>Count Staff Support: {{countStaffS}}</span>
-                <br>
-                <span>Year: {{thisYear}}</span>
-            </div>
-
-
-
-
+            <div class="chart">
+            <canvas id="myCanvas" ></canvas>
             
+            
+            </div>
+             <div  id="myLegend"></div>
+             
+              <script> 
+                    var myCanvas = document.getElementById("myCanvas");
+ 
+                    myCanvas.width = 300;
+                    
+                    myCanvas.height = 300;
+                    
+                    
+                    
+                    var ctx = myCanvas.getContext("2d");
+
+                    function drawLine(ctx, startX, startY, endX, endY){
+                    
+                        ctx.beginPath();
+                    
+                        ctx.moveTo(startX,startY);
+                    
+                        ctx.lineTo(endX,endY);
+                    
+                        ctx.stroke();
+                    
+                    }
+                    function drawArc(ctx, centerX, centerY, radius, startAngle, endAngle){
+                    
+                        ctx.beginPath();
+                    
+                        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                    
+                        ctx.stroke();
+                    
+                    }
+                    function drawPieSlice(ctx,centerX, centerY, radius, startAngle, endAngle, color ){
+                    
+                        ctx.fillStyle = color;
+                    
+                        ctx.beginPath();
+                    
+                        ctx.moveTo(centerX,centerY);
+                    
+                        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                    
+                        ctx.closePath();
+                    
+                        ctx.fill();
+                    
+                    }
+
+                    var myVinyls = {
+                    
+                        "Ideas of Academic department": {{{countA}}},
+                    
+                        "Ideas of Support department": {{{countS}}}
+                    
+                    };
+
+                    var Piechart = function(options){
+                    
+                        this.options = options;
+                    
+                        this.canvas = options.canvas;
+                    
+                        this.ctx = this.canvas.getContext("2d");
+                    
+                        this.colors = options.colors;
+                    
+                    
+                    
+                        this.draw = function(){
+                    
+                            var total_value = 0;
+                    
+                            var color_index = 0;
+                    
+                            for (var categ in this.options.data){
+                    
+                                var val = this.options.data[categ];
+                    
+                                total_value += val;
+                    
+                            }
+                    
+                    
+                    
+                            var start_angle = 0;
+                    
+                            for (categ in this.options.data){
+                    
+                                val = this.options.data[categ];
+                    
+                                var slice_angle = 2 * Math.PI * val / total_value;
+                    
+                    
+                    
+                                drawPieSlice(
+                    
+                                    this.ctx,
+                    
+                                    this.canvas.width/2,
+                    
+                                    this.canvas.height/2,
+                    
+                                    Math.min(this.canvas.width/2,this.canvas.height/2),
+                    
+                                    start_angle,
+                    
+                                    start_angle+slice_angle,
+                    
+                                    this.colors[color_index%this.colors.length]
+                    
+                                );
+                    
+                    
+                    
+                                start_angle += slice_angle;
+                    
+                                color_index++;
+                    
+                            }
+
+                            if (this.options.legend){
+ 
+                                color_index = 0;
+                    
+                                var legendHTML = "";
+                    
+                                for (categ in this.options.data){
+                    
+                                    legendHTML += "<div><span style='display:inline-block;width:20px;background-color:"+this.colors[color_index++]+";'>&nbsp;</span> "+categ+"</div>";
+                    
+                                }
+                    
+                                this.options.legend.innerHTML = legendHTML;
+                    
+                            }
+                    
+                    
+                        }
+                    
+                    }
+                    var myLegend = document.getElementById("myLegend");
+                    var myPiechart = new Piechart(
+                    
+                        {
+                    
+                            canvas:myCanvas,
+                    
+                            data:myVinyls,
+                    
+                            colors:["#02c39a","#f0f3bd"],
+
+                            legend:myLegend
+                    
+                        }
+                    
+                    );
+                    
+                    myPiechart.draw();
+                    
+
+
+              </script> 
+
+        <div class="bottom_content">
+                <!-- Bottom Content -->
+                <table border="1" cellspacing ="0 " cellpadding="15">
+                        <thead>
+                            <tr>
+                                    <th>Parameter name</th>
+                                    <th>Parameter</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                    <td>Year</td>
+                                    <td>{{thisYear}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Number of ideas of Academic department in {{thisYear}}</td>
+                                    <td>{{countA}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Number of ideas of Support department in {{thisYear}}</td>
+                                    <td>{{countS}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Number of contributors of Academic department in {{thisYear}}</td>
+                                    <td id="hello">{{countStaffA}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Number of contributors of Support department in {{thisYear}}</td>
+                                    <td>{{countStaffS}}</td>
+                                </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
+            
         <!-- (End) Content -->
 
         {{> footer}}

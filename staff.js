@@ -6,7 +6,7 @@ const { ObjectId } = require('mongodb');
 const { request } = require('https');
 const nodemailer =  require('nodemailer'); 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.odeyq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+var url = "mongodb://nguyenduyanh131201:duyanh12345678@cluster0-shard-00-00.odeyq.mongodb.net:27017,cluster0-shard-00-01.odeyq.mongodb.net:27017,cluster0-shard-00-02.odeyq.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-11147a-shard-0&authSource=admin&retryWrites=true&w=majority";
 const dbName = "COMP1640_web_db3";
 const formidable = require('formidable');
 const fs = require('fs');
@@ -20,7 +20,7 @@ const options = {
 const form = formidable(options);
 
 router.get('/', (req, res) => {
-    if(!req.session.username)
+    if(!req.session.username  || req.session.user.role != "Staff")
     return res.render('login')
     res.render('staff/staffHome');
 })
@@ -283,7 +283,7 @@ router.post('/doRemoveFile', async function(req, res, next) {
 router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
     const getDate = await dbHandler.getCategory("closureDates");
-    if(!req.session.username)
+    if(!req.session.username  || req.session.user.role != "Staff")
     return res.render('login');
     const newValues = await dbHandler.getUser("users",req.session.user.email);
     console.log(newValues);
@@ -294,7 +294,7 @@ router.get('/allFileSubmit',async (req, res) => {
 // get categories
 
 router.get('/', (req, res) => {
-    if(!req.session.username)
+    if(!req.session.username  || req.session.user.role != "Staff")
     return res.render('login')
     res.render('staff/staffHome');
 })
@@ -314,7 +314,7 @@ router.get('/viewAll',async (req, res) => {
 router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
 
-    if(!req.session.username)
+    if(!req.session.username  || req.session.user.role != "Staff")
     return res.render('login');
     const newValues = await dbHandler.getUser("users",req.session.user.email);
     console.log(newValues);
@@ -393,7 +393,6 @@ router.post("/do-like", async function (request, result) {
                     });
                 }
         })
-
 })
 router.post("/do-dislike", async function (request, result) {
     if (!request.session.user || !request.session.user._id) return result.status(401).json({status: 'error'});
@@ -510,13 +509,14 @@ router.post('/do-comment', async function(req, res) {
                 pass: 'hellomn123'
             }
         });
-        
         var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
             from: 'group2hellomn@gmail.com',
             to: req.body.email,
             subject: 'A new comment about your idea',
             text: 'You got a new comment about your idea',
-            html: '<p>You have got a new comment about your ideas from:</b><ul><li>Username: ' + req.session.user.name + '</li><li>Email: ' + req.session.user.email + '</li><li>Department: ' + req.session.user.department + '</li></ul>'
+            html: '<p>You have got a new comment about your ideas from:</b><ul><li>Username: ' 
+            + req.session.user.name + '</li><li>Email: ' + req.session.user.email 
+            + '</li><li>Department: ' + req.session.user.department + '</li></ul>'
         }
         transporter.sendMail(mainOptions, function(err, info){
             if (err) {

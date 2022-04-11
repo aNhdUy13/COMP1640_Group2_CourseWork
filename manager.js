@@ -1,3 +1,15 @@
+
+/* *
+    Phan Manh Lam ( View Idea Detail )
+*/
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.odeyq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const dbName = "COMP1640_web_db3";
+const { ObjectId } = require('mongodb');
+
+/* *
+    ( End ) Phan Manh Lam ( View Idea Detail )
+*/
 const express = require('express');
 const router = express.Router();
 const session = require('express-session');
@@ -17,7 +29,7 @@ router.use(session({
 }))
 
 router.get('/', (req, res) => {
-    if(!req.session.username)
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
     return res.render('login')
     res.render('manager/managerHome');
 })
@@ -42,12 +54,8 @@ router.use(zip());
          filename: selectedCate +'.zip'
      });
 })
-// manager Category ------------------------------------------------
-router.get('/addCategory',async (req, res) => {
-    
-    const result = await dbHandler.viewAllCategory("categories")
-    res.render('manager/addCategory', {viewAllCategory: result});
-})
+// Download Category ------------------------------------------------
+
 
 router.get('/downloadCategory',async (req, res) => {
     
@@ -55,6 +63,8 @@ router.get('/downloadCategory',async (req, res) => {
     const nameCate = await dbHandler.searchCateName()
  
     const result = await dbHandler.viewFirstCategory("postIdeas",firstCate)
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+    return res.render('login')
     res.render('manager/downloadCategory', {viewCategory:result,categoryList:nameCate, selectedCateg:firstCate});
 })
 
@@ -65,17 +75,44 @@ router.post('/ChooseCategoryList', async (req, res) => {
     const result = await dbHandler.viewFirstCategory("postIdeas",selectedCate)
     res.render('manager/downloadCategory', {viewCategory:result,categoryList:nameCate, selectedCateg:selectedCate});
 })
-
+// Add Category
+router.get('/addCategory',async (req, res) => {
+    
+    const result = await dbHandler.viewAllCategory("categories")
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+    return res.render('login')
+    res.render('manager/addCategory', {viewAllCategory: result});
+})
 router.post('/doAddCategory',async(req, res) => {
     const newCategory = req.body.txtNewCate;
 
-        const categoryData = {
-            name: newCategory
-        }
-
-        await dbHandler.addNewAccount("categories", categoryData);
+    const isCategoryExist = await dbHandler.checkExistCategory(newCategory);
+    if (isCategoryExist == "Name already in exists !")
+    {
+        console.log("Category Exist !");
         const result = await dbHandler.viewAllCategory("categories")
-        res.render('manager/addCategory', { implementSuccess: "New Account Added Successfully !",  viewAllCategory: result})
+        res.render('manager/addCategory', {viewAllCategory: result, errorName: "Category Already Exist !"});
+
+    }
+    else{
+        if( newCategory.trim().length == 0 ){
+            const result = await dbHandler.viewAllCategory("categories")
+            res.render('manager/addCategory', {viewAllCategory: result, errorName: "Error : Category Name Cannot be Null !"});
+        }
+        else{
+            
+            console.log("Start add Category !");
+            const categoryData = {
+                name: newCategory
+            }
+    
+            await dbHandler.addNewAccount("categories", categoryData);
+            const result = await dbHandler.viewAllCategory("categories")
+            res.render('manager/addCategory', { implementSuccess: "New Account Added Successfully !",  viewAllCategory: result})
+        }
+    }
+
+        
 })
 
 router.get('/deleteCategory',async function (req, res) {
@@ -83,6 +120,8 @@ router.get('/deleteCategory',async function (req, res) {
     const categoryId = req.query.id;
 
     await dbHandler.deleteFunction("categories", categoryId);
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+    return res.render('login')
     res.redirect('addCategory')
 
 })
@@ -105,6 +144,9 @@ router.get('/staticDashboard',async (req, res) => {
     const countStaffS = await dbHandler.countStaff("Support",yearcurr)
 
     const yearList = await dbHandler.findYear() 
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+    return res.render('login')
+
     res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, 
         countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList, thisYear:yearcurr});
 })
@@ -119,11 +161,78 @@ router.post('/ChooseYearStatic', async (req, res) => {
     const countStaffS = await dbHandler.countStaff("Support",selectedYear)
 
     const yearList = await dbHandler.findYear() 
-
     res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, 
         countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList, thisYear:selectedYear});
 })
 
+
+/* ===================================== Related "View Ideas" Page ============================================= */
+router.get('/viewPopularIdeas', async (req, res) => {
+    result = await dbHandler.viewAllDataInTable("postIdeas");
+
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+    return res.render('login')
+    res.render('manager/viewPopularIdeas', { viewLatestIdeas: result})
+})
+
+router.post('/ChoseViewTypePopularIdeas', async (req, res) => {
+    const selectedViewType = req.body.txtSelectedViewType;
+
+    let result;
+    if (selectedViewType == "LatestIdeas") {
+        result = await dbHandler.viewLatestPostIdeas();
+    }
+    else if (selectedViewType == "MostLikeAndDislike") {
+        await dbHandler.updatePopularPoint()
+        result = await dbHandler.mostPopular("postIdeas");
+    }
+    else if (selectedViewType == "MostViewed") {
+        result = await dbHandler.mostViewed("postIdeas");
+    }
+    else{
+        result = await dbHandler.viewLatestPostIdeas();
+    }
+
+    res.render('manager/viewPopularIdeas', { viewLatestIdeas: result })
+})
+
+
+/* *
+    View Idea Detail ( Manh Lam )
+*/ 
+
+    router.get('/viewIdea', async (req, res) => {
+        const client = await MongoClient.connect(url);
+        const dbo = client.db(dbName);
+        const postIdeaId = ObjectId(req.query.id);
+        const condition = { "_id": postIdeaId };
+        await dbo.collection('postIdeas').updateOne(condition, { $inc: { 'views': 1 } });
+        const filter = {
+            _id: postIdeaId
+        }
+        const detailIdea = await dbHandler.getIdeas(filter);
+        if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+        return res.render('login')
+        res.render('manager/viewDetail', {
+            viewDetail: detailIdea[0],
+            permissions: {
+                canRemoveAttachment: req.session.username && (detailIdea.username === req.session.username || req.session.user.role === "Manager" || req.session.user.role === "Staff")
+            }
+        })
+    })
+    function htmlEntities(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>');
+    }
+
+    // router.get('/get-comments', async (req, res) => {
+    //     const result = await findComments();
+    //     res.json(result);
+    // })
+
+/* *
+    ( End ) View Idea Detail ( Manh Lam )
+*/ 
+/* ================================================================================== */
 
 
 module.exports = router;

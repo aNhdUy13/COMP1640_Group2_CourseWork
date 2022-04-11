@@ -75,7 +75,7 @@ router.post('/doAddCategory',async(req, res) => {
     {
         console.log("Category Exist !");
         const result = await dbHandler.viewAllCategory("categories")
-        res.render('manager/addCategory', {viewAllCategory: result, errorName: "Name Already Exist !"});
+        res.render('manager/addCategory', {viewAllCategory: result, errorName: "Category Already Exist !"});
 
     }
     else{

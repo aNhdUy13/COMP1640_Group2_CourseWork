@@ -6,7 +6,7 @@ const { ObjectId } = require('mongodb');
 const { request } = require('https');
 const nodemailer =  require('nodemailer'); 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.odeyq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+var url = "mongodb://nguyenduyanh131201:duyanh12345678@cluster0-shard-00-00.odeyq.mongodb.net:27017,cluster0-shard-00-01.odeyq.mongodb.net:27017,cluster0-shard-00-02.odeyq.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-11147a-shard-0&authSource=admin&retryWrites=true&w=majority";
 const dbName = "COMP1640_web_db3";
 const formidable = require('formidable');
 const fs = require('fs');

@@ -393,7 +393,6 @@ router.post("/do-like", async function (request, result) {
                     });
                 }
         })
-
 })
 router.post("/do-dislike", async function (request, result) {
     if (!request.session.user || !request.session.user._id) return result.status(401).json({status: 'error'});

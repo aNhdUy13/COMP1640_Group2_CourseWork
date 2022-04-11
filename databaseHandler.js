@@ -647,9 +647,6 @@ module.exports = {
     viewFirstCategory,
     checkExistAccount,
     searchFilename,
-<<<<<<< HEAD
-    checkExistCategory
-=======
+    checkExistCategory,
     findEmailCoor,
->>>>>>> aec3f19532a21270e7332e4923c5d0f33040f476
 }

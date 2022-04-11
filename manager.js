@@ -29,7 +29,7 @@ router.use(session({
 }))
 
 router.get('/', (req, res) => {
-    if(!req.session.username)
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
     return res.render('login')
     res.render('manager/managerHome');
 })
@@ -54,7 +54,7 @@ router.use(zip());
          filename: selectedCate +'.zip'
      });
 })
-// manager Category ------------------------------------------------
+// Download Category ------------------------------------------------
 
 
 router.get('/downloadCategory',async (req, res) => {
@@ -63,6 +63,8 @@ router.get('/downloadCategory',async (req, res) => {
     const nameCate = await dbHandler.searchCateName()
  
     const result = await dbHandler.viewFirstCategory("postIdeas",firstCate)
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+    return res.render('login')
     res.render('manager/downloadCategory', {viewCategory:result,categoryList:nameCate, selectedCateg:firstCate});
 })
 
@@ -77,6 +79,8 @@ router.post('/ChooseCategoryList', async (req, res) => {
 router.get('/addCategory',async (req, res) => {
     
     const result = await dbHandler.viewAllCategory("categories")
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+    return res.render('login')
     res.render('manager/addCategory', {viewAllCategory: result});
 })
 router.post('/doAddCategory',async(req, res) => {
@@ -116,6 +120,8 @@ router.get('/deleteCategory',async function (req, res) {
     const categoryId = req.query.id;
 
     await dbHandler.deleteFunction("categories", categoryId);
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+    return res.render('login')
     res.redirect('addCategory')
 
 })
@@ -138,6 +144,9 @@ router.get('/staticDashboard',async (req, res) => {
     const countStaffS = await dbHandler.countStaff("Support",yearcurr)
 
     const yearList = await dbHandler.findYear() 
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+    return res.render('login')
+
     res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, 
         countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList, thisYear:yearcurr});
 })
@@ -152,16 +161,17 @@ router.post('/ChooseYearStatic', async (req, res) => {
     const countStaffS = await dbHandler.countStaff("Support",selectedYear)
 
     const yearList = await dbHandler.findYear() 
-
     res.render('manager/staticDashboard', {countA: countAcademic, countS: countSupport, 
         countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList, thisYear:selectedYear});
 })
 
 
-/* ===================================== Related "View Popular Ideas" Page ============================================= */
+/* ===================================== Related "View Ideas" Page ============================================= */
 router.get('/viewPopularIdeas', async (req, res) => {
     result = await dbHandler.viewAllDataInTable("postIdeas");
 
+    if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+    return res.render('login')
     res.render('manager/viewPopularIdeas', { viewLatestIdeas: result})
 })
 
@@ -201,6 +211,8 @@ router.post('/ChoseViewTypePopularIdeas', async (req, res) => {
             _id: postIdeaId
         }
         const detailIdea = await dbHandler.getIdeas(filter);
+        if(!req.session.username  || req.session.user.role != "Quality Assurance Manager")
+        return res.render('login')
         res.render('manager/viewDetail', {
             viewDetail: detailIdea[0],
             permissions: {

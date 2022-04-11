@@ -20,6 +20,7 @@ router.use(session({
 }))
 
 router.get('/', (req, res) => {
+    req.session.destroy();
     res.render('login');
 }) 
 

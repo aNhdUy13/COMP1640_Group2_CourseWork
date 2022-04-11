@@ -1,3 +1,15 @@
+
+/* *
+    Phan Manh Lam ( View Idea Detail )
+*/
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.odeyq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const dbName = "COMP1640_web_db3";
+const { ObjectId } = require('mongodb');
+
+/* *
+    ( End ) Phan Manh Lam ( View Idea Detail )
+*/
 const express = require('express');
 const router = express.Router();
 const session = require('express-session');
@@ -145,6 +157,70 @@ router.post('/ChooseYearStatic', async (req, res) => {
         countStaffA:countStaffA, countStaffS: countStaffS, yearList: yearList, thisYear:selectedYear});
 })
 
+
+/* ===================================== Related "View Popular Ideas" Page ============================================= */
+router.get('/viewPopularIdeas', async (req, res) => {
+    result = await dbHandler.viewAllDataInTable("postIdeas");
+
+    res.render('manager/viewPopularIdeas', { viewLatestIdeas: result})
+})
+
+router.post('/ChoseViewTypePopularIdeas', async (req, res) => {
+    const selectedViewType = req.body.txtSelectedViewType;
+
+    let result;
+    if (selectedViewType == "LatestIdeas") {
+        result = await dbHandler.viewLatestPostIdeas();
+    }
+    else if (selectedViewType == "MostLikeAndDislike") {
+        await dbHandler.updatePopularPoint()
+        result = await dbHandler.mostPopular("postIdeas");
+    }
+    else if (selectedViewType == "MostViewed") {
+        result = await dbHandler.mostViewed("postIdeas");
+    }
+    else{
+        result = await dbHandler.viewLatestPostIdeas();
+    }
+
+    res.render('manager/viewPopularIdeas', { viewLatestIdeas: result })
+})
+
+
+/* *
+    View Idea Detail ( Manh Lam )
+*/ 
+
+    router.get('/viewIdea', async (req, res) => {
+        const client = await MongoClient.connect(url);
+        const dbo = client.db(dbName);
+        const postIdeaId = ObjectId(req.query.id);
+        const condition = { "_id": postIdeaId };
+        await dbo.collection('postIdeas').updateOne(condition, { $inc: { 'views': 1 } });
+        const filter = {
+            _id: postIdeaId
+        }
+        const detailIdea = await dbHandler.getIdeas(filter);
+        res.render('manager/viewDetail', {
+            viewDetail: detailIdea[0],
+            permissions: {
+                canRemoveAttachment: req.session.username && (detailIdea.username === req.session.username || req.session.user.role === "Manager" || req.session.user.role === "Staff")
+            }
+        })
+    })
+    function htmlEntities(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>');
+    }
+
+    // router.get('/get-comments', async (req, res) => {
+    //     const result = await findComments();
+    //     res.json(result);
+    // })
+
+/* *
+    ( End ) View Idea Detail ( Manh Lam )
+*/ 
+/* ================================================================================== */
 
 
 module.exports = router;

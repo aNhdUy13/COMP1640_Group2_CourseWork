@@ -20,7 +20,7 @@ const options = {
 const form = formidable(options);
 
 router.get('/', (req, res) => {
-    if(!req.session.username)
+    if(!req.session.username  || req.session.user.role != "Staff")
     return res.render('login')
     res.render('staff/staffHome');
 })
@@ -283,7 +283,7 @@ router.post('/doRemoveFile', async function(req, res, next) {
 router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
     const getDate = await dbHandler.getCategory("closureDates");
-    if(!req.session.username)
+    if(!req.session.username  || req.session.user.role != "Staff")
     return res.render('login');
     const newValues = await dbHandler.getUser("users",req.session.user.email);
     console.log(newValues);
@@ -294,7 +294,7 @@ router.get('/allFileSubmit',async (req, res) => {
 // get categories
 
 router.get('/', (req, res) => {
-    if(!req.session.username)
+    if(!req.session.username  || req.session.user.role != "Staff")
     return res.render('login')
     res.render('staff/staffHome');
 })
@@ -314,7 +314,7 @@ router.get('/viewAll',async (req, res) => {
 router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
 
-    if(!req.session.username)
+    if(!req.session.username  || req.session.user.role != "Staff")
     return res.render('login');
     const newValues = await dbHandler.getUser("users",req.session.user.email);
     console.log(newValues);

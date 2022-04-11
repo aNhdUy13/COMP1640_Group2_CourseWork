@@ -18,12 +18,16 @@ const dbHandler = require('./databaseHandler');
 const bcrypt = require('bcrypt');
 
 router.get('/', (req, res) => {
+    if(!req.session.username  || req.session.user.role != "Admin")
+    return res.render('login')
     res.render('admin/adminHome');
 })
 
 
 router.get('/accountManagement',async (req, res) => {
     const result = await dbHandler.viewAllAccount("users", "Staff")
+    if(!req.session.username  || req.session.user.role != "Admin")
+    return res.render('login')
     res.render('admin/accountManagement', { viewAllAccount: result });
 })
 
@@ -108,13 +112,16 @@ router.get('/deleteAccount',async function (req, res) {
     const userId = req.query.id;
 
     await dbHandler.deleteFunction("users", userId);
+    if(!req.session.username  || req.session.user.role != "Admin")
+    return res.render('login')
     res.redirect('accountManagement')
 
 })
 
 router.get('/updateAccount', async (req, res) => {
     const userId = req.query.id;
-
+    if(!req.session.username  || req.session.user.role != "Admin")
+    return res.render('login')
     var accountToEdit = await dbHandler.updateFunction("users", userId);
     res.render('admin/updateAccount', { accountDetail: accountToEdit })
 })
@@ -174,6 +181,8 @@ router.get('/postIdeaManagement', async (req, res) => {
     /* 
         Get Post Idea to display with default skip data (0)
     */
+    if(!req.session.username  || req.session.user.role != "Admin")
+        return res.render('login')
     const currPage = req.query.currPage;
 
     const countData = await dbHandler.countDataInTable("postIdeas");
@@ -219,7 +228,8 @@ router.get('/postIdeaManagement', async (req, res) => {
 /* ===================================== Related "Available User" Page ============================================= */
 
 router.get('/availableUsers', async (req, res) => {
-    
+    if(!req.session.username  || req.session.user.role != "Admin")
+    return res.render('login')
     const currPage = req.query.currPage;
 
     const countData = await dbHandler.countDataInTable("users");
@@ -291,7 +301,8 @@ async function calculatePageNumTrue(collection, countData, currPage, limitItemPe
 
 /* ===================================== Related "Closure Date" Page ============================================= */
 router.get('/closureDate', async (req, res) => {
-
+    if(!req.session.username  || req.session.user.role != "Admin")
+    return res.render('login')
     const result = await dbHandler.viewAllDataInTable("closureDates");
 
     const categories = await dbHandler.viewAllDataInTable("categories");
@@ -376,6 +387,8 @@ router.post('/doSetDate', async (req, res) => {
 
 
 router.get('/updateClosureDate', async (req, res) => {
+    if(!req.session.username  || req.session.user.role != "Admin")
+    return res.render('login')
     const dateId = req.query.id;
 
     var dateEdit = await dbHandler.updateFunction("closureDates", dateId);
@@ -443,7 +456,8 @@ router.post('/doUpdateClosureDate', async (req, res) => {
 /* ===================================== Related "View Popular Ideas" Page ============================================= */
 router.get('/viewPopularIdeas', async (req, res) => {
     result = await dbHandler.viewAllDataInTable("postIdeas");
-
+    if(!req.session.username  || req.session.user.role != "Admin")
+    return res.render('login')
     res.render('admin/viewPopularIdeas', { viewLatestIdeas: result})
 })
 
@@ -474,6 +488,8 @@ router.post('/ChoseViewTypePopularIdeas', async (req, res) => {
 */ 
 
     router.get('/viewIdea', async (req, res) => {
+        if(!req.session.username  || req.session.user.role != "Admin")
+    return res.render('login')
         const client = await MongoClient.connect(url);
         const dbo = client.db(dbName);
         const postIdeaId = ObjectId(req.query.id);

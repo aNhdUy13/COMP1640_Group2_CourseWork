@@ -468,6 +468,14 @@ async function getComments(filter = {}, options = {}) {
     })
     const dbo = await getDBO();
     const result = await dbo.collection('comments').aggregate(pipeline).toArray();
+    for (let cmt of result) {
+        if (cmt.anonymous == "Anonymous") {
+            cmt.author = {
+                name: 'Anonymous',
+                email: 'anonymous@email.com',
+            }
+        }
+    }
     return result;  
 }
 
@@ -477,6 +485,7 @@ async function addComment(body) {
         "postIdeaId": ObjectId(body.postId),
         "userId":  ObjectId(body.userId),
         "content": body.content,
+        "anonymous": body.anonymous,
         "commentTime": Date.now(),
     })
     return result;
@@ -580,8 +589,25 @@ async function getIdeas(filter = {}, options = {}) {
     const result = await dbo.collection('postIdeas').aggregate(pipeline).toArray();
     for (let doc of result) {
         doc.comments.sort((a, b) => {return b.commentTime - a.commentTime});
+        for (let cmt of doc.comments) {
+            if (cmt.anonymous == "Anonymous") {
+                cmt.author = {
+                    name: 'Anonymous',
+                    email: 'anonymous@email.com',
+                }
+            }
+        }
     }
     return result;
+}
+
+async function findEmailCoor() {
+    const dbo = await getDBO();
+    const result = await dbo.collection("users").find({ role: 'Quality Assurance Manager' }).toArray();
+    const emailCoor= result.filter((item) =>{
+        return item.email
+    })
+    return emailCoor[0];
 }
 
 module.exports = {
@@ -621,5 +647,9 @@ module.exports = {
     viewFirstCategory,
     checkExistAccount,
     searchFilename,
+<<<<<<< HEAD
     checkExistCategory
+=======
+    findEmailCoor,
+>>>>>>> aec3f19532a21270e7332e4923c5d0f33040f476
 }

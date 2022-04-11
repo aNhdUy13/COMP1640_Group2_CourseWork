@@ -27,6 +27,10 @@
             min-height: 50px;
             overflow-y: auto;
         }
+        .box_comment ul li {
+            list-style: none;
+            line-height: 1.8;
+        }
     </style>
 </head>
 
@@ -105,7 +109,7 @@
             <br>Comments:
             <ul id="comments">
                 {{#each viewDetail.comments}} 
-                    <li style="list-style: none; line-height: 1.8">{{this.author.name}}: {{this.content}}</li>
+                    <li>{{this.author.name}}: {{this.content}}</li>
                 {{/each}}
             </ul>
         </div>
@@ -115,6 +119,15 @@
                 <input type="hidden" name="postId" value="{{viewDetail._id}}">
                 <input type="hidden" value="{{viewDetail.email}}" name="email">
                 <textarea name="content"></textarea>
+                <tr>
+                        <td class="accountManagement_title">Post Type: </td>
+                        <td>
+                            <select name="anonymous">
+                                    <option value="userName">Current Name</option>
+                                    <option value="Anonymous">Anonymous</option>
+                            </select>
+                        </td> 
+                </tr>
                 <button type="submit">Save</button>
             </form>
         </div>
@@ -179,7 +192,7 @@
                                             const cmtDiv = document.getElementById('comments');
                                             const cmt = document.createElement('li');
                                             cmt.innerText = `${response.comment.author.name}: ${response.comment.content}`
-                                            cmtDiv.appendChild(cmt);
+                                            cmtDiv.insertAdjacentElement('afterbegin', cmt);
                                         }
                                         else {
                                             alert(response.message)

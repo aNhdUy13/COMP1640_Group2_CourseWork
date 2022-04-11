@@ -43,11 +43,7 @@ router.use(zip());
      });
 })
 // manager Category ------------------------------------------------
-router.get('/addCategory',async (req, res) => {
-    
-    const result = await dbHandler.viewAllCategory("categories")
-    res.render('manager/addCategory', {viewAllCategory: result});
-})
+
 
 router.get('/downloadCategory',async (req, res) => {
     
@@ -65,17 +61,42 @@ router.post('/ChooseCategoryList', async (req, res) => {
     const result = await dbHandler.viewFirstCategory("postIdeas",selectedCate)
     res.render('manager/downloadCategory', {viewCategory:result,categoryList:nameCate, selectedCateg:selectedCate});
 })
-
+// Add Category
+router.get('/addCategory',async (req, res) => {
+    
+    const result = await dbHandler.viewAllCategory("categories")
+    res.render('manager/addCategory', {viewAllCategory: result});
+})
 router.post('/doAddCategory',async(req, res) => {
     const newCategory = req.body.txtNewCate;
 
-        const categoryData = {
-            name: newCategory
-        }
-
-        await dbHandler.addNewAccount("categories", categoryData);
+    const isCategoryExist = await dbHandler.checkExistCategory(newCategory);
+    if (isCategoryExist == "Name already in exists !")
+    {
+        console.log("Category Exist !");
         const result = await dbHandler.viewAllCategory("categories")
-        res.render('manager/addCategory', { implementSuccess: "New Account Added Successfully !",  viewAllCategory: result})
+        res.render('manager/addCategory', {viewAllCategory: result, errorName: "Name Already Exist !"});
+
+    }
+    else{
+        if( newCategory.trim().length == 0 ){
+            const result = await dbHandler.viewAllCategory("categories")
+            res.render('manager/addCategory', {viewAllCategory: result, errorName: "Error : Category Name Cannot be Null !"});
+        }
+        else{
+            
+            console.log("Start add Category !");
+            const categoryData = {
+                name: newCategory
+            }
+    
+            await dbHandler.addNewAccount("categories", categoryData);
+            const result = await dbHandler.viewAllCategory("categories")
+            res.render('manager/addCategory', { implementSuccess: "New Account Added Successfully !",  viewAllCategory: result})
+        }
+    }
+
+        
 })
 
 router.get('/deleteCategory',async function (req, res) {

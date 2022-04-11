@@ -393,6 +393,20 @@ async function updatePopularPoint(){
     }
 }
 
+async function checkExistCategory(categoryName) {
+    const dbo = await getDBO();
+
+    const result = await dbo.collection("categories").findOne({ name: categoryName });
+
+    var message;
+    if (result) {
+        message = "Name already in exists !";
+    } else {
+        message = "Good Email";
+    }
+    return message;
+
+}
 /* End Manager function*/
 
 /* Comment */
@@ -606,5 +620,6 @@ module.exports = {
     searchCateName,
     viewFirstCategory,
     checkExistAccount,
-    searchFilename
+    searchFilename,
+    checkExistCategory
 }

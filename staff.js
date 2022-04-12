@@ -352,7 +352,7 @@ router.post("/do-like", async function (request, result) {
                         console.log(data);
                         return result.json({
                             "status": "success",
-                            "message": "Video has been liked",
+                            "message": "This idea has been liked",
                             count: {
                                 like: data.value.likers ? data.value.likers.length : 0,
                                 dislike: data.value.dislikers ? data.value.dislikers.length : 0
@@ -362,7 +362,7 @@ router.post("/do-like", async function (request, result) {
                 } else if (item.likers.find(e => e._id.toString() === request.session.user._id)) {
                     return result.json({
                         "status": "error",
-                        "message": "Already liked this video"
+                        "message": "Already liked this idea"
                     });
                 } else {
                     dbo.collection("postIdeas").findOneAndUpdate({
@@ -384,7 +384,7 @@ router.post("/do-like", async function (request, result) {
                         console.log(data);
                         return result.json({
                             "status": "success",
-                            "message": "Video has been liked",
+                            "message": "This idea has been liked",
                             count: {
                                 like: data.value.likers ? data.value.likers.length : 0,
                                 dislike: data.value.dislikers ? data.value.dislikers.length : 0
@@ -422,7 +422,7 @@ router.post("/do-dislike", async function (request, result) {
                     function (error, data){
                         return result.json({
                             "status": "success",
-                            "message": "Video has been disliked",
+                            "message": "The idea has been disliked",
                             count: {
                                 like: data.value.likers ? data.value.likers.length : 0,
                                 dislike: data.value.dislikers ? data.value.dislikers.length : 0
@@ -432,7 +432,7 @@ router.post("/do-dislike", async function (request, result) {
                 } else if (item.dislikers.find(e => e._id.toString() === request.session.user._id)) {
                     return result.json({
                         "status": "error",
-                        "message": "Already disliked this video"
+                        "message": "Already disliked this idea"
                     });
                 } else {
                     dbo.collection("postIdeas").findOneAndUpdate({
@@ -453,7 +453,7 @@ router.post("/do-dislike", async function (request, result) {
                     function (error, data){
                         return result.json({
                             "status": "success",
-                            "message": "Video has been disliked",
+                            "message": "This idea has been disliked",
                             count: {
                                 like: data.value.likers ? data.value.likers.length : 0,
                                 dislike: data.value.dislikers ? data.value.dislikers.length : 0

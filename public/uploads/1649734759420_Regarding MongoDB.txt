@@ -1,0 +1,20 @@
+*Database Access:
+	- Username : nguyenduyanh131201
+	- Password : duyanh12345678
+
+	- Connect URL : mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.3vt1h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+	- DB Name : COMP1640_Project
+
+*Database Access (v2) :
+	- Username : nguyenduyanh131201
+	- Password : duyanh12345678
+
+	- Connect URL : mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.letwt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+	- DB Name : COMP1640_Web_DBnew_2
+
+*Database Access (v3) :
+	- Username : nguyenduyanh131201
+	- Password : duyanh12345678
+
+	- Connect URL : mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.odeyq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+	- DB Name : COMP1640_web_db3

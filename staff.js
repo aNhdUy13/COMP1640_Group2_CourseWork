@@ -362,7 +362,7 @@ router.post("/do-like", async function (request, result) {
                 } else if (item.likers.find(e => e._id.toString() === request.session.user._id)) {
                     return result.json({
                         "status": "error",
-                        "message": "Already liked this idea"
+                        "message": "You have already liked this idea"
                     });
                 } else {
                     dbo.collection("postIdeas").findOneAndUpdate({
@@ -432,7 +432,7 @@ router.post("/do-dislike", async function (request, result) {
                 } else if (item.dislikers.find(e => e._id.toString() === request.session.user._id)) {
                     return result.json({
                         "status": "error",
-                        "message": "Already disliked this idea"
+                        "message": "You have already disliked this idea"
                     });
                 } else {
                     dbo.collection("postIdeas").findOneAndUpdate({

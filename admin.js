@@ -312,10 +312,10 @@ router.get('/closureDate', async (req, res) => {
 
     for (let i = 0; i < count; i++) {
         const objectDate = JSON.stringify(categories[i], null, 0);
-        console.log("Before Slice : ", objectDate);
+        // console.log("Before Slice : ", objectDate);
 
         const getCategoriesName = objectDate.slice(42,-2);
-        console.log("After Slice : ", getCategoriesName);
+        // console.log("After Slice : ", getCategoriesName);
         getCategories.push(getCategoriesName)
     }
 
@@ -332,34 +332,48 @@ router.post('/doSetDate', async (req, res) => {
     console.log("New Start Date : " , newStartDate);
     console.log("New End Date : ", newEndDate);
 
-    const result = await dbHandler.viewAllDataInTable("closureDates");
+    // Code for get category name
     const categories = await dbHandler.viewAllDataInTable("categories");
-    const count = categories.length;
+    const countCategories = categories.length;
     const getCategories = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < countCategories; i++) {
         const objectDate = JSON.stringify(categories[i], null, 0);
-        console.log("Before Slice : ", objectDate);
+        // console.log("Before Slice : ", objectDate);
         const getCategoriesName = objectDate.slice(42, -2);
-        console.log("After Slice : ", getCategoriesName);
+        // console.log("After Slice : ", getCategoriesName);
         getCategories.push(getCategoriesName)
     }
 
-    const startDateCheck = Date.parse(newStartDate);
-    const endDateCheck = Date.parse(newEndDate);
+    // Code for get all information about Closure Date 
+    const result = await dbHandler.viewAllDataInTable("closureDates");
+    const checkNameInClosureDate = await dbHandler.checkNameClosureDate(name);
 
-    if(newStartDate == "" || newEndDate == "")
-    {
-        res.render('admin/closureDate', { viewAllClosureDate: result, categories: getCategories, 
-            errMessage: "Select Start Date & End Date !" });
-    }
-    else if (startDateCheck > endDateCheck)
-    {
+    if (checkNameInClosureDate == "ExistName") {
+        // if Name of New Closure Date Exist
         res.render('admin/closureDate', {
             viewAllClosureDate: result, categories: getCategories,
-            errMessage: "Start Date cannot > End Date !"
-        });
-    }
-    else{
+            errMessage: "Category Existed !"
+        });        
+    } 
+    else 
+    {
+        // if Name of New Closure Date NOT Exist
+        const startDateCheck = Date.parse(newStartDate);
+        const endDateCheck = Date.parse(newEndDate);
+
+        if (newStartDate == "" || newEndDate == "") {
+            res.render('admin/closureDate', {
+                viewAllClosureDate: result, categories: getCategories,
+                errMessage: "Select Start Date & End Date !"
+            });
+        }
+        else if (startDateCheck > endDateCheck) {
+            res.render('admin/closureDate', {
+                viewAllClosureDate: result, categories: getCategories,
+                errMessage: "Start Date cannot > End Date !"
+            });
+        }
+        else {
             const splitStartD = newStartDate.split('-');
             const startYear = splitStartD[0];
             const startMonth = splitStartD[1];
@@ -381,7 +395,9 @@ router.post('/doSetDate', async (req, res) => {
             await dbHandler.addNewAccount("closureDates", setDateValue);
 
             res.redirect('closureDate');
+        }
     }
+    
 })
 
 

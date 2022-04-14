@@ -153,6 +153,19 @@ async function getCategory(collectionName) {
 
 }
 
+async function checkNameClosureDate(inputNameClosureDate) {
+    const dbo = await getDBO();
+
+    const result = await dbo.collection("closureDates").findOne({ name: inputNameClosureDate });
+
+    var message;
+    if (result) {
+        message = "ExistName";
+    } else {
+        message = "NOTExistName";
+    }
+    return message;
+}
 
 async function viewLatestPostIdeas(){
     const dbo = await getDBO();
@@ -648,4 +661,5 @@ module.exports = {
     searchFilename,
     checkExistCategory,
     findEmailCoor,
+    checkNameClosureDate
 }

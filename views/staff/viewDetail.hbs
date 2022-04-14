@@ -69,7 +69,7 @@
                         {{#each viewDetail.files}} 
                             <li file-url="{{this.url}}" file-name="{{this.fileName}}">
                                 {{!-- {{#ifCond permissions.canRemoveAttachment true}} --}}
-                                <button onclick="removeAttachment(this)">Remove</button>&nbsp;
+                                {{!-- <button onclick="removeAttachment(this)">Remove</button>&nbsp; --}}
                                 {{!-- {{/ifCond}} --}}
                                 {{this.fileName}}
                             </li>

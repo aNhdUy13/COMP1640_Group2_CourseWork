@@ -212,11 +212,11 @@ router.post('/doAddIdea',async(req, res, next) => {
             pass: 'hellomn123'
         }
     });
-
-    const emailCoor = await dbHandler.findEmailCoor("users");
+    const a =  req.session.user.department;
+    const emailCoor1 = await dbHandler.findEmailCoor(a);
     var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
         from: 'group2hellomn@gmail.com',
-        to:  emailCoor.email,
+        to:  emailCoor1.email,   
         subject: 'A new postIdea',
         text: 'You got a new postIdea',
         html: '<p>You have got a new postIdea:</b><ul><li>Username: ' + req.session.user.name + '</li><li>Email: ' + req.session.user.email + '</li><li>Department: ' + req.session.user.department + '</li></ul>'
@@ -227,7 +227,7 @@ router.post('/doAddIdea',async(req, res, next) => {
             res.redirect('/');
         } else {
             console.log('Message sent: ' +  info.response);
-            console.log(emailCoor1)
+            console.log(emailCoor1.email)
             res.redirect('/');
         }
     });

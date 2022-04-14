@@ -601,9 +601,9 @@ async function getIdeas(filter = {}, options = {}) {
     return result;
 }
 
-async function findEmailCoor() {
+async function findEmailCoor(department) {
     const dbo = await getDBO();
-    const result = await dbo.collection("users").find({ role: 'Quality Assurance Coordinator' }).toArray();
+    const result = await dbo.collection("users").find({ role: 'Quality Assurance Coordinator',department:department }).toArray();
     const emailCoor= result.filter((item) =>{
         return item.email;
     })

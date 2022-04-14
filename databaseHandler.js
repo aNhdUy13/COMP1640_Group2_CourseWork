@@ -18,7 +18,7 @@ async function getDBO() {
 async function checkUser(emailIn, passwordIn) {
     const dbo = await getDBO();
     const results = await dbo.collection("users").
-        findOne({ $and: [{ email: emailIn }] });
+        findOne({ $and: [{ email: emailIn }]});
 
     if (results != null)
     {
@@ -603,13 +603,12 @@ async function getIdeas(filter = {}, options = {}) {
 
 async function findEmailCoor() {
     const dbo = await getDBO();
-    const result = await dbo.collection("users").find({ role: 'Quality Assurance Manager' }).toArray();
+    const result = await dbo.collection("users").find({ role: 'Quality Assurance Coordinator' }).toArray();
     const emailCoor= result.filter((item) =>{
-        return item.email
+        return item.email;
     })
     return emailCoor[0];
 }
-
 module.exports = {
     addNewAccount,
     checkUser,

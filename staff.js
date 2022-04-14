@@ -6,7 +6,7 @@ const { ObjectId } = require('mongodb');
 const { request } = require('https');
 const nodemailer =  require('nodemailer'); 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://nguyenduyanh131201:duyanh12345678@cluster0-shard-00-00.odeyq.mongodb.net:27017,cluster0-shard-00-01.odeyq.mongodb.net:27017,cluster0-shard-00-02.odeyq.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-11147a-shard-0&authSource=admin&retryWrites=true&w=majority";
+var url = "mongodb+srv://nguyenduyanh131201:duyanh12345678@cluster0.odeyq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const dbName = "COMP1640_web_db3";
 const formidable = require('formidable');
 const fs = require('fs');
@@ -20,7 +20,7 @@ const options = {
 const form = formidable(options);
 
 router.get('/', (req, res) => {
-    if(!req.session.username  || req.session.user.role != "Staff")
+    if(!req.session.username)
     return res.render('login')
     res.render('staff/staffHome');
 })
@@ -212,10 +212,11 @@ router.post('/doAddIdea',async(req, res, next) => {
             pass: 'hellomn123'
         }
     });
-    // const emailCoor = await dbHandler.findEmailCoor("users");
+
+    const emailCoor = await dbHandler.findEmailCoor("users");
     var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
         from: 'group2hellomn@gmail.com',
-        to:  'manhmainad@gmail.com',
+        to:  emailCoor.email,
         subject: 'A new postIdea',
         text: 'You got a new postIdea',
         html: '<p>You have got a new postIdea:</b><ul><li>Username: ' + req.session.user.name + '</li><li>Email: ' + req.session.user.email + '</li><li>Department: ' + req.session.user.department + '</li></ul>'
@@ -226,6 +227,7 @@ router.post('/doAddIdea',async(req, res, next) => {
             res.redirect('/');
         } else {
             console.log('Message sent: ' +  info.response);
+            console.log(emailCoor1)
             res.redirect('/');
         }
     });
@@ -283,7 +285,7 @@ router.post('/doRemoveFile', async function(req, res, next) {
 router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
     const getDate = await dbHandler.getCategory("closureDates");
-    if(!req.session.username  || req.session.user.role != "Staff")
+    if(!req.session.username)
     return res.render('login');
     const newValues = await dbHandler.getUser("users",req.session.user.email);
     console.log(newValues);
@@ -294,7 +296,7 @@ router.get('/allFileSubmit',async (req, res) => {
 // get categories
 
 router.get('/', (req, res) => {
-    if(!req.session.username  || req.session.user.role != "Staff")
+    if(!req.session.username)
     return res.render('login')
     res.render('staff/staffHome');
 })
@@ -314,7 +316,7 @@ router.get('/viewAll',async (req, res) => {
 router.get('/allFileSubmit',async (req, res) => {
     const result = await dbHandler.getCategory("categories");
 
-    if(!req.session.username  || req.session.user.role != "Staff")
+    if(!req.session.username)
     return res.render('login');
     const newValues = await dbHandler.getUser("users",req.session.user.email);
     console.log(newValues);
@@ -352,7 +354,7 @@ router.post("/do-like", async function (request, result) {
                         console.log(data);
                         return result.json({
                             "status": "success",
-                            "message": "This idea has been liked",
+                            "message": "Video has been liked",
                             count: {
                                 like: data.value.likers ? data.value.likers.length : 0,
                                 dislike: data.value.dislikers ? data.value.dislikers.length : 0
@@ -362,7 +364,7 @@ router.post("/do-like", async function (request, result) {
                 } else if (item.likers.find(e => e._id.toString() === request.session.user._id)) {
                     return result.json({
                         "status": "error",
-                        "message": "You have already liked this idea"
+                        "message": "Already liked this video"
                     });
                 } else {
                     dbo.collection("postIdeas").findOneAndUpdate({
@@ -384,7 +386,7 @@ router.post("/do-like", async function (request, result) {
                         console.log(data);
                         return result.json({
                             "status": "success",
-                            "message": "This idea has been liked",
+                            "message": "Video has been liked",
                             count: {
                                 like: data.value.likers ? data.value.likers.length : 0,
                                 dislike: data.value.dislikers ? data.value.dislikers.length : 0
@@ -393,6 +395,7 @@ router.post("/do-like", async function (request, result) {
                     });
                 }
         })
+
 })
 router.post("/do-dislike", async function (request, result) {
     if (!request.session.user || !request.session.user._id) return result.status(401).json({status: 'error'});
@@ -422,7 +425,7 @@ router.post("/do-dislike", async function (request, result) {
                     function (error, data){
                         return result.json({
                             "status": "success",
-                            "message": "The idea has been disliked",
+                            "message": "Video has been disliked",
                             count: {
                                 like: data.value.likers ? data.value.likers.length : 0,
                                 dislike: data.value.dislikers ? data.value.dislikers.length : 0
@@ -432,7 +435,7 @@ router.post("/do-dislike", async function (request, result) {
                 } else if (item.dislikers.find(e => e._id.toString() === request.session.user._id)) {
                     return result.json({
                         "status": "error",
-                        "message": "You have already disliked this idea"
+                        "message": "Already disliked this video"
                     });
                 } else {
                     dbo.collection("postIdeas").findOneAndUpdate({
@@ -453,7 +456,7 @@ router.post("/do-dislike", async function (request, result) {
                     function (error, data){
                         return result.json({
                             "status": "success",
-                            "message": "This idea has been disliked",
+                            "message": "Video has been disliked",
                             count: {
                                 like: data.value.likers ? data.value.likers.length : 0,
                                 dislike: data.value.dislikers ? data.value.dislikers.length : 0
@@ -494,14 +497,15 @@ router.post('/do-comment', async function(req, res) {
     if(req.session.user && req.session.user._id) {
         const client = await MongoClient.connect(url);
         const dbo = client.db(dbName);
-        const content = htmlEntities(req.body.content);
+        const content = htmlEntities(req.body.content);      
+ 
         const data = await dbHandler.addComment({
             postId: req.body.postId,
             userId: req.session.user._id,
             anonymous: req.body.anonymous,
             content: content,
         })
-        const cmt = await dbHandler.getComments({_id: data.insertedId});
+        const cmt = await dbHandler.getComments({_id: data.insertedId})
         var transporter =  nodemailer.createTransport({ // config mail server
             service: 'Gmail',
             auth: {
@@ -509,14 +513,13 @@ router.post('/do-comment', async function(req, res) {
                 pass: 'hellomn123'
             }
         });
+
         var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
             from: 'group2hellomn@gmail.com',
             to: req.body.email,
             subject: 'A new comment about your idea',
             text: 'You got a new comment about your idea',
-            html: '<p>You have got a new comment about your ideas from:</b><ul><li>Username: ' 
-            + req.session.user.name + '</li><li>Email: ' + req.session.user.email 
-            + '</li><li>Department: ' + req.session.user.department + '</li></ul>'
+            html: '<p>You have got a new comment about your ideas from:</b><ul><li>Username: ' + req.session.user.name + '</li><li>Email: ' + req.session.user.email + '</li><li>Department: ' + req.session.user.department + '</li></ul>'
         }
         transporter.sendMail(mainOptions, function(err, info){
             if (err) {

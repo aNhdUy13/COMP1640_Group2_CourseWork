@@ -497,6 +497,15 @@ async function addComment(body) {
     const findCategory = await dbo.collection("postIdeas").findOne({ _id:ObjectId(body.postId) });
     const findDate = await dbo.collection("closureDates").findOne({ name:findCategory.category });
     console.log(findDate.endDate)
+    var today = Date.now();
+    // today = today.split("-");
+    // var newDate1 = new Date( today[2], today[1] - 1, today[0]);
+    // console.log(newDate1.getTime())
+    console.log(today);
+    findDate.endDate = findDate.endDate.split("-");
+    var newDate = new Date( findDate.endDate[2], findDate.endDate[1] - 1, findDate.endDate[0]);
+    console.log(newDate.getTime()); 
+    if ((today <= newDate.getTime())){
     const result = await dbo.collection("comments").insertOne({
         "postIdeaId": ObjectId(body.postId),
         "userId":  ObjectId(body.userId),
@@ -505,6 +514,7 @@ async function addComment(body) {
         "commentTime": Date.now(),
     })
     return result;
+    }
 }
 
 async function getIdeas(filter = {}, options = {}) {

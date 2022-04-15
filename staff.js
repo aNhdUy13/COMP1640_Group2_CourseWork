@@ -497,8 +497,8 @@ router.post('/do-comment', async function(req, res) {
     if(req.session.user && req.session.user._id) {
         const client = await MongoClient.connect(url);
         const dbo = client.db(dbName);
-        const content = htmlEntities(req.body.content);      
- 
+        const content = htmlEntities(req.body.content);        
+        
         const data = await dbHandler.addComment({
             postId: req.body.postId,
             userId: req.session.user._id,

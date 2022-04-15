@@ -494,6 +494,9 @@ async function getComments(filter = {}, options = {}) {
 
 async function addComment(body) {
     const dbo = await getDBO();
+    const findCategory = await dbo.collection("postIdeas").findOne({ _id:ObjectId(body.postId) });
+    const findDate = await dbo.collection("closureDates").findOne({ name:findCategory.category });
+    console.log(findDate.endDate)
     const result = await dbo.collection("comments").insertOne({
         "postIdeaId": ObjectId(body.postId),
         "userId":  ObjectId(body.userId),
@@ -622,6 +625,8 @@ async function findEmailCoor(department) {
     })
     return emailCoor[0];
 }
+
+
 module.exports = {
     addNewAccount,
     checkUser,
@@ -661,5 +666,5 @@ module.exports = {
     searchFilename,
     checkExistCategory,
     findEmailCoor,
-    checkNameClosureDate
+    checkNameClosureDate,
 }

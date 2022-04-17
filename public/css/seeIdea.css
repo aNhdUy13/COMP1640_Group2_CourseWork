@@ -9,11 +9,7 @@ div.container{
     height: 800px;
     
 }
-@media only screen
-  and (min-device-width: 320px) 
-  and (max-device-width: 480px)
-  and (-webkit-min-device-pixel-ratio: 2) {
-  }
+
 
 /*=============================== Header ===============================*/
 
@@ -234,3 +230,41 @@ div.footer {
     border-bottom-left-radius: 10px;
 
 }
+@media only screen
+    and (max-width: 525px) {
+        div.container{
+            width: 100%;
+            height: 750px;
+            
+        }
+        div.greeting{
+            display: none;
+        }
+        div.leftSideHeader {
+            width: 100%;
+            height:10%;
+            background-color: #203b5b;
+            
+            border-top-left-radius: 10px;
+            text-align: center;
+        }
+        nav ul li {
+            text-decoration: none;
+            color: white;
+            display: inline-block;
+            list-style-type: none;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+        }
+        div.main_Content {
+            width: 100%;
+            height: 80%;
+            background-color: #ffffff;
+            float: left;
+            border-top-right-radius: 10px;
+            display:table;
+        
+        }
+    }

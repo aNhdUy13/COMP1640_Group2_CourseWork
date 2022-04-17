@@ -127,15 +127,14 @@ div.footer {
         }
         nav ul li {
             text-decoration: none;
-            padding: 24px 10px;
             color: white;
             display: inline-block;
             list-style-type: none;
         }
         nav ul li a {
             text-decoration: none;
-            padding: 5px;
             color: white;
+            padding: 15px;
         }
         div.main_Content {
             width: 100%;

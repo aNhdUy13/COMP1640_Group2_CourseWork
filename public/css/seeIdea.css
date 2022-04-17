@@ -257,6 +257,7 @@ div.footer {
         nav ul li a {
             text-decoration: none;
             color: white;
+            padding: 15px;
         }
         div.main_Content {
             width: 100%;
